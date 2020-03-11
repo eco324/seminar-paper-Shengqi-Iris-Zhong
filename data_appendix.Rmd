@@ -52,13 +52,29 @@ This section documents the datasets used in this analysis.
 
 ### To obtain a copy
 
-Describe in a step-by-step fashion how an interested user could obtain the data.
+Users can visit the website that displays election results at Gwinnett County at https://results.enr.clarityelections.com/GA/Gwinnett/94961/Web02.225391/#/ and choose the **Detail XLS** link at the bottom right corner. 
 
-### Importable version (if necessary)
+The xls file contains three spreadsheets. What I will be using is the third sheet. 
 
-**Filename(s):** importable-data/filename-importable.csv
+### Importable version
 
-In some cases the raw data is not directly importable. In this case, you should fully document every step you took to create the importable data in a subsection like this one. 
+**Filename(s):** importable_data/vote_result_importable.xls
+
+The raw dataset is hard to be imported to R directly because of the following reasons. First, it has three tabs. Second, the top two rows do not contain any useful information or should be incorporated to the next row. Therefore, an importable version of the dataset was created.
+
+Here are the steps:
+
+1. The original file was opened in Microsoft Excel.  
+2. The first and the second spreadsheets were removed. 
+3. Columns H through AI (RecreationVisits through MiscellaneousOvernightStaysTotal) were highlighted and
+formatted as numbers with no decimal places and no 1000 separators.  
+4. The file was saved using the CSV(comma delimited) format in the importable_data folder.  
+
+*Note:* This procedure violates one of my principles of data analysis: avoid doing the same thing over and over again. It's usually possible to get the computer to do it for you. In this case, we could get R to read in the original files directly by specifying column types and defining a special function to read-in the data. I did not do this in the demonstration file for two reasons:
+
+1. To demonstrate how to document the process if you have to modify your raw files before importing.  
+1. Because there are only a couple files, it may be faster to make this change manually than to figure out the code needed to automate it. Whether this is true or not depends on the number of files you need to modify, the likelihood that you'll have to redo it (e.g. if you decided to add years to your analysis later), and your experience with writing code. Check with me if you find yourself wondering whether you should automate something or do it manually (or see [this xkcd comic](https://imgs.xkcd.com/comics/is_it_worth_the_time_2x.png))
+
 
 ### Variable descriptions
 
