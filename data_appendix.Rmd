@@ -11,6 +11,7 @@ output:
 knitr::opts_chunk$set(results = 'asis', cache = F)
 library(tidyverse)
 library(summarytools)
+library(sf)
 st_options(plain.ascii = F,
            style = "rmarkdown",
            footnote = NA,
