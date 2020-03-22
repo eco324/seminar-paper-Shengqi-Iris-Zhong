@@ -12,6 +12,7 @@ knitr::opts_chunk$set(results = 'asis', cache = F)
 library(tidyverse)
 library(summarytools)
 library(sf)
+library(readxl)
 st_options(plain.ascii = F,
            style = "rmarkdown",
            footnote = NA,
@@ -38,10 +39,78 @@ st_css()
 
 
 # Raw data
-*Each dataset you use will have its own documentation section. The next subsection in this document (Dataset description) is a template. You can copy this section and paste it into your document each time you need to add a section for a new dataset. Note that each line in the Dataset description section __must__ end with two spaces.* 
-This section documents the datasets used in this analysis.
+
 
 ## Gwinnett County 2019 Referendum Dataset
+**Citation:** Results—Gwinnett—Election Night Reporting. (n.d.). Retrieved March 11, 2020, from https://results.enr.clarityelections.com/GA/Gwinnett/94961/Web02.225391/#/
+  
+**DOI:** N/A  
+**Date Downloaded:** Mar 11, 2020  
+**Filename(s):** raw_data/vote_result.xls *If you have a large number of files you can use a patten (see visit data below)*
+**Unit of observation:** Precinct 
+**Dates covered:** Mar 19, 2019
+
+### To obtain a copy
+
+Users can visit the website that displays election results at Gwinnett County at https://results.enr.clarityelections.com/GA/Gwinnett/94961/Web02.225391/#/ and choose the **Detail XLS** link at the bottom right corner. 
+
+The xls file contains three spreadsheets. I will be using the second and third sheet. 
+
+### Importable version
+
+**Filename(s):** importable_data/vote_result_importable.xlsx
+
+The raw dataset is hard to be imported to R directly because of the following reasons. First, it has three tabs. Second, the top two rows do not contain any useful information or should be incorporated to the next row. The file uses the extension .xls, which is imcompatible with R. Therefore, an importable version of the dataset was created.
+
+Here are the steps:
+
+1. The original file was opened in Microsoft Excel.  
+2. The turnout rate for each precinct which was displayed in the second spreadsheet was moved to the third spreadsheet.
+3. The first and second spreadsheets were deleted.
+4. The top two rows of the third spreadsheet were removed.
+5. The columns were renamed to reflect whether the vote was for or against the proposal.
+6. The extension was changed from .xls to .xlsx. 
+
+
+### Variable descriptions
+
+I cannot find any information that describes the variables in this dataset. Therefore, the description below is my understanding. 
+
+- **precinct:** The name of the precinct. 
+- **registered_voters:** The number of registered voters in the precinct.
+- **total_votes:** The number of votes received in this referendum.
+- **voter_turnout:** The percentage of voters who voted in this referendum. ($reigstered\_voters/total\_votes$) 
+- **election_day_yes:** The number of people who voted yes during the election day.
+- **absentee_mail_yes:** The number of people who voted yes by mailing paper ballots prior to the election day.
+- **advance_in_person_1_yes:** The number of people who voted yes prior to the election day.
+- **advance_in_person_2_yes:** The number of people who voted yes prior to the election day. The difference between this variable from the previous one is not clear. My speculation is they record people voting on different days before election.
+- **provisional_yes:** The number of people who voted yes but had questions in their eligibility. 
+- **votes_yes:** The number of people who voted yes in total. (the sum of the previous five variables)
+- **election_day_no:** The number of people who voted no during the election day.
+- **absentee_mail_no:** The number of people who voted no by mailing paper ballots prior to the election day.
+- **advance_in_person_1_no:** The number of people who voted no prior to the election day.
+- **advance_in_person_2_no:** The number of people who voted no prior to the election day. The difference between this variable from the previous one is not clear. My speculation is they record people voting on different days before election.
+- **provisional_no:** The number of people who voted no but had questions in their eligibility. 
+- **votes_no:** The number of people who voted no in total. (the sum of the previous five variables)
+
+
+
+### Data import code and summary
+
+```{r}
+vote_result <- read_excel("importable_data/vote_result_importable.xlsx", 
+    col_types = c("text", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", "numeric", 
+        "numeric", "numeric", "numeric", "numeric", "numeric", 
+        "numeric"))
+View(vote_result)
+export_summary_table(dfSummary(vote_result))
+```
+
+
+
+## Gwinnett County Census Data
 **Citation:** Results—Gwinnett—Election Night Reporting. (n.d.). Retrieved March 11, 2020, from https://results.enr.clarityelections.com/GA/Gwinnett/94961/Web02.225391/#/
   
 **DOI:** N/A  
@@ -85,11 +154,43 @@ Create a bullet list with the name of each variable in the dataset followed by a
 
 ### Data import code and summary
 
+```{r}
+library(tidycensus)
+v18 <- load_variables(2018, "acs5", cache = TRUE)
+```
+
+
+```{r}
+
+cbdata <- get_acs(geography = "tract", 
+              variables = c(medincome = "B19013_001", 
+                            medage = "B01002_001", 
+                            total = "B01001_001", 
+                            white = "B01001A_001", 
+                            transportation_total = "B08006_001", 
+                            car = "B08006_002", 
+                            public = "B08006_008", 
+                            bike = "B08006_014", 
+                            walk = "B08006_015", 
+                            other = "B08006_016", 
+                            no_transport = "B08006_017"),
+              state = "GA", 
+              county = "Gwinnett",
+              year = 2018)
+cbdata
+```
+
+```{r}
+cbdata_tidy <- cbdata %>%
+  select(-moe) %>%
+  pivot_wider(names_from = variable, values_from = estimate)
+```
+
 *Once you've described the variables, enter an R chunk by selecting Code -> Insert Chunk, or Ctrl+Alt+I, give it a name to describe the dataset you are importing. After importing, export a dataframe summary using the command.*
 
 `export_summary_table(dfSummary(dataset_name))`
 
-*While it will make your resulting file long, you should not modify the chunk options to suppress printing of code and output. I would likely not include this in the documentation for an actual paper I was submitting, but including them here will let me read your code and the output message from R and may help identify data import concerns early in the process. Since these files will exist only electronically, their length is less of a concern. If you like to print out files to proofread and want me to help you shorten the printed versions, let me know. We can temporarily modify the chunk options for printing and restore them before you submit the assignment.*
+
 
 
 # Data Processing and Combination
