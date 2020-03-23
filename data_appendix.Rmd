@@ -7,7 +7,7 @@ output:
     number_sections: true
 ---
 
-```{r setup, echo = F, message = F}
+```{r setup, echo = F, message = F, warning = F}
 knitr::opts_chunk$set(results = 'asis', cache = F)
 library(tidyverse)
 library(summarytools)
@@ -222,9 +222,9 @@ cbdata_transport <- cbdata_white %>%
 
 ```{r}
 cbdata_tidy <- cbdata_transport %>%
-  mutate(time_0_30_pct = (time_less_5 + time_10_14 + time_15_19 + 
+  mutate(time_0_29_pct = (time_less_5 + time_10_14 + time_15_19 + 
                             time_20_24 + time_25_29) / time_total,
-         time_30_60_pct = (time_30_34 + time_35_39 + time_40_44 + 
+         time_30_59_pct = (time_30_34 + time_35_39 + time_40_44 + 
                              time_45_59) / time_total,
          time_60_89_pct = time_60_89 / time_total,
          time_more_90_pct = time_more_90 / time_total) %>%
@@ -242,9 +242,9 @@ cbdata_tidy <- cbdata_transport %>%
 - **NAME:** The name of the census tract.
 - **total:** The total population of the tract.
 - **medage:** The median age of the population in the tract.
-- **transportation_total:** The number of people who work in the tract.
 - **medincome:** The median income of the population in the tract.
 - **white_pct:** The percentage of white population in the tract.
+- **transportation_total:** The number of people who were sampled in the transportation survey.
 - **car_pct:** The percentage of people who go to work by car, truck or van.
 - **public_pct:** The percentage of people who go to work by public transportation (excluding taxi or cab).
 - **subway_pct:** The percentage of people who go to work by subway or elevated.
@@ -252,6 +252,11 @@ cbdata_tidy <- cbdata_transport %>%
 - **walk_pct:** The percentage of people who go to work on foot.
 - **other_pct:** The percentage of people who go to work by other transportation means such as taxi, cab and motorcycle.
 - **no_pct:** The percentage of people who work at home (i.e. no transportation needed).
+- **time_total:** The number of people who were sampled in the travel time to work survey.
+- **time_0_29_pct:** The percentage of people who travel less than 30 minutes to work.
+- **time_30_59_pct:** The percentage of people who travel between 30 and 59 minutes to work.
+- **time_60_89_pct:** The percentage of people who travel between 60 and 89 minutes to work.
+- **time_more_90_pct:** The percentage of people who travel more than 90 minutes to work.
 
 ### Data import code and summary
 
