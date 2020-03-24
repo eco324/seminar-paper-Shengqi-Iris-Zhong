@@ -175,7 +175,7 @@ View(cbdata)
 The code above constructs a dataframe called cbdata by calling the function `get_acs()`, which pulls the data from the American Community Survey. Inside the function, the unit of measurement is specified by the `geography` argument. In this case, select "tract" for census tract. Put all the chosen variables in the
 `variables` argument. Finally, address `state` ("GA"), `county` ("Gwinnett"), and `year` of survey ("2018").
 
-### Importable version (Data Wrangling)
+### Importable version (Data wrangling)
 
 The current dataframe requires modifications. First, each row displays one variable from one tract. However, to make tract as the unit of measurement, each row should include all the variables of one tract. Second, instead of the actual number of people who are white, the percentage of white population is more informative. Similarly, the percentage of people who go to work by certain transportation should also be calculated. Finally, travel time data is mostly grouped by a 5-minute band, which is too detailed for this project. It will be categorized with wider range to reduce variables. After consolidation, the percentages will be calculated. 
 
@@ -266,7 +266,14 @@ Data has been imported from the codes in the previous sections.
 export_summary_table(dfSummary(cbdata_tidy))
 ```
 
+## 2016 Presidential Election Data at Gwinnett County
+**Citation:** MIT Election Data and Science Lab, 2018, U.S. President Precinct-Level Returns 2016, *Harvard Dataverse, V11,* UNF:6:hQyVqHW+vTFnAW2jYIOy/Q== [fileUNF]  
+**DOI:** doi:10.7910/DVN/LYWX3D  
+**Date Downloaded:** Mar 19, 2020  
+**Filename(s):** N/A  
+**Unit of observation:** Precinct     
+**Dates covered:** November 8, 2016 
 
+### To obtain a copy
 
-
-
+Users can obtain a copy of the dataset at https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/LYWX3D. Under the **Files** tab, select and click the download button of the first file **"2016-precinct-president.tab"**. The description of the variables can be found in the second file, **"codebook-2016-precinct-president.md
