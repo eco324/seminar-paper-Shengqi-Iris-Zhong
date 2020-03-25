@@ -46,7 +46,7 @@ st_css()
   
 **DOI:** N/A  
 **Date Downloaded:** Mar 11, 2020  
-**Filename(s):** raw_data/vote_result.xls *If you have a large number of files you can use a patten (see visit data below)*
+**Filename(s):** raw_data/vote_result.xls
 **Unit of observation:** Precinct 
 **Dates covered:** Mar 19, 2019
 
@@ -60,7 +60,7 @@ The xls file contains three spreadsheets. I will be using the second and third s
 
 **Filename(s):** importable_data/vote_result_importable.xlsx
 
-The raw dataset is hard to be imported to R directly because of the following reasons. First, it has three tabs. Second, the top two rows do not contain any useful information or should be incorporated to the next row. The file uses the extension .xls, which is imcompatible with R. Therefore, an importable version of the dataset was created.
+The raw dataset is hard to be imported to R directly because of the following reasons. First, it has three sheets. Second, the top two rows do not contain any useful information or should be incorporated to the next row. The file uses the extension .xls, which is imcompatible with R. Therefore, an importable version of the dataset was created.
 
 Here are the steps:
 
@@ -116,7 +116,7 @@ export_summary_table(dfSummary(vote_result))
 **DOI:** N/A  
 **Date Downloaded:** Mar 19, 2020  
 **Filename(s):** N/A  
-**Unit of observation:** Census tract   
+**Unit of observation:** Census tract  
 **Dates covered:** 2018 (5-year estimate)  
 
 ### To obtain a copy
@@ -175,7 +175,7 @@ View(cbdata)
 The code above constructs a dataframe called cbdata by calling the function `get_acs()`, which pulls the data from the American Community Survey. Inside the function, the unit of measurement is specified by the `geography` argument. In this case, select "tract" for census tract. Put all the chosen variables in the
 `variables` argument. Finally, address `state` ("GA"), `county` ("Gwinnett"), and `year` of survey ("2018").
 
-### Importable version (Data wrangling)
+### Data wrangling
 
 The current dataframe requires modifications. First, each row displays one variable from one tract. However, to make tract as the unit of measurement, each row should include all the variables of one tract. Second, instead of the actual number of people who are white, the percentage of white population is more informative. Similarly, the percentage of people who go to work by certain transportation should also be calculated. Finally, travel time data is mostly grouped by a 5-minute band, which is too detailed for this project. It will be categorized with wider range to reduce variables. After consolidation, the percentages will be calculated. 
 
@@ -258,7 +258,7 @@ cbdata_tidy <- cbdata_transport %>%
 - **time_60_89_pct:** The percentage of people who travel between 60 and 89 minutes to work.
 - **time_more_90_pct:** The percentage of people who travel more than 90 minutes to work.
 
-### Data import code and summary
+### Data summary
 
 Data has been imported from the codes in the previous sections.
 
@@ -276,4 +276,21 @@ export_summary_table(dfSummary(cbdata_tidy))
 
 ### To obtain a copy
 
-Users can obtain a copy of the dataset at https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/LYWX3D. Under the **Files** tab, select and click the download button of the first file **"2016-precinct-president.tab"**. The description of the variables can be found in the second file, **"codebook-2016-precinct-president.md
+Users can obtain a copy of the dataset at https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/LYWX3D. Under the **Files** tab, select and click the download button of the first file **2016-precinct-president.tab**. The description of the variables can be found in the second file, **codebook-2016-precinct-president.md**. 
+
+However, the datafile was not included in the importable_data folder, because it is too large to be uploaded to github. 
+
+### Importable version
+
+**Filename(s):** importable_data/election_result_importable.csv
+
+The original file contains data from all the precincts in the United States. Therefore, it is too large to be loaded to R or github. Therefore, filtering is necessary before importing. 
+
+Here are the steps of filtering:
+
+1. Open the file in excel.  
+2. Click on **Sort & Filter** button; click **Filter**.  
+3. Go to column H -- **county_name** and click on the small triangle in cell H1.  
+4. Find and select **Gwinnett County** in the drop-down menu.  
+5. Copy and paste this subset of data into another file and put into 
+
