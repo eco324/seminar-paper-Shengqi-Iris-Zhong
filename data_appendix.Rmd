@@ -13,6 +13,7 @@ library(tidyverse)
 library(summarytools)
 library(sf)
 library(readxl)
+library(readr)
 st_options(plain.ascii = F,
            style = "rmarkdown",
            footnote = NA,
@@ -60,7 +61,7 @@ The xls file contains three spreadsheets. I will be using the second and third s
 
 **Filename(s):** importable_data/vote_result_importable.xlsx
 
-The raw dataset is hard to be imported to R directly because of the following reasons. First, it has three sheets. Second, the top two rows do not contain any useful information or should be incorporated to the next row. The file uses the extension .xls, which is imcompatible with R. Therefore, an importable version of the dataset was created.
+The raw dataset is hard to be imported to R directly because of the following reasons. First, it has three sheets. Second, the top two rows do not contain any useful information or should be incorporated to the next row. The file uses the extension .xls, which is incompatible with R. Therefore, an importable version of the dataset was created.
 
 Here are the steps:
 
@@ -121,15 +122,15 @@ export_summary_table(dfSummary(vote_result))
 
 ### To obtain a copy
 
-Users can obtain a copy of the dataset from an R package tidycensus.  
-**Citation:** Walker, K., Eberwein, K., & Herman, M. (2020). tidycensus: Load US Census Boundary and Attribute Data as “tidyverse” and ’sf’-Ready Data Frames (Version 0.9.6) [Computer software]. https://CRAN.R-project.org/package=tidycensus
+Users can obtain a copy of the dataset from an R package `tidycensus`.  
+**Citation:** Walker, K., Eberwein, K., & Herman, M. (2020). tidycensus: Load US Census Boundary and Attribute Data as "tidyverse" and "sf"-Ready Data Frames (Version 0.9.6) [Computer software]. https://CRAN.R-project.org/package=tidycensus
 
 Below are the steps to use tidycensus to obtain the data:
 1. Install the package `tidycensus` in R.  
-2. If haven’t, register to get an API key in order to download data from the pacakage. The key can be acquired at http://api.census.gov/data/key_signup.html.  
+2. If haven’t, register to get an API key in order to download data from the package. The key can be acquired at http://api.census.gov/data/key_signup.html.  
 3. Load the key into R with the following code:  
 `census_api_key(key, install = TRUE)`
-4. Load the library in R. Execute the code chunck below to get the dataframe `acs18`. `acs18` shows all of the variables present in ACS-5 2018 survey and their IDs.  
+4. Load the library in R. Execute the code chunk below to get the data frame `acs18`. `acs18` shows all of the variables present in ACS-5 2018 survey and their IDs.  
 
 ```{r}
 library(tidycensus)
@@ -172,16 +173,15 @@ cbdata <- get_acs(geography = "tract",
 View(cbdata)
 ```
 
-The code above constructs a dataframe called cbdata by calling the function `get_acs()`, which pulls the data from the American Community Survey. Inside the function, the unit of measurement is specified by the `geography` argument. In this case, select "tract" for census tract. Put all the chosen variables in the
-`variables` argument. Finally, address `state` ("GA"), `county` ("Gwinnett"), and `year` of survey ("2018").
+The code above constructs a data frame called cbdata by calling the function `get_acs()`, which pulls the data from the American Community Survey. Inside the function, the unit of measurement is specified by the `geography` argument. In this case, select **tract** for census tract. Put all the chosen variables in the `variables` argument. Finally, address `state` (**GA**), `county` (**Gwinnett**), and `year` of survey (**2018**).
 
 ### Data wrangling
 
-The current dataframe requires modifications. First, each row displays one variable from one tract. However, to make tract as the unit of measurement, each row should include all the variables of one tract. Second, instead of the actual number of people who are white, the percentage of white population is more informative. Similarly, the percentage of people who go to work by certain transportation should also be calculated. Finally, travel time data is mostly grouped by a 5-minute band, which is too detailed for this project. It will be categorized with wider range to reduce variables. After consolidation, the percentages will be calculated. 
+The current data frame requires modifications. First, each row displays one variable from one tract. However, to make tract as the unit of measurement, each row should include all the variables of one tract. Second, instead of the actual number of people who are white, the percentage of white population is more informative. Similarly, the percentage of people who go to work by certain transportation should also be calculated. Finally, travel time data is mostly grouped by a 5-minute band, which is too detailed for this project. It will be categorized with wider range to reduce variables. After consolidation, the percentages will be calculated. 
 
 Here are the steps of data wrangling:
 
-1. Remove the margin of error for each measurement (moe), because it is not useful in later analyses.
+1. Remove the margin of error for each measurement (**moe**), because it is not useful in later analyses.
 
 ```{r}
 cbdata_moe <- cbdata %>%
@@ -278,7 +278,7 @@ export_summary_table(dfSummary(cbdata_tidy))
 
 Users can obtain a copy of the dataset at https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/LYWX3D. Under the **Files** tab, select and click the download button of the first file **2016-precinct-president.tab**. The description of the variables can be found in the second file, **codebook-2016-precinct-president.md**. 
 
-However, the datafile was not included in the importable_data folder, because it is too large to be uploaded to github. 
+However, the data file was not included in the importable_data folder, because it is too large to be uploaded to github. 
 
 ### Importable version
 
@@ -292,5 +292,59 @@ Here are the steps of filtering:
 2. Click on **Sort & Filter** button; click **Filter**.  
 3. Go to column H -- **county_name** and click on the small triangle in cell H1.  
 4. Find and select **Gwinnett County** in the drop-down menu.  
-5. Copy and paste this subset of data into another file and put into 
+5. Copy and paste this subset of data into another file and put it into the importable data folder.  
+
+### Data import and wrangling
+
+```{r}
+election <- read_csv("importable_data/election_result_importable.csv")
+```
+
+The data needs more cleaning in R because firstly, it has unnecessary variables. Secondly, each row in this dataset represents the number of people voting for one particular candidate by one particular mode in a precinct. To make precinct as the unit of measurement, the ideal dataset will have the voting results for each candidate at one precinct in one row. 
+
+Here are the steps of data wrangling:
+
+1. Select the useful variables: **precinct**, **candidate**, **votes**, **mode**. For more information about the removed variables, see the codebook in the raw data folder. 
+
+```{r}
+election_variables <- election %>%
+  select(precinct, candidate, votes, mode)
+```
+
+2. Summarize the number of votes for each candidate in a precinct. This is done by adding across different modes of votes (election day, absentee by mail, advance in person, and provisional). Then calculate the percentage of votes for each candidate. 
+
+```{r}
+election_mode <- election_variables %>%
+  group_by(precinct, candidate) %>%
+  summarize(votes = sum(votes))
+
+```
+
+
+3. Remove the write-in votes because they don't belong to any specific precincts; transpose the data; finally, calculate the precentage of votes for each candidate. 
+```{r}
+election_tidy <- election_mode %>%
+  filter(precinct != "Write-ins") %>%
+  pivot_wider(names_from = candidate,
+              values_from = votes) %>%
+  mutate(total = `Donald Trump` + `Hillary Clinton` + `Gary Johnson`,
+         trump_pct = `Donald Trump` / total,
+         clinton_pct = `Hillary Clinton` / total,
+         johnson_pct = `Gary Johnson` / total) %>%
+  select(precinct, trump_pct, clinton_pct, johnson_pct)
+
+```
+
+### Variable description
+
+**precinct:** The name of the precinct.  
+**trump_pct:** The percentage of votes for Donald Trump in that precinct.  
+**clinton_pct:** The percentage of votes for Hillary Clinton in that precinct.  
+**johnson_pct:** The percentage of votes for Gary Johnson in that precinct.
+
+### Data summary
+
+```{r}
+export_summary_table(dfSummary(election_tidy))
+```
 
