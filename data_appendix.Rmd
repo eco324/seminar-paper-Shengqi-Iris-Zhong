@@ -322,8 +322,9 @@ election_mode <- election_variables %>%
 
 
 3. Remove the write-in votes because they don't belong to any specific precincts; transpose the data; finally, calculate the precentage of votes for each candidate. 
+
 ```{r}
-election_tidy <- election_mode %>%
+election_tidy <- as.data.frame(election_mode %>%
   filter(precinct != "Write-ins") %>%
   pivot_wider(names_from = candidate,
               values_from = votes) %>%
@@ -331,7 +332,7 @@ election_tidy <- election_mode %>%
          trump_pct = `Donald Trump` / total,
          clinton_pct = `Hillary Clinton` / total,
          johnson_pct = `Gary Johnson` / total) %>%
-  select(precinct, trump_pct, clinton_pct, johnson_pct)
+  select(precinct, trump_pct, clinton_pct, johnson_pct))
 
 ```
 
@@ -344,7 +345,33 @@ election_tidy <- election_mode %>%
 
 ### Data summary
 
-```{r}
+```{r, warning = F, message = F}
 export_summary_table(dfSummary(election_tidy))
 ```
 
+## Gwinnett County Precinct Map
+
+**Citation:** District Maps | Gwinnett County. (n.d.). Retrieved March 27, 2020, from https://www.gwinnettcounty.com/web/gwinnett/Departments/Elections/ElectedOfficials/DistrictMaps  
+**DOI:** N/A  
+**Date Downloaded:** Mar 27, 2020  
+**Filename(s):** raw_data/precinct_map.pdf
+**Unit of observation:** N/A 
+**Dates covered:** Unknown
+
+### To obtain a copy
+
+Users can obtain a copy of the map by going to Gwinnett County website at https://www.gwinnettcounty.com/web/gwinnett/Home. In the navigation panel, select **Departments** > **Voting Registration and Election**. Click on **District Maps** in the blue panel. Click on the fifth result, **Precinct District (PDF)**. Download the PDF to get a copy. 
+
+
+## Gwinnett County Census Tract Map
+
+**Citation:** 2010 Census—Census Tract Reference Map. (2010). [Map].  
+**DOI:** N/A  
+**Date Downloaded:** Mar 27, 2020  
+**Filename(s):** raw_data/census_tract_map.pdf
+**Unit of observation:** N/A 
+**Dates covered:** 2010
+
+### To obtain a copy
+
+Users can obtain a copy of the map by going to Gwinnett County website at https://www.gwinnettcounty.com/web/gwinnett/Home. In the navigation panel, select **Departments** > **Voting Registration and Election**. Click on **District Maps** in the blue panel. Click on the fifth result, **Precinct District (PDF)**. Download the PDF to get a copy. 
