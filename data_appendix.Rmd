@@ -43,34 +43,33 @@ st_css()
 
 
 ## Gwinnett County 2019 Referendum Dataset
-**Citation:** Results—Gwinnett—Election Night Reporting. (n.d.). Retrieved March 11, 2020, from https://results.enr.clarityelections.com/GA/Gwinnett/94961/Web02.225391/#/
-  
+**Citation:** Results—Gwinnett—Election Night Reporting. (n.d.). Retrieved March 11, 2020, from https://results.enr.clarityelections.com/GA/Gwinnett/94961/Web02.225391/#/  
 **DOI:** N/A  
 **Date Downloaded:** Mar 11, 2020  
-**Filename(s):** raw_data/vote_result.xls
-**Unit of observation:** Precinct 
+**Filename:** raw_data/vote_result.xls  
+**Unit of observation:** Precinct   
 **Dates covered:** Mar 19, 2019
 
 ### To obtain a copy
 
 Users can visit the website that displays election results at Gwinnett County at https://results.enr.clarityelections.com/GA/Gwinnett/94961/Web02.225391/#/ and choose the **Detail XLS** link at the bottom right corner. 
 
-The xls file contains three spreadsheets. I will be using the second and third sheet. 
+The xls file contains three spreadsheets. I will be using the second and the third sheets. 
 
 ### Importable version
 
-**Filename(s):** importable_data/vote_result_importable.xlsx
+**Filename:** importable_data/vote_result_importable.xlsx
 
 The raw dataset is hard to be imported to R directly because of the following reasons. First, it has three sheets. Second, the top two rows do not contain any useful information or should be incorporated to the next row. The file uses the extension .xls, which is incompatible with R. Therefore, an importable version of the dataset was created.
 
 Here are the steps:
 
-1. The original file was opened in Microsoft Excel.  
-2. The turnout rate for each precinct which was displayed in the second spreadsheet was moved to the third spreadsheet.
-3. The first and second spreadsheets were deleted.
-4. The top two rows of the third spreadsheet were removed.
-5. The columns were renamed to reflect whether the vote was for or against the proposal.
-6. The extension was changed from .xls to .xlsx. 
+1. Open the original files in Excel.
+2. Move the turnout rate for each precinct displayed in the second spreadsheet to the third spreadsheet.
+3. Delete the first and the second spreadsheets.
+4. Remove the top two rows of the third spreadsheet.
+5. Rename the columns to reflect whether the vote was for or against the proposal.
+6. Change the extension from .xls to .xlsx.
 
 
 ### Variable descriptions
@@ -80,7 +79,7 @@ I cannot find any information that describes the variables in this dataset. Ther
 - **precinct:** The name of the precinct. 
 - **registered_voters:** The number of registered voters in the precinct.
 - **total_votes:** The number of votes received in this referendum.
-- **voter_turnout:** The percentage of voters who voted in this referendum. ($reigstered\_voters/total\_votes$) 
+- **voter_turnout:** The percentage of voters who voted in this referendum. ($total\_votes/reigstered\_voters$) 
 - **election_day_yes:** The number of people who voted yes during the election day.
 - **absentee_mail_yes:** The number of people who voted yes by mailing paper ballots prior to the election day.
 - **advance_in_person_1_yes:** The number of people who voted yes prior to the election day.
@@ -113,32 +112,33 @@ export_summary_table(dfSummary(vote_result))
 
 ## Gwinnett County Census Data
 **Citation:** U.S. Census Bureau. (2018). American Community Survey. https://data.census.gov/cedsci/table?d=ACS%205-Year%20Estimates%20Data%20Profiles&table=DP05&tid=ACSDP5Y2018.DP05&g=0500000US13135,13135.140000&hidePreview=true&t=Age%20and%20Sex%3AHousing%3AHousing%20Units%3ARace%20and%20Ethnicity  
-  
 **DOI:** N/A  
 **Date Downloaded:** Mar 19, 2020  
-**Filename(s):** N/A  
+**Filename:** N/A  
 **Unit of observation:** Census tract  
 **Dates covered:** 2018 (5-year estimate)  
 
 ### To obtain a copy
 
-Users can obtain a copy of the dataset from an R package `tidycensus`.  
+Users can obtain a copy of the dataset from an R package `tidycensus`. 
+
 **Citation:** Walker, K., Eberwein, K., & Herman, M. (2020). tidycensus: Load US Census Boundary and Attribute Data as "tidyverse" and "sf"-Ready Data Frames (Version 0.9.6) [Computer software]. https://CRAN.R-project.org/package=tidycensus
 
-Below are the steps to use tidycensus to obtain the data:
-1. Install the package `tidycensus` in R.  
-2. If haven’t, register to get an API key in order to download data from the package. The key can be acquired at http://api.census.gov/data/key_signup.html.  
+Below are the steps to use `tidycensus` to obtain the data:
+
+1. Install the package `tidycensus` in R.
+2. If haven’t, register to get an API key in order to download data from the package. The key can be acquired at http://api.census.gov/data/key_signup.html.
 3. Load the key into R with the following code:  
-`census_api_key(key, install = TRUE)`
+`census_api_key(key, install = TRUE)`  
 4. Load the library in R. Execute the code chunk below to get the data frame `acs18`. `acs18` shows all of the variables present in ACS-5 2018 survey and their IDs.  
 
-```{r}
+```{r, warning = F}
 library(tidycensus)
 acs18 <- load_variables(2018, "acs5", cache = TRUE)
 ```
 
 5. Search for desirable variables in acs18 and record their IDs. The selected variables are: population, median income, median age, white population, the number of people who work, the number of people who commute by car, the number of people who commute by public transportation, the number of people who commute by subway, the number of people who go to work by bike, the number of people
-who walk to work, the number of people who use other transportation means, and the number of people who work at home. Subway is a subcategory of public transportation, but since it is particularly important in this project, it is also selected. Besides, variables that reflect workers' travel time to work are potentially useful. 
+who walk to work, the number of people who use other transportation means, and the number of people who work at home. Subway is a subcategory of public transportation, but since it is particularly important in this project, it is also selected. Besides, variables that reflect people's travel time to work are potentially useful. 
 
 ```{r}
 cbdata <- get_acs(geography = "tract",
@@ -170,7 +170,6 @@ cbdata <- get_acs(geography = "tract",
                   state = "GA",
                   county = "Gwinnett",
                   year = 2018)
-View(cbdata)
 ```
 
 The code above constructs a data frame called cbdata by calling the function `get_acs()`, which pulls the data from the American Community Survey. Inside the function, the unit of measurement is specified by the `geography` argument. In this case, select **tract** for census tract. Put all the chosen variables in the `variables` argument. Finally, address `state` (**GA**), `county` (**Gwinnett**), and `year` of survey (**2018**).
@@ -260,9 +259,9 @@ cbdata_tidy <- cbdata_transport %>%
 
 ### Data summary
 
-Data has been imported from the codes in the previous sections.
 
 ```{r}
+View(cbdata_tidy)
 export_summary_table(dfSummary(cbdata_tidy))
 ```
 
@@ -278,25 +277,25 @@ export_summary_table(dfSummary(cbdata_tidy))
 
 Users can obtain a copy of the dataset at https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/LYWX3D. Under the **Files** tab, select and click the download button of the first file **2016-precinct-president.tab**. The description of the variables can be found in the second file, **codebook-2016-precinct-president.md**. 
 
-However, the data file was not included in the importable_data folder, because it is too large to be uploaded to github. 
+However, the data file is not included in the raw_data folder, because it is too large to be uploaded to github. 
 
 ### Importable version
 
-**Filename(s):** importable_data/election_result_importable.csv
+**Filename:** importable_data/election_result_importable.csv
 
 The original file contains data from all the precincts in the United States. Therefore, it is too large to be loaded to R or github. Therefore, filtering is necessary before importing. 
 
 Here are the steps of filtering:
 
-1. Open the file in excel.  
-2. Click on **Sort & Filter** button; click **Filter**.  
-3. Go to column H -- **county_name** and click on the small triangle in cell H1.  
-4. Find and select **Gwinnett County** in the drop-down menu.  
+1. Open the file in excel.
+2. Click on **Sort & Filter** button; click **Filter**.
+3. Go to column H -- **county_name** and click on the small triangle in cell H1.
+4. Find and select **Gwinnett County** in the drop-down menu.
 5. Copy and paste this subset of data into another file and put it into the importable data folder.  
 
 ### Data import and wrangling
 
-```{r}
+```{r, message = F, warning = F}
 election <- read_csv("importable_data/election_result_importable.csv")
 ```
 
@@ -304,7 +303,7 @@ The data needs more cleaning in R because firstly, it has unnecessary variables.
 
 Here are the steps of data wrangling:
 
-1. Select the useful variables: **precinct**, **candidate**, **votes**, **mode**. For more information about the removed variables, see the codebook in the raw data folder. 
+1. Select the useful variables: **precinct**, **candidate**, **votes**, **mode**. For more information about the removed variables, check out the codebook in the raw data folder. 
 
 ```{r}
 election_variables <- election %>%
@@ -346,6 +345,7 @@ election_tidy <- as.data.frame(election_mode %>%
 ### Data summary
 
 ```{r, warning = F, message = F}
+View(election_tidy)
 export_summary_table(dfSummary(election_tidy))
 ```
 
@@ -354,8 +354,8 @@ export_summary_table(dfSummary(election_tidy))
 **Citation:** District Maps | Gwinnett County. (n.d.). Retrieved March 27, 2020, from https://www.gwinnettcounty.com/web/gwinnett/Departments/Elections/ElectedOfficials/DistrictMaps  
 **DOI:** N/A  
 **Date Downloaded:** Mar 27, 2020  
-**Filename(s):** raw_data/precinct_map.pdf
-**Unit of observation:** N/A 
+**Filename(s):** raw_data/precinct_map.pdf  
+**Unit of observation:** N/A    
 **Dates covered:** Unknown
 
 ### To obtain a copy
@@ -368,10 +368,38 @@ Users can obtain a copy of the map by going to Gwinnett County website at https:
 **Citation:** 2010 Census—Census Tract Reference Map. (2010). [Map].  
 **DOI:** N/A  
 **Date Downloaded:** Mar 27, 2020  
-**Filename(s):** raw_data/census_tract_map.pdf
-**Unit of observation:** N/A 
+**Filename:** raw_data/census_tract_map.pdf  
+**Unit of observation:** N/A   
 **Dates covered:** 2010
 
 ### To obtain a copy
 
-Users can obtain a copy of the map by going to Gwinnett County website at https://www.gwinnettcounty.com/web/gwinnett/Home. In the navigation panel, select **Departments** > **Voting Registration and Election**. Click on **District Maps** in the blue panel. Click on the fifth result, **Precinct District (PDF)**. Download the PDF to get a copy. 
+A copy of the map can be obtained with the following procedures:
+
+1. Go to the website of the Census Bureau: https://www.census.gov/. 
+2. Type **2010 census tract reference maps** in the search bar.
+3. Click on the first result. 
+4. Under Tract Maps, select **Georgia** as the state. 
+5. The returning page shows the folders of maps of all counties in Georgia. Find Gwinnett County: **c13135_gwinnett/**. 
+6. Open the folder; the first one **DC10CT_C13135_001.pdf** is the target file. 
+7. Open the file and save the PDF to get a copy. 
+
+## Gwinnett Transportation Expansion Plan Map
+
+**Citation:** Plan Documents | Gwinnett County. (n.d.). Retrieved March 28, 2020, from https://www.gwinnettcounty.com/web/gwinnett/departments/transportation/connectgwinnett/plandocuments  
+**DOI:** N/A  
+**Date Downloaded:** Mar 28, 2020  
+**Filenames:** raw_data/existing_map.pdf, raw_data/short_range_map.pdf, raw_data/mid_range_map.pdf, raw_data/long_range_1_map.pdf, raw_data/long_range_2_map.pdf  
+**Unit of observation:** N/A   
+**Dates covered:** N/A
+
+### To obtain a copy
+
+A copy of the maps can be obtained at the official website of Gwinnett County with the following steps: 
+
+1. Go to https://www.gwinnettcounty.com/web/gwinnett/Home. 
+2. Select **Transportation** under the **Departments** tab.
+3. Click on **Connect Gwinnett: Transit Plan** on the left panel. 
+4. Click on **Plan Documents** on the left panel.
+5. Under the Reports title, there are detailed descriptions of the transit plan from short-term to long-term period. Under the **Maps** title, users can find the maps that are used in this research. 
+6. Click on the map that is interested and save the PDF file to get a copy. 
