@@ -11,6 +11,7 @@ library(tidyverse)
 library(sf)
 library(tigris)
 library(tmap)
+library(tidycensus)
 ```
 
 Data downloaded from http://www.legis.ga.gov/Joint/reapportionment/en-US/default.aspx
@@ -20,7 +21,7 @@ precincts <- st_read("raw_data/VTD2018-Shapefile.shp")
 
 gwinnett <- precincts %>% 
   filter(CTYNAME == "GWINNETT") %>% 
-  st_transform("+init=epsg:4326") %>% 
+  st_transform("+init=epsg:4326") %>%  # set CRS to WGS84
   st_transform(crs = 4269)
 
 acs_vars <- load_variables(2010, "sf1", cache = T)
@@ -35,7 +36,8 @@ precinct_areas <- area_values %>%
   summarize(total_area = sum(loc_area)) %>% 
   st_drop_geometry() %>% 
   right_join(area_values) %>% 
-  mutate(shr_of_precinct = as.vector(loc_area/total_area))
+  mutate(shr_of_precinct = as.vector(loc_area/total_area))# %>%
+ # select(PRECINCT_I, PRECINCT_N, GEOID, shr_of_precinct)
 
 vote_allocation_shares <- precinct_areas %>% 
   select(PRECINCT_I, PRECINCT_N, GEOID, shr_of_precinct) %>% 
