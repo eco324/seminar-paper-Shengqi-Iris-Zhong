@@ -1,0 +1,46 @@
+---
+title: "Test_data"
+author: "Susan Sayre"
+date: "2/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(sf)
+library(tigris)
+library(tmap)
+```
+
+Data downloaded from http://www.legis.ga.gov/Joint/reapportionment/en-US/default.aspx
+```{r read in shapefile}
+
+precincts <- st_read("raw_data/VTD2018-Shapefile.shp")
+
+gwinnett <- precincts %>% 
+  filter(CTYNAME == "GWINNETT") %>% 
+  st_transform("+init=epsg:4326") %>% 
+  st_transform(crs = 4269)
+
+acs_vars <- load_variables(2010, "sf1", cache = T)
+gwinnett_tracks <- tigris::tracts(state = 13, county = 135) %>% st_as_sf()
+
+intersected_areas <- st_intersection(gwinnett, gwinnett_tracks)
+
+area_values <- intersected_areas %>% mutate(loc_area = st_area(intersected_areas))
+
+precinct_areas <- area_values %>% 
+  group_by(PRECINCT_N) %>% 
+  summarize(total_area = sum(loc_area)) %>% 
+  st_drop_geometry() %>% 
+  right_join(area_values) %>% 
+  mutate(shr_of_precinct = as.vector(loc_area/total_area))
+
+vote_allocation_shares <- precinct_areas %>% 
+  select(PRECINCT_I, PRECINCT_N, GEOID, shr_of_precinct) %>% 
+  group_by(PRECINCT_I, PRECINCT_N, GEOID) %>% 
+  summarize(shr_of_precinct = sum(shr_of_precinct)) %>% 
+  filter(shr_of_precinct > .001)
+```
+
