@@ -1,5 +1,5 @@
 ---
-title: "Data Appendix to Individual Charateristics' Influence on Public Transportation Planning"
+title: "Data Appendix to The Influence of Individual Characterisitcs on Public Transportation Planning"
 author: "Iris Zhong"
 output: 
   pdf_document:
