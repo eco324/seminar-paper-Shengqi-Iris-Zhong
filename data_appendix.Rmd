@@ -14,6 +14,9 @@ library(summarytools)
 library(sf)
 library(readxl)
 library(readr)
+library(sf)
+library(tigris)
+library(tmap)
 st_options(plain.ascii = F,
            style = "rmarkdown",
            footnote = NA,
@@ -327,11 +330,8 @@ election_tidy <- as.data.frame(election_mode %>%
   filter(precinct != "Write-ins") %>%
   pivot_wider(names_from = candidate,
               values_from = votes) %>%
-  mutate(total = `Donald Trump` + `Hillary Clinton` + `Gary Johnson`,
-         trump_pct = `Donald Trump` / total,
-         clinton_pct = `Hillary Clinton` / total,
-         johnson_pct = `Gary Johnson` / total) %>%
-  select(precinct, trump_pct, clinton_pct, johnson_pct))
+  mutate(total = `Donald Trump` + `Hillary Clinton` + `Gary Johnson`) %>%
+  select(precinct, trump_votes = `Donald Trump`, clinton_votes = `Hillary Clinton`, johnson_votes = `Gary Johnson`, total_election = total))
 
 ```
 
@@ -349,40 +349,6 @@ View(election_tidy)
 export_summary_table(dfSummary(election_tidy))
 ```
 
-## Gwinnett County Precinct Map
-
-**Citation:** District Maps | Gwinnett County. (n.d.). Retrieved March 27, 2020, from https://www.gwinnettcounty.com/web/gwinnett/Departments/Elections/ElectedOfficials/DistrictMaps  
-**DOI:** N/A  
-**Date Downloaded:** Mar 27, 2020  
-**Filename(s):** raw_data/precinct_map.pdf  
-**Unit of observation:** N/A    
-**Dates covered:** Unknown
-
-### To obtain a copy
-
-Users can obtain a copy of the map by going to Gwinnett County website at https://www.gwinnettcounty.com/web/gwinnett/Home. In the navigation panel, select **Departments** > **Voting Registration and Election**. Click on **District Maps** in the blue panel. Click on the fifth result, **Precinct District (PDF)**. Download the PDF to get a copy. 
-
-
-## Gwinnett County Census Tract Map
-
-**Citation:** 2010 Census—Census Tract Reference Map. (2010). [Map].  
-**DOI:** N/A  
-**Date Downloaded:** Mar 27, 2020  
-**Filename:** raw_data/census_tract_map.pdf  
-**Unit of observation:** N/A   
-**Dates covered:** 2010
-
-### To obtain a copy
-
-A copy of the map can be obtained with the following procedures:
-
-1. Go to the website of the Census Bureau: https://www.census.gov/. 
-2. Type **2010 census tract reference maps** in the search bar.
-3. Click on the first result. 
-4. Under Tract Maps, select **Georgia** as the state. 
-5. The returning page shows the folders of maps of all counties in Georgia. Find Gwinnett County: **c13135_gwinnett/**. 
-6. Open the folder; the first one **DC10CT_C13135_001.pdf** is the target file. 
-7. Open the file and save the PDF to get a copy. 
 
 ## Gwinnett Transportation Expansion Plan Map
 
@@ -403,3 +369,75 @@ A copy of the maps can be obtained at the official website of Gwinnett County wi
 4. Click on **Plan Documents** on the left panel.
 5. Under the Reports title, there are detailed descriptions of the transit plan from short-term to long-term period. Under the **Maps** title, users can find the maps that are used in this research. 
 6. Click on the map that is interested and save the PDF file to get a copy. 
+
+## Data processing and combination
+
+Firstly, select the desired variables in the referendum dataset: precinct name, total votes, total registered voters, and the number of supporters. 
+
+```{r}
+vote_tidy <- vote_result %>%
+  select(precinct, total_votes, registered_voters, votes_yes)
+```
+
+Next, select the variables in the 2016 election dataset: precinct name, total votes, and the number of Trump supporters. Then join the two tables by precinct name. 
+
+```{r}
+precinct_tidy <- election_tidy %>%
+  select(precinct, trump_votes, total_election) %>%
+  full_join(vote_tidy, by = "precinct")
+```
+
+
+The datasets above are measured at the precinct level. To match with census data, they will be transformed into census tracts by using shapefiles. Additionally, the shapefile contains a typo in the name of the precinct, and is fixed in the code trunk below. 
+
+```{r read in shapefile}
+
+precincts <- st_read("raw_data/VTD2018-Shapefile.shp")
+
+gwinnett <- precincts %>% 
+  filter(CTYNAME == "GWINNETT") %>% 
+  st_transform("+init=epsg:4326") %>%  # set CRS to WGS84
+  st_transform(crs = 4269)
+
+acs_vars <- load_variables(2010, "sf1", cache = T)
+gwinnett_tracks <- tigris::tracts(state = 13, county = 135) %>% st_as_sf()
+
+intersected_areas <- st_intersection(gwinnett, gwinnett_tracks)
+
+area_values <- intersected_areas %>% mutate(loc_area = st_area(intersected_areas))
+
+precinct_areas <- area_values %>% 
+  group_by(PRECINCT_N) %>% 
+  summarize(total_area = sum(loc_area)) %>% 
+  st_drop_geometry() %>% 
+  right_join(area_values) %>% 
+  mutate(shr_of_precinct = as.vector(loc_area/total_area))# %>%
+ # select(PRECINCT_I, PRECINCT_N, GEOID, shr_of_precinct)
+
+vote_allocation_shares <- as.data.frame(precinct_areas %>% 
+  select(PRECINCT_I, PRECINCT_N, GEOID, shr_of_precinct) %>% 
+  group_by(PRECINCT_I, PRECINCT_N, GEOID) %>% 
+  summarize(shr_of_precinct = sum(shr_of_precinct)) %>% 
+  filter(shr_of_precinct > .001))
+
+vote_allocation_shares$PRECINCT_N <- as.character(vote_allocation_shares$PRECINCT_N)
+vote_allocation_shares$PRECINCT_N[35]= "PINCKNEYVILLE A"
+vote_allocation_shares$PRECINCT_N[36]= "PINCKNEYVILLE A"
+vote_allocation_shares$PRECINCT_N <- as.factor(vote_allocation_shares$PRECINCT_N)
+```
+
+```{r}
+precinct_tidy_transformed <- vote_allocation_shares %>%
+  left_join(precinct_tidy, by = c("PRECINCT_N" = "precinct")) %>%
+  mutate(supporter_share = votes_yes * shr_of_precinct,
+         voter_share = total_votes * shr_of_precinct,
+         total_voter_share = registered_voters * shr_of_precinct,
+         trump_share = trump_votes * shr_of_precinct,
+         election_voter_share = total_election * shr_of_precinct
+         ) %>%
+  group_by(GEOID) %>%
+  summarize(pct_trump = sum(trump_share) / sum(election_voter_share),
+            voter_turnout = sum(voter_share) / sum(total_voter_share),
+            pct_yes = sum(supporter_share) / sum(voter_share))
+```
+
