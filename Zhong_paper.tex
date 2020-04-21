@@ -1,0 +1,169 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={The Influence of Individual Characterisitcs on Public Transportation Planning},
+  pdfauthor={Iris Zhong},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{booktabs}
+\usepackage{setspace}
+\doublespacing
+\usepackage[labelfont=bf]{caption}
+
+\title{The Influence of Individual Characterisitcs on Public Transportation
+Planning\thanks{xx}}
+\author{Iris Zhong}
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+xx
+\end{abstract}
+
+\begin{verbatim}
+## Warning: package 'tidyverse' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'ggplot2' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'tibble' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'tidyr' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'readr' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'purrr' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'dplyr' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'stringr' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'forcats' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'lubridate' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'stargazer' was built under R version 3.5.2
+\end{verbatim}
+
+\hypertarget{literature-review}{%
+\section{Literature Review}\label{literature-review}}
+
+Allen et al.~(2016) study the reasoning of the failure of a referendum
+on a congestion charging scheme in Edinburgh. Instead of using direct
+voting data, they conduct a survey after the referendum, which allows
+them to ask more specific questions. Researchers can gain detailed data
+by surveying, because the unit of measurement is each individual;
+however, a possible disadvantage of surveying is that respondents who
+turn in the questionnaire tend to have stronger attitudes towards the
+proposal, generating sampling bias. They conclude that people who use
+cars as the primary transportation mean, demonstrate a misconception of
+the pricing plan, or question the effectiveness of the scheme at
+reducing congestion are more likely to oppose it. Their findings can
+give insights to the similar failure in the Gwinnett referendum. Voters
+against the proposal could be those who rarely use public transportation
+and those who are not convinced by the effectiveness of expanding public
+transit in alleviating the traffic.
+
+Another crucial factor is the accessibility of the proposed transit
+system. Kinsey et al.~(2010) examine the relationship between the
+distance to the scheduled railway station and voter turnout by studying
+the Seattle monorail referendum. They introduce the concept of diffused
+and concentrated benefit/cost. People who live far from the monorail
+enjoy the diffused benefit of less traffic congestion, and bear the
+diffused cost of increased tax. People living close to the rail
+experience the same diffused benefit and cost, but they also gain the
+concentrated benefit of easily accessing the public good. Finally, those
+who live very close to the railway have the same benefits and costs, but
+they also face the concentrated cost such as inconvenience during
+construction. Since ``people are more strongly motivated to avoid losses
+than to approach gains,'' they expect a higher turnout rate in farther
+places with votes for ``no,'' which is verified from their analyses.
+Besides distance, they also find out precincts with a higher percentage
+of people of lower socioeconomic status or young people have a lower
+turnout rate. Interestingly, there is a significant interaction between
+partisanship and distance, which would be also tested in my study. In
+essence, the effect of distance on turnout is weakened by partisanship,
+and vanishes beyond a threshold of distance. Even though my dependent
+variable is voters' responses rather than turnout, it can be inferred
+from Kinsey et al.'s findings that people farther away from the transit
+system would vote against the referendum more. However, the relationship
+might be non-linear and requires some form of transformation. Regarding
+the methods, they utilize the spatial lag model to correct for
+autocorrelation, which is proper to use in my project as well since both
+studies use precinct-level data.
+
+\end{document}

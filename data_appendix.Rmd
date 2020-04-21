@@ -1,10 +1,14 @@
 ---
-title: "Data Appendix to The Influence of Individual Characterisitcs on Public Transportation Planning"
+title: Data Appendix to The Influence of Individual Characterisitcs on Public Transportation
+  Planning
 author: "Iris Zhong"
-output: 
+output:
   pdf_document:
-    toc: true
-    number_sections: true
+    number_sections: yes
+    toc: yes
+  html_document:
+    df_print: paged
+    toc: yes
 ---
 
 ```{r setup, echo = F, message = F, warning = F}
@@ -14,7 +18,6 @@ library(summarytools)
 library(sf)
 library(readxl)
 library(readr)
-library(sf)
 library(tigris)
 library(tmap)
 st_options(plain.ascii = F,
@@ -63,7 +66,7 @@ The xls file contains three spreadsheets. I will be using the second and the thi
 
 **Filename:** importable_data/vote_result_importable.xlsx
 
-The raw dataset is hard to be imported to R directly because of the following reasons. First, it has three sheets. Second, the top two rows do not contain any useful information or should be incorporated to the next row. The file uses the extension .xls, which is incompatible with R. Therefore, an importable version of the dataset was created.
+The raw dataset is hard to be imported to R directly because of the following reasons. First, it has three sheets. Second, the top two rows do not contain any useful information or should be incorporated into the next row. The file uses the extension .xls, which is incompatible with R. Therefore, an importable version of the dataset was created.
 
 Here are the steps:
 
@@ -100,7 +103,7 @@ I cannot find any information that describes the variables in this dataset. Ther
 
 ### Data import code and summary
 
-```{r, warning = F, message = F}
+```{r summarize referendum data, warning = F, message = F}
 vote_result <- read_excel("importable_data/vote_result_importable.xlsx", 
     col_types = c("text", "numeric", "numeric", 
         "numeric", "numeric", "numeric", 
@@ -135,7 +138,7 @@ Below are the steps to use `tidycensus` to obtain the data:
 `census_api_key(key, install = TRUE)`  
 4. Load the library in R. Execute the code chunk below to get the data frame `acs18`. `acs18` shows all of the variables present in ACS-5 2018 survey and their IDs.  
 
-```{r, warning = F}
+```{r load tidycensus, warning = F}
 library(tidycensus)
 acs18 <- load_variables(2018, "acs5", cache = TRUE)
 ```
@@ -143,7 +146,7 @@ acs18 <- load_variables(2018, "acs5", cache = TRUE)
 5. Search for desirable variables in acs18 and record their IDs. The selected variables are: population, median income, median age, white population, the number of people who work, the number of people who commute by car, the number of people who commute by public transportation, the number of people who commute by subway, the number of people who go to work by bike, the number of people
 who walk to work, the number of people who use other transportation means, and the number of people who work at home. Subway is a subcategory of public transportation, but since it is particularly important in this project, it is also selected. Besides, variables that reflect people's travel time to work are potentially useful. 
 
-```{r}
+```{r extract cb variables}
 cbdata <- get_acs(geography = "tract",
                   variables = c(total = "B01001_001",
                                 medincome = "B19013_001",
@@ -179,27 +182,27 @@ The code above constructs a data frame called cbdata by calling the function `ge
 
 ### Data wrangling
 
-The current data frame requires modifications. First, each row displays one variable from one tract. However, to make tract as the unit of measurement, each row should include all the variables of one tract. Second, instead of the actual number of people who are white, the percentage of white population is more informative. Similarly, the percentage of people who go to work by certain transportation should also be calculated. Finally, travel time data is mostly grouped by a 5-minute band, which is too detailed for this project. It will be categorized with wider range to reduce variables. After consolidation, the percentages will be calculated. 
+The current data frame requires modifications. First, each row displays one variable from one tract. However, to make tract as the unit of measurement, each row should include all the variables of one tract. Second, instead of the actual number of people who are white, the percentage of white population is more informative. Similarly, the percentage of people who go to work by certain transportation should also be calculated. Finally, travel time data is mostly grouped by a 5-minute band, which is too detailed for this project. It will be categorized with a wider range to reduce variables. After consolidation, the percentages will be calculated.
 
 Here are the steps of data wrangling:
 
 1. Remove the margin of error for each measurement (**moe**), because it is not useful in later analyses.
 
-```{r}
+```{r cb data cleaning 1}
 cbdata_moe <- cbdata %>%
   select (-moe)
 ```
 
 2. Use `pivot_wider()` to transpose the data.
 
-```{r}
+```{r cb data cleaning 2}
 cbdata_wider <- cbdata_moe %>%
   pivot_wider(names_from = variable,
               values_from = estimate)
 ```
 
 3. Calculate the percentage of white population ($white/total$).
-```{r}
+```{r cb data cleaning 3}
 cbdata_white <- cbdata_wider %>%
   mutate(white_pct = white / total) %>%
   select (-white)
@@ -207,7 +210,7 @@ cbdata_white <- cbdata_wider %>%
 
 4. Calculate the percentage of people using each transportation method.
 
-```{r}
+```{r cb data cleaning 4}
 cbdata_transport <- cbdata_white %>%
   mutate(car_pct = car / transportation_total,
          public_pct = public / transportation_total,
@@ -222,7 +225,7 @@ cbdata_transport <- cbdata_white %>%
 
 5. Combine the ranges of travel time data and calculate the percentages. 
 
-```{r}
+```{r cb data cleaning 5}
 cbdata_tidy <- cbdata_transport %>%
   mutate(time_0_29_pct = (time_less_5 + time_10_14 + time_15_19 + 
                             time_20_24 + time_25_29) / time_total,
@@ -263,7 +266,7 @@ cbdata_tidy <- cbdata_transport %>%
 ### Data summary
 
 
-```{r}
+```{r summarize cbdata}
 View(cbdata_tidy)
 export_summary_table(dfSummary(cbdata_tidy))
 ```
@@ -298,24 +301,24 @@ Here are the steps of filtering:
 
 ### Data import and wrangling
 
-```{r, message = F, warning = F}
+```{r import election data, message = F, warning = F}
 election <- read_csv("importable_data/election_result_importable.csv")
 ```
 
-The data needs more cleaning in R because firstly, it has unnecessary variables. Secondly, each row in this dataset represents the number of people voting for one particular candidate by one particular mode in a precinct. To make precinct as the unit of measurement, the ideal dataset will have the voting results for each candidate at one precinct in one row. 
+The data needs more cleaning in R because firstly, it has unnecessary variables. Secondly, each row in this dataset represents the number of people voting for one particular candidate by one particular mode in a precinct. The ideal dataset will have the voting results for each candidate at one precinct in one row to make precinct as the unit of measurement.
 
 Here are the steps of data wrangling:
 
 1. Select the useful variables: **precinct**, **candidate**, **votes**, **mode**. For more information about the removed variables, check out the codebook in the raw data folder. 
 
-```{r}
+```{r election data cleaning 1}
 election_variables <- election %>%
   select(precinct, candidate, votes, mode)
 ```
 
 2. Summarize the number of votes for each candidate in a precinct. This is done by adding across different modes of votes (election day, absentee by mail, advance in person, and provisional). Then calculate the percentage of votes for each candidate. 
 
-```{r}
+```{r election data cleaning 2}
 election_mode <- election_variables %>%
   group_by(precinct, candidate) %>%
   summarize(votes = sum(votes))
@@ -325,7 +328,7 @@ election_mode <- election_variables %>%
 
 3. Remove the write-in votes because they don't belong to any specific precincts; transpose the data; finally, calculate the precentage of votes for each candidate. 
 
-```{r}
+```{r election data cleaning 3}
 election_tidy <- as.data.frame(election_mode %>%
   filter(precinct != "Write-ins") %>%
   pivot_wider(names_from = candidate,
@@ -338,13 +341,14 @@ election_tidy <- as.data.frame(election_mode %>%
 ### Variable description
 
 **precinct:** The name of the precinct.  
-**trump_pct:** The percentage of votes for Donald Trump in that precinct.  
-**clinton_pct:** The percentage of votes for Hillary Clinton in that precinct.  
-**johnson_pct:** The percentage of votes for Gary Johnson in that precinct.
+**trump_votes:** The number of votes for Donald Trump in that precinct.  
+**clinton_votes:** The number of votes for Hillary Clinton in that precinct.  
+**johnson_votes:** The number of votes for Gary Johnson in that precinct.
+**total_election:** The number of voters who participated in the 2016 election. 
 
 ### Data summary
 
-```{r, warning = F, message = F}
+```{r summarize election data, warning = F, message = F}
 View(election_tidy)
 export_summary_table(dfSummary(election_tidy))
 ```
@@ -370,27 +374,32 @@ A copy of the maps can be obtained at the official website of Gwinnett County wi
 5. Under the Reports title, there are detailed descriptions of the transit plan from short-term to long-term period. Under the **Maps** title, users can find the maps that are used in this research. 
 6. Click on the map that is interested and save the PDF file to get a copy. 
 
-## Data processing and combination
+
+
+
+# Data processing and combination
+
+## Referendum and election data processing
 
 Firstly, select the desired variables in the referendum dataset: precinct name, total votes, total registered voters, and the number of supporters. 
 
-```{r}
+```{r select referendum data}
 vote_tidy <- vote_result %>%
   select(precinct, total_votes, registered_voters, votes_yes)
 ```
 
 Next, select the variables in the 2016 election dataset: precinct name, total votes, and the number of Trump supporters. Then join the two tables by precinct name. 
 
-```{r}
+```{r select election data}
 precinct_tidy <- election_tidy %>%
   select(precinct, trump_votes, total_election) %>%
   full_join(vote_tidy, by = "precinct")
 ```
 
 
-The datasets above are measured at the precinct level. To match with census data, they will be transformed into census tracts by using shapefiles. Additionally, the shapefile contains a typo in the name of the precinct, and is fixed in the code trunk below. 
+The datasets above are measured at the precinct level. To match with census data, they will be transformed into census tracts by using shapefiles. Additionally, the shapefile contains a typo in the precinct name, and is fixed in the code trunk below.
 
-```{r read in shapefile}
+```{r precinct tract allocation}
 
 precincts <- st_read("raw_data/VTD2018-Shapefile.shp")
 
@@ -426,7 +435,7 @@ vote_allocation_shares$PRECINCT_N[36]= "PINCKNEYVILLE A"
 vote_allocation_shares$PRECINCT_N <- as.factor(vote_allocation_shares$PRECINCT_N)
 ```
 
-```{r}
+```{r transform precinct data}
 precinct_tidy_transformed <- vote_allocation_shares %>%
   left_join(precinct_tidy, by = c("PRECINCT_N" = "precinct")) %>%
   mutate(supporter_share = votes_yes * shr_of_precinct,
@@ -436,8 +445,102 @@ precinct_tidy_transformed <- vote_allocation_shares %>%
          election_voter_share = total_election * shr_of_precinct
          ) %>%
   group_by(GEOID) %>%
-  summarize(pct_trump = sum(trump_share) / sum(election_voter_share),
+  summarize(trump_pct = sum(trump_share) / sum(election_voter_share),
             voter_turnout = sum(voter_share) / sum(total_voter_share),
-            pct_yes = sum(supporter_share) / sum(voter_share))
+            yes_pct = sum(supporter_share) / sum(voter_share))
 ```
 
+## Map data processing
+
+The PDF versions of current and short-range plan (Y2020-2025) maps have been transformed to shapefiles through QGIS. The following code chunk reads the shapefile and creates a data-frame that specifies whether each transportation line is within 500 meters of distance in that census tract.
+
+```{r short range plan buffer, message = F, warning = F}
+short_range <- st_read("raw_data/short_range_layer.shp") %>% 
+  st_transform(32615)
+short_range_buffers <- st_buffer(short_range, dist = 500)
+acs_vars <- load_variables(2010, "sf1", cache = T)
+gwinnett_tracks <- tigris::tracts(state = 13, county = 135, cb = T) %>% st_as_sf() %>% 
+  st_transform(32615)
+short_in_buffer <- st_intersects(gwinnett_tracks, short_range_buffers, sparse = F)
+colnames(short_in_buffer) <- short_range_buffers$id
+short_in_buffer <- as_tibble(short_in_buffer)
+short_in_buffer$GEOID <- gwinnett_tracks$GEOID
+```
+
+Then, I summarize whether any transportation line is within 500 meters of distance in that tract.
+
+```{r summarize short range plan}
+short_in_buffer <- short_in_buffer %>%
+  mutate(plan_yes = case_when(rowSums(short_in_buffer[,c("1", "2","3", "4","5", "6","7", "8","9", "10","11", "12","13", "14","15", "16","17", "18","19", "20","21", "22","23","24","25", "26")])!=0 ~ 1,
+         rowSums(short_in_buffer[,c("1", "2","3", "4","5", "6","7", "8","9", "10","11", "12","13", "14","15", "16","17", "18","19", "20","21", "22","23","24","25", "26")])==0 ~ 0)) %>%
+  select(GEOID, plan_yes)
+```
+
+
+Similar steps are taken to get the data of current transportation system. 
+
+```{r current buffer}
+current <- st_read("raw_data/existing_layer.shp") %>% 
+  st_transform(32615)
+current_buffers <- st_buffer(current, dist = 500)
+current_in_buffer <- st_intersects(gwinnett_tracks, current_buffers, sparse = F)
+colnames(current_in_buffer) <- current_buffers$id
+current_in_buffer <- as_tibble(current_in_buffer)
+current_in_buffer$GEOID <- gwinnett_tracks$GEOID
+```
+
+```{r summarize current}
+current_in_buffer <- current_in_buffer %>%
+  mutate(current_yes = case_when(rowSums(current_in_buffer[,c("1", "2","3", "4","5", "6","7", "8","9", "10","11", "12")])!=0 ~ 1,
+         rowSums(current_in_buffer[,c("1", "2","3", "4","5", "6","7", "8","9", "10","11", "12")])==0 ~ 0)) %>%
+  select(GEOID, current_yes)
+```
+
+## Census data processing
+
+Select the variables in census data: GEOID, median age, median income, the percentage of white, the percentage of people using public transportation, and the percentage of people who spend more than an hour on transportation to work. Finally, join the tables together to get the final dataset.
+
+```{r final data cleaning}
+final_data <- cbdata_tidy %>%
+  mutate(time_pct = time_60_89_pct + time_more_90_pct) %>%
+  select(GEOID, medage, medincome, white_pct, public_pct, time_pct) %>%
+  inner_join(precinct_tidy_transformed, by = "GEOID") %>%
+  inner_join(short_in_buffer, by = "GEOID") %>%
+  inner_join(current_in_buffer, by = "GEOID") %>%
+  mutate(plan_yes = as.factor(plan_yes),
+         current_yes = as.factor(current_yes))
+```
+
+
+# Analysis Variables
+
+The variable used in the final analysis are:
+
+- **GEOID:** The geographic identifier of the census tract.  
+- **medage:** The median age of the population in the tract.
+- **medincome:** The median income of the population in the tract.
+- **white_pct:** The percentage of white population in the tract.
+- **public_pct:** The percentage of people who go to work by public transportation (excluding taxi or cab).  
+- **time_pct:** The percentage of people who travel more than an hour to work.  
+- **trump_pct:** The estimated percentage of votes for Donald Trump in that tract.
+- **voter_turnout:** The estimated percentage of voters who voted in this referendum in the tract.
+- **yes_pct:** The estimated percentage of voters who voted yes in this referendum in the tract.
+- **plan_yes:** Whether the tract is covered by the public transportation planned in the short-range (Y2020 – 2025), defined by whether any transportation is available within 500 meters. 1 stands for yes, 0 stands for no.  
+- **current_yes:** Whether the tract is covered by the existing public transportation, defined by whether any transportation is available within 500 meters. 1 stands for yes, 0 stands for no.  
+
+```{r summarize and save data}
+export_summary_table(dfSummary(final_data))
+save("final_data", file = "processed_data/analysis_data.RData")
+```
+
+
+
+# Discussion of Data
+
+First, the distribution of median income is slightly skewed to the right, ranging from 33020 to 156136. It demonstrates that income inequality is visible at an aggregate level. 
+
+Secondly, the usage of public transit is surprisingly low. The median is 0, implying that people in over half of the tracts do not use public transport. The distribution is highly positively skewed and might require data transformation.
+
+The percentage of Trump supporters is relatively evenly distributed, with a mean of 0.4. Given that Gwinnett is one of the minority counties in which Clinton won over Trump, the result is reasonable. 
+
+Finally, as expected, public transportation is accessible to more tracts if it expands as planned. Interestingly, through a more detailed look at the data, we can see a few census tracts covered by public transit within 500 meters of distance at present, but no more in the short-range plan. This is possibly due to a reduction in circuitous routing in the proposition.

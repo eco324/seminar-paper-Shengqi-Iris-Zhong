@@ -1,0 +1,1412 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Data Appendix to The Influence of Individual Characterisitcs on Public Transportation Planning},
+  pdfauthor={Iris Zhong},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+
+\title{Data Appendix to The Influence of Individual Characterisitcs on Public
+Transportation Planning}
+\author{Iris Zhong}
+\date{}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\hypertarget{raw-data}{%
+\section{Raw data}\label{raw-data}}
+
+\hypertarget{gwinnett-county-2019-referendum-dataset}{%
+\subsection{Gwinnett County 2019 Referendum
+Dataset}\label{gwinnett-county-2019-referendum-dataset}}
+
+\textbf{Citation:} Results---Gwinnett---Election Night Reporting.
+(n.d.). Retrieved March 11, 2020, from
+\url{https://results.enr.clarityelections.com/GA/Gwinnett/94961/Web02.225391/\#/}\\
+\textbf{DOI:} N/A\\
+\textbf{Date Downloaded:} Mar 11, 2020\\
+\textbf{Filename:} raw\_data/vote\_result.xls\\
+\textbf{Unit of observation:} Precinct\\
+\textbf{Dates covered:} Mar 19, 2019
+
+\hypertarget{to-obtain-a-copy}{%
+\subsubsection{To obtain a copy}\label{to-obtain-a-copy}}
+
+Users can visit the website that displays election results at Gwinnett
+County at
+\url{https://results.enr.clarityelections.com/GA/Gwinnett/94961/Web02.225391/\#/}
+and choose the \textbf{Detail XLS} link at the bottom right corner.
+
+The xls file contains three spreadsheets. I will be using the second and
+the third sheets.
+
+\hypertarget{importable-version}{%
+\subsubsection{Importable version}\label{importable-version}}
+
+\textbf{Filename:} importable\_data/vote\_result\_importable.xlsx
+
+The raw dataset is hard to be imported to R directly because of the
+following reasons. First, it has three sheets. Second, the top two rows
+do not contain any useful information or should be incorporated into the
+next row. The file uses the extension .xls, which is incompatible with
+R. Therefore, an importable version of the dataset was created.
+
+Here are the steps:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Open the original files in Excel.
+\item
+  Move the turnout rate for each precinct displayed in the second
+  spreadsheet to the third spreadsheet.
+\item
+  Delete the first and the second spreadsheets.
+\item
+  Remove the top two rows of the third spreadsheet.
+\item
+  Rename the columns to reflect whether the vote was for or against the
+  proposal.
+\item
+  Change the extension from .xls to .xlsx.
+\end{enumerate}
+
+\hypertarget{variable-descriptions}{%
+\subsubsection{Variable descriptions}\label{variable-descriptions}}
+
+I cannot find any information that describes the variables in this
+dataset. Therefore, the description below is my understanding.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{precinct:} The name of the precinct.
+\item
+  \textbf{registered\_voters:} The number of registered voters in the
+  precinct.
+\item
+  \textbf{total\_votes:} The number of votes received in this
+  referendum.
+\item
+  \textbf{voter\_turnout:} The percentage of voters who voted in this
+  referendum. (\(total\_votes/reigstered\_voters\))
+\item
+  \textbf{election\_day\_yes:} The number of people who voted yes during
+  the election day.
+\item
+  \textbf{absentee\_mail\_yes:} The number of people who voted yes by
+  mailing paper ballots prior to the election day.
+\item
+  \textbf{advance\_in\_person\_1\_yes:} The number of people who voted
+  yes prior to the election day.
+\item
+  \textbf{advance\_in\_person\_2\_yes:} The number of people who voted
+  yes prior to the election day. The difference between this variable
+  from the previous one is not clear. My speculation is they record
+  people voting on different days before election.
+\item
+  \textbf{provisional\_yes:} The number of people who voted yes but had
+  questions in their eligibility.
+\item
+  \textbf{votes\_yes:} The number of people who voted yes in total. (the
+  sum of the previous five variables)
+\item
+  \textbf{election\_day\_no:} The number of people who voted no during
+  the election day.
+\item
+  \textbf{absentee\_mail\_no:} The number of people who voted no by
+  mailing paper ballots prior to the election day.
+\item
+  \textbf{advance\_in\_person\_1\_no:} The number of people who voted no
+  prior to the election day.
+\item
+  \textbf{advance\_in\_person\_2\_no:} The number of people who voted no
+  prior to the election day. The difference between this variable from
+  the previous one is not clear. My speculation is they record people
+  voting on different days before election.
+\item
+  \textbf{provisional\_no:} The number of people who voted no but had
+  questions in their eligibility.
+\item
+  \textbf{votes\_no:} The number of people who voted no in total. (the
+  sum of the previous five variables)
+\end{itemize}
+
+\hypertarget{data-import-code-and-summary}{%
+\subsubsection{Data import code and
+summary}\label{data-import-code-and-summary}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vote_result <-}\StringTok{ }\KeywordTok{read_excel}\NormalTok{(}\StringTok{"importable_data/vote_result_importable.xlsx"}\NormalTok{, }
+    \DataTypeTok{col_types =} \KeywordTok{c}\NormalTok{(}\StringTok{"text"}\NormalTok{, }\StringTok{"numeric"}\NormalTok{, }\StringTok{"numeric"}\NormalTok{, }
+        \StringTok{"numeric"}\NormalTok{, }\StringTok{"numeric"}\NormalTok{, }\StringTok{"numeric"}\NormalTok{, }
+        \StringTok{"numeric"}\NormalTok{, }\StringTok{"numeric"}\NormalTok{, }\StringTok{"numeric"}\NormalTok{, }\StringTok{"numeric"}\NormalTok{, }
+        \StringTok{"numeric"}\NormalTok{, }\StringTok{"numeric"}\NormalTok{, }\StringTok{"numeric"}\NormalTok{, }\StringTok{"numeric"}\NormalTok{, }\StringTok{"numeric"}\NormalTok{, }
+        \StringTok{"numeric"}\NormalTok{))}
+\KeywordTok{View}\NormalTok{(vote_result)}
+\KeywordTok{export_summary_table}\NormalTok{(}\KeywordTok{dfSummary}\NormalTok{(vote_result))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{gwinnett-county-census-data}{%
+\subsection{Gwinnett County Census
+Data}\label{gwinnett-county-census-data}}
+
+\textbf{Citation:} U.S. Census Bureau. (2018). American Community
+Survey.
+\url{https://data.census.gov/cedsci/table?d=ACS\%205-Year\%20Estimates\%20Data\%20Profiles\&table=DP05\&tid=ACSDP5Y2018.DP05\&g=0500000US13135,13135.140000\&hidePreview=true\&t=Age\%20and\%20Sex\%3AHousing\%3AHousing\%20Units\%3ARace\%20and\%20Ethnicity}\\
+\textbf{DOI:} N/A\\
+\textbf{Date Downloaded:} Mar 19, 2020\\
+\textbf{Filename:} N/A\\
+\textbf{Unit of observation:} Census tract\\
+\textbf{Dates covered:} 2018 (5-year estimate)
+
+\hypertarget{to-obtain-a-copy-1}{%
+\subsubsection{To obtain a copy}\label{to-obtain-a-copy-1}}
+
+Users can obtain a copy of the dataset from an R package
+\texttt{tidycensus}.
+
+\textbf{Citation:} Walker, K., Eberwein, K., \& Herman, M. (2020).
+tidycensus: Load US Census Boundary and Attribute Data as ``tidyverse''
+and ``sf''-Ready Data Frames (Version 0.9.6) {[}Computer software{]}.
+\url{https://CRAN.R-project.org/package=tidycensus}
+
+Below are the steps to use \texttt{tidycensus} to obtain the data:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Install the package \texttt{tidycensus} in R.
+\item
+  If haven't, register to get an API key in order to download data from
+  the package. The key can be acquired at
+  \url{http://api.census.gov/data/key_signup.html}.
+\item
+  Load the key into R with the following code:\\
+  \texttt{census\_api\_key(key,\ install\ =\ TRUE)}~\\
+\item
+  Load the library in R. Execute the code chunk below to get the data
+  frame \texttt{acs18}. \texttt{acs18} shows all of the variables
+  present in ACS-5 2018 survey and their IDs.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tidycensus)}
+\NormalTok{acs18 <-}\StringTok{ }\KeywordTok{load_variables}\NormalTok{(}\DecValTok{2018}\NormalTok{, }\StringTok{"acs5"}\NormalTok{, }\DataTypeTok{cache =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Search for desirable variables in acs18 and record their IDs. The
+  selected variables are: population, median income, median age, white
+  population, the number of people who work, the number of people who
+  commute by car, the number of people who commute by public
+  transportation, the number of people who commute by subway, the number
+  of people who go to work by bike, the number of people who walk to
+  work, the number of people who use other transportation means, and the
+  number of people who work at home. Subway is a subcategory of public
+  transportation, but since it is particularly important in this
+  project, it is also selected. Besides, variables that reflect people's
+  travel time to work are potentially useful.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cbdata <-}\StringTok{ }\KeywordTok{get_acs}\NormalTok{(}\DataTypeTok{geography =} \StringTok{"tract"}\NormalTok{,}
+                  \DataTypeTok{variables =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{total =} \StringTok{"B01001_001"}\NormalTok{,}
+                                \DataTypeTok{medincome =} \StringTok{"B19013_001"}\NormalTok{,}
+                                \DataTypeTok{medage =} \StringTok{"B01002_001"}\NormalTok{,}
+                                \DataTypeTok{white =} \StringTok{"B01001A_001"}\NormalTok{,}
+                                \DataTypeTok{transportation_total =} \StringTok{"B08006_001"}\NormalTok{,}
+                                \DataTypeTok{car =} \StringTok{"B08006_002"}\NormalTok{,}
+                                \DataTypeTok{public =} \StringTok{"B08006_008"}\NormalTok{,}
+                                \DataTypeTok{subway =} \StringTok{"B08006_011"}\NormalTok{,}
+                                \DataTypeTok{bike =} \StringTok{"B08006_014"}\NormalTok{,}
+                                \DataTypeTok{walk =} \StringTok{"B08006_015"}\NormalTok{,}
+                                \DataTypeTok{other_transport =} \StringTok{"B08006_016"}\NormalTok{,}
+                                \DataTypeTok{no_transport =} \StringTok{"B08006_017"}\NormalTok{,}
+                                \DataTypeTok{time_total =} \StringTok{"B08012_001"}\NormalTok{,}
+                                \DataTypeTok{time_less_5 =} \StringTok{"B08012_002"}\NormalTok{,}
+                                \DataTypeTok{time_5_9 =} \StringTok{"B08012_003"}\NormalTok{,}
+                                \DataTypeTok{time_10_14 =} \StringTok{"B08012_004"}\NormalTok{,}
+                                \DataTypeTok{time_15_19 =} \StringTok{"B08012_005"}\NormalTok{,}
+                                \DataTypeTok{time_20_24 =} \StringTok{"B08012_006"}\NormalTok{,}
+                                \DataTypeTok{time_25_29 =} \StringTok{"B08012_007"}\NormalTok{,}
+                                \DataTypeTok{time_30_34 =} \StringTok{"B08012_008"}\NormalTok{,}
+                                \DataTypeTok{time_35_39 =} \StringTok{"B08012_009"}\NormalTok{,}
+                                \DataTypeTok{time_40_44 =} \StringTok{"B08012_010"}\NormalTok{,}
+                                \DataTypeTok{time_45_59 =} \StringTok{"B08012_011"}\NormalTok{,}
+                                \DataTypeTok{time_60_89 =} \StringTok{"B08012_012"}\NormalTok{,}
+                                \DataTypeTok{time_more_90 =} \StringTok{"B08012_013"}\NormalTok{),}
+                  \DataTypeTok{state =} \StringTok{"GA"}\NormalTok{,}
+                  \DataTypeTok{county =} \StringTok{"Gwinnett"}\NormalTok{,}
+                  \DataTypeTok{year =} \DecValTok{2018}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Getting data from the 2014-2018 5-year ACS
+\end{verbatim}
+
+The code above constructs a data frame called cbdata by calling the
+function \texttt{get\_acs()}, which pulls the data from the American
+Community Survey. Inside the function, the unit of measurement is
+specified by the \texttt{geography} argument. In this case, select
+\textbf{tract} for census tract. Put all the chosen variables in the
+\texttt{variables} argument. Finally, address \texttt{state}
+(\textbf{GA}), \texttt{county} (\textbf{Gwinnett}), and \texttt{year} of
+survey (\textbf{2018}).
+
+\hypertarget{data-wrangling}{%
+\subsubsection{Data wrangling}\label{data-wrangling}}
+
+The current data frame requires modifications. First, each row displays
+one variable from one tract. However, to make tract as the unit of
+measurement, each row should include all the variables of one tract.
+Second, instead of the actual number of people who are white, the
+percentage of white population is more informative. Similarly, the
+percentage of people who go to work by certain transportation should
+also be calculated. Finally, travel time data is mostly grouped by a
+5-minute band, which is too detailed for this project. It will be
+categorized with a wider range to reduce variables. After consolidation,
+the percentages will be calculated.
+
+Here are the steps of data wrangling:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Remove the margin of error for each measurement (\textbf{moe}),
+  because it is not useful in later analyses.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cbdata_moe <-}\StringTok{ }\NormalTok{cbdata }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{ (}\OperatorTok{-}\NormalTok{moe)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Use \texttt{pivot\_wider()} to transpose the data.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cbdata_wider <-}\StringTok{ }\NormalTok{cbdata_moe }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{pivot_wider}\NormalTok{(}\DataTypeTok{names_from =}\NormalTok{ variable,}
+              \DataTypeTok{values_from =}\NormalTok{ estimate)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Calculate the percentage of white population (\(white/total\)).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cbdata_white <-}\StringTok{ }\NormalTok{cbdata_wider }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{white_pct =}\NormalTok{ white }\OperatorTok{/}\StringTok{ }\NormalTok{total) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{ (}\OperatorTok{-}\NormalTok{white)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Calculate the percentage of people using each transportation method.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cbdata_transport <-}\StringTok{ }\NormalTok{cbdata_white }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{car_pct =}\NormalTok{ car }\OperatorTok{/}\StringTok{ }\NormalTok{transportation_total,}
+         \DataTypeTok{public_pct =}\NormalTok{ public }\OperatorTok{/}\StringTok{ }\NormalTok{transportation_total,}
+         \DataTypeTok{subway_pct =}\NormalTok{ subway }\OperatorTok{/}\StringTok{ }\NormalTok{transportation_total,}
+         \DataTypeTok{bike_pct =}\NormalTok{ bike }\OperatorTok{/}\StringTok{ }\NormalTok{transportation_total,}
+         \DataTypeTok{walk_pct =}\NormalTok{ walk }\OperatorTok{/}\StringTok{ }\NormalTok{transportation_total,}
+         \DataTypeTok{other_pct =}\NormalTok{ other_transport }\OperatorTok{/}\StringTok{ }\NormalTok{transportation_total,}
+         \DataTypeTok{no_pct =}\NormalTok{ no_transport }\OperatorTok{/}\StringTok{ }\NormalTok{transportation_total) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\KeywordTok{c}\NormalTok{(car, public, subway, bike, walk, other_transport, no_transport))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Combine the ranges of travel time data and calculate the percentages.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cbdata_tidy <-}\StringTok{ }\NormalTok{cbdata_transport }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{time_0_29_pct =}\NormalTok{ (time_less_}\DecValTok{5} \OperatorTok{+}\StringTok{ }\NormalTok{time_}\DecValTok{10}\NormalTok{_}\DecValTok{14} \OperatorTok{+}\StringTok{ }\NormalTok{time_}\DecValTok{15}\NormalTok{_}\DecValTok{19} \OperatorTok{+}\StringTok{ }
+\StringTok{                            }\NormalTok{time_}\DecValTok{20}\NormalTok{_}\DecValTok{24} \OperatorTok{+}\StringTok{ }\NormalTok{time_}\DecValTok{25}\NormalTok{_}\DecValTok{29}\NormalTok{) }\OperatorTok{/}\StringTok{ }\NormalTok{time_total,}
+         \DataTypeTok{time_30_59_pct =}\NormalTok{ (time_}\DecValTok{30}\NormalTok{_}\DecValTok{34} \OperatorTok{+}\StringTok{ }\NormalTok{time_}\DecValTok{35}\NormalTok{_}\DecValTok{39} \OperatorTok{+}\StringTok{ }\NormalTok{time_}\DecValTok{40}\NormalTok{_}\DecValTok{44} \OperatorTok{+}\StringTok{ }
+\StringTok{                             }\NormalTok{time_}\DecValTok{45}\NormalTok{_}\DecValTok{59}\NormalTok{) }\OperatorTok{/}\StringTok{ }\NormalTok{time_total,}
+         \DataTypeTok{time_60_89_pct =}\NormalTok{ time_}\DecValTok{60}\NormalTok{_}\DecValTok{89} \OperatorTok{/}\StringTok{ }\NormalTok{time_total,}
+         \DataTypeTok{time_more_90_pct =}\NormalTok{ time_more_}\DecValTok{90} \OperatorTok{/}\StringTok{ }\NormalTok{time_total) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\KeywordTok{c}\NormalTok{(time_less_}\DecValTok{5}\NormalTok{, time_}\DecValTok{5}\NormalTok{_}\DecValTok{9}\NormalTok{, time_}\DecValTok{10}\NormalTok{_}\DecValTok{14}\NormalTok{, time_}\DecValTok{15}\NormalTok{_}\DecValTok{19}\NormalTok{, time_}\DecValTok{20}\NormalTok{_}\DecValTok{24}\NormalTok{,}
+\NormalTok{            time_}\DecValTok{25}\NormalTok{_}\DecValTok{29}\NormalTok{, time_}\DecValTok{30}\NormalTok{_}\DecValTok{34}\NormalTok{, time_}\DecValTok{35}\NormalTok{_}\DecValTok{39}\NormalTok{, time_}\DecValTok{40}\NormalTok{_}\DecValTok{44}\NormalTok{, time_}\DecValTok{45}\NormalTok{_}\DecValTok{59}\NormalTok{,}
+\NormalTok{            time_}\DecValTok{60}\NormalTok{_}\DecValTok{89}\NormalTok{, time_more_}\DecValTok{90}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{variable-descriptions-1}{%
+\subsubsection{Variable descriptions}\label{variable-descriptions-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{GEOID:} The geographic identifier of the census tract.
+\item
+  \textbf{NAME:} The name of the census tract.
+\item
+  \textbf{total:} The total population of the tract.
+\item
+  \textbf{medage:} The median age of the population in the tract.
+\item
+  \textbf{medincome:} The median income of the population in the tract.
+\item
+  \textbf{white\_pct:} The percentage of white population in the tract.
+\item
+  \textbf{transportation\_total:} The number of people who were sampled
+  in the transportation survey.
+\item
+  \textbf{car\_pct:} The percentage of people who go to work by car,
+  truck or van.
+\item
+  \textbf{public\_pct:} The percentage of people who go to work by
+  public transportation (excluding taxi or cab).
+\item
+  \textbf{subway\_pct:} The percentage of people who go to work by
+  subway or elevated.
+\item
+  \textbf{bike\_pct:} The percentage of people who go to work by bike.
+\item
+  \textbf{walk\_pct:} The percentage of people who go to work on foot.
+\item
+  \textbf{other\_pct:} The percentage of people who go to work by other
+  transportation means such as taxi, cab and motorcycle.
+\item
+  \textbf{no\_pct:} The percentage of people who work at home (i.e.~no
+  transportation needed).
+\item
+  \textbf{time\_total:} The number of people who were sampled in the
+  travel time to work survey.
+\item
+  \textbf{time\_0\_29\_pct:} The percentage of people who travel less
+  than 30 minutes to work.
+\item
+  \textbf{time\_30\_59\_pct:} The percentage of people who travel
+  between 30 and 59 minutes to work.
+\item
+  \textbf{time\_60\_89\_pct:} The percentage of people who travel
+  between 60 and 89 minutes to work.
+\item
+  \textbf{time\_more\_90\_pct:} The percentage of people who travel more
+  than 90 minutes to work.
+\end{itemize}
+
+\hypertarget{data-summary}{%
+\subsubsection{Data summary}\label{data-summary}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{View}\NormalTok{(cbdata_tidy)}
+\KeywordTok{export_summary_table}\NormalTok{(}\KeywordTok{dfSummary}\NormalTok{(cbdata_tidy))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{presidential-election-data-at-gwinnett-county}{%
+\subsection{2016 Presidential Election Data at Gwinnett
+County}\label{presidential-election-data-at-gwinnett-county}}
+
+\textbf{Citation:} MIT Election Data and Science Lab, 2018, U.S.
+President Precinct-Level Returns 2016, \emph{Harvard Dataverse, V11,}
+UNF:6:hQyVqHW+vTFnAW2jYIOy/Q== {[}fileUNF{]}\\
+\textbf{DOI:} \url{doi:10.7910/DVN/LYWX3D}\\
+\textbf{Date Downloaded:} Mar 19, 2020\\
+\textbf{Filename(s):} N/A\\
+\textbf{Unit of observation:} Precinct\\
+\textbf{Dates covered:} November 8, 2016
+
+\hypertarget{to-obtain-a-copy-2}{%
+\subsubsection{To obtain a copy}\label{to-obtain-a-copy-2}}
+
+Users can obtain a copy of the dataset at
+\url{https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/LYWX3D}.
+Under the \textbf{Files} tab, select and click the download button of
+the first file \textbf{2016-precinct-president.tab}. The description of
+the variables can be found in the second file,
+\textbf{codebook-2016-precinct-president.md}.
+
+However, the data file is not included in the raw\_data folder, because
+it is too large to be uploaded to github.
+
+\hypertarget{importable-version-1}{%
+\subsubsection{Importable version}\label{importable-version-1}}
+
+\textbf{Filename:} importable\_data/election\_result\_importable.csv
+
+The original file contains data from all the precincts in the United
+States. Therefore, it is too large to be loaded to R or github.
+Therefore, filtering is necessary before importing.
+
+Here are the steps of filtering:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Open the file in excel.
+\item
+  Click on \textbf{Sort \& Filter} button; click \textbf{Filter}.
+\item
+  Go to column H -- \textbf{county\_name} and click on the small
+  triangle in cell H1.
+\item
+  Find and select \textbf{Gwinnett County} in the drop-down menu.
+\item
+  Copy and paste this subset of data into another file and put it into
+  the importable data folder.
+\end{enumerate}
+
+\hypertarget{data-import-and-wrangling}{%
+\subsubsection{Data import and
+wrangling}\label{data-import-and-wrangling}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{election <-}\StringTok{ }\KeywordTok{read_csv}\NormalTok{(}\StringTok{"importable_data/election_result_importable.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The data needs more cleaning in R because firstly, it has unnecessary
+variables. Secondly, each row in this dataset represents the number of
+people voting for one particular candidate by one particular mode in a
+precinct. The ideal dataset will have the voting results for each
+candidate at one precinct in one row to make precinct as the unit of
+measurement.
+
+Here are the steps of data wrangling:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Select the useful variables: \textbf{precinct}, \textbf{candidate},
+  \textbf{votes}, \textbf{mode}. For more information about the removed
+  variables, check out the codebook in the raw data folder.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{election_variables <-}\StringTok{ }\NormalTok{election }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(precinct, candidate, votes, mode)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Summarize the number of votes for each candidate in a precinct. This
+  is done by adding across different modes of votes (election day,
+  absentee by mail, advance in person, and provisional). Then calculate
+  the percentage of votes for each candidate.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{election_mode <-}\StringTok{ }\NormalTok{election_variables }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(precinct, candidate) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{votes =} \KeywordTok{sum}\NormalTok{(votes))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Remove the write-in votes because they don't belong to any specific
+  precincts; transpose the data; finally, calculate the precentage of
+  votes for each candidate.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{election_tidy <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(election_mode }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(precinct }\OperatorTok{!=}\StringTok{ "Write-ins"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{pivot_wider}\NormalTok{(}\DataTypeTok{names_from =}\NormalTok{ candidate,}
+              \DataTypeTok{values_from =}\NormalTok{ votes) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{total =} \StringTok{`}\DataTypeTok{Donald Trump}\StringTok{`} \OperatorTok{+}\StringTok{ `}\DataTypeTok{Hillary Clinton}\StringTok{`} \OperatorTok{+}\StringTok{ `}\DataTypeTok{Gary Johnson}\StringTok{`}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(precinct, }\DataTypeTok{trump_votes =} \StringTok{`}\DataTypeTok{Donald Trump}\StringTok{`}\NormalTok{, }\DataTypeTok{clinton_votes =} \StringTok{`}\DataTypeTok{Hillary Clinton}\StringTok{`}\NormalTok{, }\DataTypeTok{johnson_votes =} \StringTok{`}\DataTypeTok{Gary Johnson}\StringTok{`}\NormalTok{, }\DataTypeTok{total_election =}\NormalTok{ total))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{variable-description}{%
+\subsubsection{Variable description}\label{variable-description}}
+
+\textbf{precinct:} The name of the precinct.\\
+\textbf{trump\_votes:} The number of votes for Donald Trump in that
+precinct.\\
+\textbf{clinton\_votes:} The number of votes for Hillary Clinton in that
+precinct.\\
+\textbf{johnson\_votes:} The number of votes for Gary Johnson in that
+precinct. \textbf{total\_election:} The number of voters who
+participated in the 2016 election.
+
+\hypertarget{data-summary-1}{%
+\subsubsection{Data summary}\label{data-summary-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{View}\NormalTok{(election_tidy)}
+\KeywordTok{export_summary_table}\NormalTok{(}\KeywordTok{dfSummary}\NormalTok{(election_tidy))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{gwinnett-transportation-expansion-plan-map}{%
+\subsection{Gwinnett Transportation Expansion Plan
+Map}\label{gwinnett-transportation-expansion-plan-map}}
+
+\textbf{Citation:} Plan Documents \textbar{} Gwinnett County. (n.d.).
+Retrieved March 28, 2020, from
+\url{https://www.gwinnettcounty.com/web/gwinnett/departments/transportation/connectgwinnett/plandocuments}\\
+\textbf{DOI:} N/A\\
+\textbf{Date Downloaded:} Mar 28, 2020\\
+\textbf{Filenames:} raw\_data/existing\_map.pdf,
+raw\_data/short\_range\_map.pdf, raw\_data/mid\_range\_map.pdf,
+raw\_data/long\_range\_1\_map.pdf, raw\_data/long\_range\_2\_map.pdf\\
+\textbf{Unit of observation:} N/A\\
+\textbf{Dates covered:} N/A
+
+\hypertarget{to-obtain-a-copy-3}{%
+\subsubsection{To obtain a copy}\label{to-obtain-a-copy-3}}
+
+A copy of the maps can be obtained at the official website of Gwinnett
+County with the following steps:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Go to \url{https://www.gwinnettcounty.com/web/gwinnett/Home}.
+\item
+  Select \textbf{Transportation} under the \textbf{Departments} tab.
+\item
+  Click on \textbf{Connect Gwinnett: Transit Plan} on the left panel.
+\item
+  Click on \textbf{Plan Documents} on the left panel.
+\item
+  Under the Reports title, there are detailed descriptions of the
+  transit plan from short-term to long-term period. Under the
+  \textbf{Maps} title, users can find the maps that are used in this
+  research.
+\item
+  Click on the map that is interested and save the PDF file to get a
+  copy.
+\end{enumerate}
+
+\hypertarget{data-processing-and-combination}{%
+\section{Data processing and
+combination}\label{data-processing-and-combination}}
+
+\hypertarget{referendum-and-election-data-processing}{%
+\subsection{Referendum and election data
+processing}\label{referendum-and-election-data-processing}}
+
+Firstly, select the desired variables in the referendum dataset:
+precinct name, total votes, total registered voters, and the number of
+supporters.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vote_tidy <-}\StringTok{ }\NormalTok{vote_result }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(precinct, total_votes, registered_voters, votes_yes)}
+\end{Highlighting}
+\end{Shaded}
+
+Next, select the variables in the 2016 election dataset: precinct name,
+total votes, and the number of Trump supporters. Then join the two
+tables by precinct name.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{precinct_tidy <-}\StringTok{ }\NormalTok{election_tidy }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(precinct, trump_votes, total_election) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{full_join}\NormalTok{(vote_tidy, }\DataTypeTok{by =} \StringTok{"precinct"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The datasets above are measured at the precinct level. To match with
+census data, they will be transformed into census tracts by using
+shapefiles. Additionally, the shapefile contains a typo in the precinct
+name, and is fixed in the code trunk below.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{precincts <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"raw_data/VTD2018-Shapefile.shp"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Reading layer
+\texttt{VTD2018-Shapefile\textquotesingle{}\ from\ data\ source}C:\Users\iris\_\OneDrive\Desktop\Smith\Spring 2020\ECO 324\seminar-paper-Shengqi-Iris-Zhong\raw\_data\VTD2018-Shapefile.shp'
+using driver `ESRI Shapefile' Simple feature collection with 2660
+features and 11 fields geometry type: MULTIPOLYGON dimension: XY bbox:
+xmin: -85.60516 ymin: 30.35576 xmax: -80.75143 ymax: 35.00066
+proj4string: +proj=longlat +ellps=GRS80 +no\_defs
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gwinnett <-}\StringTok{ }\NormalTok{precincts }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{filter}\NormalTok{(CTYNAME }\OperatorTok{==}\StringTok{ "GWINNETT"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{st_transform}\NormalTok{(}\StringTok{"+init=epsg:4326"}\NormalTok{) }\OperatorTok{%>%}\StringTok{  }\CommentTok{# set CRS to WGS84}
+\StringTok{  }\KeywordTok{st_transform}\NormalTok{(}\DataTypeTok{crs =} \DecValTok{4269}\NormalTok{)}
+
+\NormalTok{acs_vars <-}\StringTok{ }\KeywordTok{load_variables}\NormalTok{(}\DecValTok{2010}\NormalTok{, }\StringTok{"sf1"}\NormalTok{, }\DataTypeTok{cache =}\NormalTok{ T)}
+\NormalTok{gwinnett_tracks <-}\StringTok{ }\NormalTok{tigris}\OperatorTok{::}\KeywordTok{tracts}\NormalTok{(}\DataTypeTok{state =} \DecValTok{13}\NormalTok{, }\DataTypeTok{county =} \DecValTok{135}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{st_as_sf}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\textbar{} \textbar{} \textbar{} 0\% \textbar{} \textbar{} \textbar{}
+1\% \textbar{} \textbar= \textbar{} 1\% \textbar{} \textbar= \textbar{}
+2\% \textbar{} \textbar== \textbar{} 2\% \textbar{} \textbar==
+\textbar{} 3\% \textbar{} \textbar=== \textbar{} 4\% \textbar{}
+\textbar=== \textbar{} 5\% \textbar{} \textbar==== \textbar{} 5\%
+\textbar{} \textbar==== \textbar{} 6\% \textbar{} \textbar=====
+\textbar{} 7\% \textbar{} \textbar===== \textbar{} 8\% \textbar{}
+\textbar====== \textbar{} 8\% \textbar{} \textbar====== \textbar{} 9\%
+\textbar{} \textbar======= \textbar{} 9\% \textbar{} \textbar=======
+\textbar{} 10\% \textbar{} \textbar======= \textbar{} 11\% \textbar{}
+\textbar======== \textbar{} 11\% \textbar{} \textbar======== \textbar{}
+12\% \textbar{} \textbar========= \textbar{} 12\% \textbar{}
+\textbar========= \textbar{} 13\% \textbar{} \textbar==========
+\textbar{} 14\% \textbar{} \textbar========== \textbar{} 15\% \textbar{}
+\textbar=========== \textbar{} 15\% \textbar{} \textbar===========
+\textbar{} 16\% \textbar{} \textbar============ \textbar{} 17\%
+\textbar{} \textbar============ \textbar{} 18\% \textbar{}
+\textbar============= \textbar{} 18\% \textbar{} \textbar=============
+\textbar{} 19\% \textbar{} \textbar============== \textbar{} 19\%
+\textbar{} \textbar============== \textbar{} 20\% \textbar{}
+\textbar============== \textbar{} 21\% \textbar{}
+\textbar=============== \textbar{} 21\% \textbar{}
+\textbar=============== \textbar{} 22\% \textbar{}
+\textbar================ \textbar{} 22\% \textbar{}
+\textbar================ \textbar{} 23\% \textbar{}
+\textbar================ \textbar{} 24\% \textbar{}
+\textbar================= \textbar{} 24\% \textbar{}
+\textbar================= \textbar{} 25\% \textbar{}
+\textbar================== \textbar{} 25\% \textbar{}
+\textbar================== \textbar{} 26\% \textbar{}
+\textbar=================== \textbar{} 26\% \textbar{}
+\textbar=================== \textbar{} 27\% \textbar{}
+\textbar=================== \textbar{} 28\% \textbar{}
+\textbar==================== \textbar{} 28\% \textbar{}
+\textbar==================== \textbar{} 29\% \textbar{}
+\textbar===================== \textbar{} 29\% \textbar{}
+\textbar===================== \textbar{} 30\% \textbar{}
+\textbar===================== \textbar{} 31\% \textbar{}
+\textbar====================== \textbar{} 31\% \textbar{}
+\textbar====================== \textbar{} 32\% \textbar{}
+\textbar======================= \textbar{} 32\% \textbar{}
+\textbar======================= \textbar{} 33\% \textbar{}
+\textbar======================= \textbar{} 34\% \textbar{}
+\textbar======================== \textbar{} 34\% \textbar{}
+\textbar======================== \textbar{} 35\% \textbar{}
+\textbar========================= \textbar{} 35\% \textbar{}
+\textbar========================= \textbar{} 36\% \textbar{}
+\textbar========================== \textbar{} 37\% \textbar{}
+\textbar========================== \textbar{} 38\% \textbar{}
+\textbar=========================== \textbar{} 38\% \textbar{}
+\textbar=========================== \textbar{} 39\% \textbar{}
+\textbar============================ \textbar{} 39\% \textbar{}
+\textbar============================ \textbar{} 40\% \textbar{}
+\textbar============================ \textbar{} 41\% \textbar{}
+\textbar============================= \textbar{} 41\% \textbar{}
+\textbar============================= \textbar{} 42\% \textbar{}
+\textbar============================== \textbar{} 42\% \textbar{}
+\textbar============================== \textbar{} 43\% \textbar{}
+\textbar=============================== \textbar{} 44\% \textbar{}
+\textbar=============================== \textbar{} 45\% \textbar{}
+\textbar================================ \textbar{} 45\% \textbar{}
+\textbar================================ \textbar{} 46\% \textbar{}
+\textbar================================= \textbar{} 46\% \textbar{}
+\textbar================================= \textbar{} 47\% \textbar{}
+\textbar================================= \textbar{} 48\% \textbar{}
+\textbar================================== \textbar{} 48\% \textbar{}
+\textbar================================== \textbar{} 49\% \textbar{}
+\textbar=================================== \textbar{} 49\% \textbar{}
+\textbar=================================== \textbar{} 50\% \textbar{}
+\textbar=================================== \textbar{} 51\% \textbar{}
+\textbar==================================== \textbar{} 51\% \textbar{}
+\textbar==================================== \textbar{} 52\% \textbar{}
+\textbar===================================== \textbar{} 52\% \textbar{}
+\textbar===================================== \textbar{} 53\% \textbar{}
+\textbar====================================== \textbar{} 54\%
+\textbar{} \textbar====================================== \textbar{}
+55\% \textbar{} \textbar=======================================
+\textbar{} 55\% \textbar{}
+\textbar======================================= \textbar{} 56\%
+\textbar{} \textbar======================================== \textbar{}
+56\% \textbar{} \textbar========================================
+\textbar{} 57\% \textbar{}
+\textbar======================================== \textbar{} 58\%
+\textbar{} \textbar========================================= \textbar{}
+58\% \textbar{} \textbar=========================================
+\textbar{} 59\% \textbar{}
+\textbar========================================== \textbar{} 59\%
+\textbar{} \textbar========================================== \textbar{}
+60\% \textbar{} \textbar==========================================
+\textbar{} 61\% \textbar{}
+\textbar=========================================== \textbar{} 61\%
+\textbar{} \textbar===========================================
+\textbar{} 62\% \textbar{}
+\textbar============================================ \textbar{} 62\%
+\textbar{} \textbar============================================
+\textbar{} 63\% \textbar{}
+\textbar============================================ \textbar{} 64\%
+\textbar{} \textbar=============================================
+\textbar{} 64\% \textbar{}
+\textbar============================================= \textbar{} 65\%
+\textbar{} \textbar==============================================
+\textbar{} 65\% \textbar{}
+\textbar============================================== \textbar{} 66\%
+\textbar{} \textbar===============================================
+\textbar{} 66\% \textbar{}
+\textbar=============================================== \textbar{} 67\%
+\textbar{} \textbar===============================================
+\textbar{} 68\% \textbar{}
+\textbar================================================ \textbar{} 68\%
+\textbar{} \textbar================================================
+\textbar{} 69\% \textbar{}
+\textbar================================================= \textbar{}
+69\% \textbar{}
+\textbar================================================= \textbar{}
+70\% \textbar{}
+\textbar================================================= \textbar{}
+71\% \textbar{}
+\textbar================================================== \textbar{}
+71\% \textbar{}
+\textbar================================================== \textbar{}
+72\% \textbar{}
+\textbar=================================================== \textbar{}
+72\% \textbar{}
+\textbar=================================================== \textbar{}
+73\% \textbar{}
+\textbar=================================================== \textbar{}
+74\% \textbar{}
+\textbar==================================================== \textbar{}
+74\% \textbar{}
+\textbar==================================================== \textbar{}
+75\% \textbar{}
+\textbar===================================================== \textbar{}
+75\% \textbar{}
+\textbar===================================================== \textbar{}
+76\% \textbar{}
+\textbar======================================================
+\textbar{} 77\% \textbar{}
+\textbar======================================================
+\textbar{} 78\% \textbar{}
+\textbar=======================================================
+\textbar{} 78\% \textbar{}
+\textbar=======================================================
+\textbar{} 79\% \textbar{}
+\textbar========================================================
+\textbar{} 79\% \textbar{}
+\textbar========================================================
+\textbar{} 80\% \textbar{}
+\textbar========================================================
+\textbar{} 81\% \textbar{}
+\textbar=========================================================
+\textbar{} 81\% \textbar{}
+\textbar=========================================================
+\textbar{} 82\% \textbar{}
+\textbar==========================================================
+\textbar{} 82\% \textbar{}
+\textbar==========================================================
+\textbar{} 83\% \textbar{}
+\textbar==========================================================
+\textbar{} 84\% \textbar{}
+\textbar===========================================================
+\textbar{} 84\% \textbar{}
+\textbar===========================================================
+\textbar{} 85\% \textbar{}
+\textbar============================================================
+\textbar{} 85\% \textbar{}
+\textbar============================================================
+\textbar{} 86\% \textbar{}
+\textbar=============================================================
+\textbar{} 86\% \textbar{}
+\textbar=============================================================
+\textbar{} 87\% \textbar{}
+\textbar=============================================================
+\textbar{} 88\% \textbar{}
+\textbar==============================================================
+\textbar{} 88\% \textbar{}
+\textbar==============================================================
+\textbar{} 89\% \textbar{}
+\textbar===============================================================
+\textbar{} 89\% \textbar{}
+\textbar===============================================================
+\textbar{} 90\% \textbar{}
+\textbar===============================================================
+\textbar{} 91\% \textbar{}
+\textbar================================================================
+\textbar{} 91\% \textbar{}
+\textbar================================================================
+\textbar{} 92\% \textbar{}
+\textbar=================================================================
+\textbar{} 92\% \textbar{}
+\textbar=================================================================
+\textbar{} 93\% \textbar{}
+\textbar=================================================================
+\textbar{} 94\% \textbar{}
+\textbar==================================================================
+\textbar{} 94\% \textbar{}
+\textbar==================================================================
+\textbar{} 95\% \textbar{}
+\textbar===================================================================
+\textbar{} 95\% \textbar{}
+\textbar===================================================================
+\textbar{} 96\% \textbar{}
+\textbar====================================================================
+\textbar{} 96\% \textbar{}
+\textbar====================================================================
+\textbar{} 97\% \textbar{}
+\textbar====================================================================
+\textbar{} 98\% \textbar{}
+\textbar=====================================================================
+\textbar{} 98\% \textbar{}
+\textbar=====================================================================
+\textbar{} 99\% \textbar{}
+\textbar======================================================================\textbar{}
+99\% \textbar{}
+\textbar======================================================================\textbar{}
+100\%
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{intersected_areas <-}\StringTok{ }\KeywordTok{st_intersection}\NormalTok{(gwinnett, gwinnett_tracks)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## although coordinates are longitude/latitude, st_intersection assumes that they are planar
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: attribute variables are assumed to be spatially constant throughout all
+## geometries
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{area_values <-}\StringTok{ }\NormalTok{intersected_areas }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{loc_area =} \KeywordTok{st_area}\NormalTok{(intersected_areas))}
+
+\NormalTok{precinct_areas <-}\StringTok{ }\NormalTok{area_values }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(PRECINCT_N) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{total_area =} \KeywordTok{sum}\NormalTok{(loc_area)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{st_drop_geometry}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{right_join}\NormalTok{(area_values) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{shr_of_precinct =} \KeywordTok{as.vector}\NormalTok{(loc_area}\OperatorTok{/}\NormalTok{total_area))}\CommentTok{# %>%}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Joining, by = "PRECINCT_N"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+ \CommentTok{# select(PRECINCT_I, PRECINCT_N, GEOID, shr_of_precinct)}
+
+\NormalTok{vote_allocation_shares <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(precinct_areas }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select}\NormalTok{(PRECINCT_I, PRECINCT_N, GEOID, shr_of_precinct) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(PRECINCT_I, PRECINCT_N, GEOID) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{shr_of_precinct =} \KeywordTok{sum}\NormalTok{(shr_of_precinct)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{filter}\NormalTok{(shr_of_precinct }\OperatorTok{>}\StringTok{ }\FloatTok{.001}\NormalTok{))}
+
+\NormalTok{vote_allocation_shares}\OperatorTok{$}\NormalTok{PRECINCT_N <-}\StringTok{ }\KeywordTok{as.character}\NormalTok{(vote_allocation_shares}\OperatorTok{$}\NormalTok{PRECINCT_N)}
+\NormalTok{vote_allocation_shares}\OperatorTok{$}\NormalTok{PRECINCT_N[}\DecValTok{35}\NormalTok{]=}\StringTok{ "PINCKNEYVILLE A"}
+\NormalTok{vote_allocation_shares}\OperatorTok{$}\NormalTok{PRECINCT_N[}\DecValTok{36}\NormalTok{]=}\StringTok{ "PINCKNEYVILLE A"}
+\NormalTok{vote_allocation_shares}\OperatorTok{$}\NormalTok{PRECINCT_N <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(vote_allocation_shares}\OperatorTok{$}\NormalTok{PRECINCT_N)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{precinct_tidy_transformed <-}\StringTok{ }\NormalTok{vote_allocation_shares }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{left_join}\NormalTok{(precinct_tidy, }\DataTypeTok{by =} \KeywordTok{c}\NormalTok{(}\StringTok{"PRECINCT_N"}\NormalTok{ =}\StringTok{ "precinct"}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{supporter_share =}\NormalTok{ votes_yes }\OperatorTok{*}\StringTok{ }\NormalTok{shr_of_precinct,}
+         \DataTypeTok{voter_share =}\NormalTok{ total_votes }\OperatorTok{*}\StringTok{ }\NormalTok{shr_of_precinct,}
+         \DataTypeTok{total_voter_share =}\NormalTok{ registered_voters }\OperatorTok{*}\StringTok{ }\NormalTok{shr_of_precinct,}
+         \DataTypeTok{trump_share =}\NormalTok{ trump_votes }\OperatorTok{*}\StringTok{ }\NormalTok{shr_of_precinct,}
+         \DataTypeTok{election_voter_share =}\NormalTok{ total_election }\OperatorTok{*}\StringTok{ }\NormalTok{shr_of_precinct}
+\NormalTok{         ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(GEOID) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{trump_pct =} \KeywordTok{sum}\NormalTok{(trump_share) }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(election_voter_share),}
+            \DataTypeTok{voter_turnout =} \KeywordTok{sum}\NormalTok{(voter_share) }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(total_voter_share),}
+            \DataTypeTok{yes_pct =} \KeywordTok{sum}\NormalTok{(supporter_share) }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(voter_share))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Column `PRECINCT_N`/`precinct` joining factor and character vector,
+## coercing into character vector
+\end{verbatim}
+
+\hypertarget{map-data-processing}{%
+\subsection{Map data processing}\label{map-data-processing}}
+
+The PDF versions of current and short-range plan (Y2020-2025) maps have
+been transformed to shapefiles through QGIS. The following code chunk
+reads the shapefile and creates a data-frame that specifies whether each
+transportation line is within 500 meters of distance in that census
+tract.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{short_range <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"raw_data/short_range_layer.shp"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{st_transform}\NormalTok{(}\DecValTok{32615}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Reading layer
+\texttt{short\_range\_layer\textquotesingle{}\ from\ data\ source}C:\Users\iris\_\OneDrive\Desktop\Smith\Spring 2020\ECO 324\seminar-paper-Shengqi-Iris-Zhong\raw\_data\short\_range\_layer.shp'
+using driver `ESRI Shapefile' Simple feature collection with 26 features
+and 2 fields geometry type: LINESTRING dimension: XY bbox: xmin:
+-84.42795 ymin: 33.72982 xmax: -83.89378 ymax: 34.08735 CRS: 4326
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{short_range_buffers <-}\StringTok{ }\KeywordTok{st_buffer}\NormalTok{(short_range, }\DataTypeTok{dist =} \DecValTok{500}\NormalTok{)}
+\NormalTok{acs_vars <-}\StringTok{ }\KeywordTok{load_variables}\NormalTok{(}\DecValTok{2010}\NormalTok{, }\StringTok{"sf1"}\NormalTok{, }\DataTypeTok{cache =}\NormalTok{ T)}
+\NormalTok{gwinnett_tracks <-}\StringTok{ }\NormalTok{tigris}\OperatorTok{::}\KeywordTok{tracts}\NormalTok{(}\DataTypeTok{state =} \DecValTok{13}\NormalTok{, }\DataTypeTok{county =} \DecValTok{135}\NormalTok{, }\DataTypeTok{cb =}\NormalTok{ T) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{st_as_sf}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{st_transform}\NormalTok{(}\DecValTok{32615}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\textbar{} \textbar{} \textbar{} 0\% \textbar{} \textbar= \textbar{} 1\%
+\textbar{} \textbar= \textbar{} 2\% \textbar{} \textbar== \textbar{} 3\%
+\textbar{} \textbar=== \textbar{} 4\% \textbar{} \textbar==== \textbar{}
+5\% \textbar{} \textbar==== \textbar{} 6\% \textbar{} \textbar=====
+\textbar{} 7\% \textbar{} \textbar====== \textbar{} 8\% \textbar{}
+\textbar====== \textbar{} 9\% \textbar{} \textbar======= \textbar{} 9\%
+\textbar{} \textbar======= \textbar{} 10\% \textbar{} \textbar=======
+\textbar{} 11\% \textbar{} \textbar======== \textbar{} 12\% \textbar{}
+\textbar========= \textbar{} 12\% \textbar{} \textbar=========
+\textbar{} 13\% \textbar{} \textbar========== \textbar{} 14\% \textbar{}
+\textbar=========== \textbar{} 15\% \textbar{} \textbar===========
+\textbar{} 16\% \textbar{} \textbar============ \textbar{} 17\%
+\textbar{} \textbar============= \textbar{} 18\% \textbar{}
+\textbar============= \textbar{} 19\% \textbar{} \textbar==============
+\textbar{} 20\% \textbar{} \textbar=============== \textbar{} 21\%
+\textbar{} \textbar================ \textbar{} 22\% \textbar{}
+\textbar================ \textbar{} 23\% \textbar{}
+\textbar================= \textbar{} 24\% \textbar{}
+\textbar================= \textbar{} 25\% \textbar{}
+\textbar================== \textbar{} 25\% \textbar{}
+\textbar================== \textbar{} 26\% \textbar{}
+\textbar=================== \textbar{} 27\% \textbar{}
+\textbar==================== \textbar{} 28\% \textbar{}
+\textbar==================== \textbar{} 29\% \textbar{}
+\textbar===================== \textbar{} 30\% \textbar{}
+\textbar===================== \textbar{} 31\% \textbar{}
+\textbar====================== \textbar{} 31\% \textbar{}
+\textbar====================== \textbar{} 32\% \textbar{}
+\textbar======================= \textbar{} 32\% \textbar{}
+\textbar======================= \textbar{} 33\% \textbar{}
+\textbar======================== \textbar{} 34\% \textbar{}
+\textbar======================== \textbar{} 35\% \textbar{}
+\textbar========================= \textbar{} 35\% \textbar{}
+\textbar========================= \textbar{} 36\% \textbar{}
+\textbar========================== \textbar{} 37\% \textbar{}
+\textbar========================== \textbar{} 38\% \textbar{}
+\textbar=========================== \textbar{} 38\% \textbar{}
+\textbar=========================== \textbar{} 39\% \textbar{}
+\textbar============================ \textbar{} 40\% \textbar{}
+\textbar============================= \textbar{} 41\% \textbar{}
+\textbar============================= \textbar{} 42\% \textbar{}
+\textbar============================== \textbar{} 43\% \textbar{}
+\textbar=============================== \textbar{} 44\% \textbar{}
+\textbar=============================== \textbar{} 45\% \textbar{}
+\textbar================================ \textbar{} 45\% \textbar{}
+\textbar================================ \textbar{} 46\% \textbar{}
+\textbar================================= \textbar{} 47\% \textbar{}
+\textbar================================= \textbar{} 48\% \textbar{}
+\textbar================================== \textbar{} 49\% \textbar{}
+\textbar=================================== \textbar{} 50\% \textbar{}
+\textbar==================================== \textbar{} 51\% \textbar{}
+\textbar==================================== \textbar{} 52\% \textbar{}
+\textbar===================================== \textbar{} 53\% \textbar{}
+\textbar====================================== \textbar{} 54\%
+\textbar{} \textbar====================================== \textbar{}
+55\% \textbar{} \textbar=======================================
+\textbar{} 56\% \textbar{}
+\textbar======================================== \textbar{} 57\%
+\textbar{} \textbar======================================== \textbar{}
+58\% \textbar{} \textbar=========================================
+\textbar{} 58\% \textbar{}
+\textbar========================================== \textbar{} 59\%
+\textbar{} \textbar========================================== \textbar{}
+60\% \textbar{} \textbar==========================================
+\textbar{} 61\% \textbar{}
+\textbar=========================================== \textbar{} 61\%
+\textbar{} \textbar===========================================
+\textbar{} 62\% \textbar{}
+\textbar============================================ \textbar{} 63\%
+\textbar{} \textbar=============================================
+\textbar{} 64\% \textbar{}
+\textbar============================================= \textbar{} 65\%
+\textbar{} \textbar==============================================
+\textbar{} 66\% \textbar{}
+\textbar=============================================== \textbar{} 67\%
+\textbar{} \textbar================================================
+\textbar{} 68\% \textbar{}
+\textbar================================================ \textbar{} 69\%
+\textbar{} \textbar=================================================
+\textbar{} 70\% \textbar{}
+\textbar================================================= \textbar{}
+71\% \textbar{}
+\textbar================================================== \textbar{}
+72\% \textbar{}
+\textbar=================================================== \textbar{}
+73\% \textbar{}
+\textbar==================================================== \textbar{}
+74\% \textbar{}
+\textbar===================================================== \textbar{}
+75\% \textbar{}
+\textbar===================================================== \textbar{}
+76\% \textbar{}
+\textbar======================================================
+\textbar{} 76\% \textbar{}
+\textbar======================================================
+\textbar{} 77\% \textbar{}
+\textbar======================================================
+\textbar{} 78\% \textbar{}
+\textbar=======================================================
+\textbar{} 79\% \textbar{}
+\textbar========================================================
+\textbar{} 80\% \textbar{}
+\textbar=========================================================
+\textbar{} 81\% \textbar{}
+\textbar==========================================================
+\textbar{} 82\% \textbar{}
+\textbar==========================================================
+\textbar{} 83\% \textbar{}
+\textbar===========================================================
+\textbar{} 84\% \textbar{}
+\textbar===========================================================
+\textbar{} 85\% \textbar{}
+\textbar============================================================
+\textbar{} 85\% \textbar{}
+\textbar============================================================
+\textbar{} 86\% \textbar{}
+\textbar=============================================================
+\textbar{} 87\% \textbar{}
+\textbar==============================================================
+\textbar{} 88\% \textbar{}
+\textbar==============================================================
+\textbar{} 89\% \textbar{}
+\textbar===============================================================
+\textbar{} 90\% \textbar{}
+\textbar================================================================
+\textbar{} 91\% \textbar{}
+\textbar================================================================
+\textbar{} 92\% \textbar{}
+\textbar=================================================================
+\textbar{} 92\% \textbar{}
+\textbar=================================================================
+\textbar{} 93\% \textbar{}
+\textbar==================================================================
+\textbar{} 94\% \textbar{}
+\textbar===================================================================
+\textbar{} 95\% \textbar{}
+\textbar===================================================================
+\textbar{} 96\% \textbar{}
+\textbar====================================================================
+\textbar{} 97\% \textbar{}
+\textbar=====================================================================
+\textbar{} 98\% \textbar{}
+\textbar=====================================================================
+\textbar{} 99\% \textbar{}
+\textbar======================================================================\textbar{}
+99\% \textbar{}
+\textbar======================================================================\textbar{}
+100\%
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{short_in_buffer <-}\StringTok{ }\KeywordTok{st_intersects}\NormalTok{(gwinnett_tracks, short_range_buffers, }\DataTypeTok{sparse =}\NormalTok{ F)}
+\KeywordTok{colnames}\NormalTok{(short_in_buffer) <-}\StringTok{ }\NormalTok{short_range_buffers}\OperatorTok{$}\NormalTok{id}
+\NormalTok{short_in_buffer <-}\StringTok{ }\KeywordTok{as_tibble}\NormalTok{(short_in_buffer)}
+\NormalTok{short_in_buffer}\OperatorTok{$}\NormalTok{GEOID <-}\StringTok{ }\NormalTok{gwinnett_tracks}\OperatorTok{$}\NormalTok{GEOID}
+\end{Highlighting}
+\end{Shaded}
+
+Then, I summarize whether any transportation line is within 500 meters
+of distance in that tract.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{short_in_buffer <-}\StringTok{ }\NormalTok{short_in_buffer }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{plan_yes =} \KeywordTok{case_when}\NormalTok{(}\KeywordTok{rowSums}\NormalTok{(short_in_buffer[,}\KeywordTok{c}\NormalTok{(}\StringTok{"1"}\NormalTok{, }\StringTok{"2"}\NormalTok{,}\StringTok{"3"}\NormalTok{, }\StringTok{"4"}\NormalTok{,}\StringTok{"5"}\NormalTok{, }\StringTok{"6"}\NormalTok{,}\StringTok{"7"}\NormalTok{, }\StringTok{"8"}\NormalTok{,}\StringTok{"9"}\NormalTok{, }\StringTok{"10"}\NormalTok{,}\StringTok{"11"}\NormalTok{, }\StringTok{"12"}\NormalTok{,}\StringTok{"13"}\NormalTok{, }\StringTok{"14"}\NormalTok{,}\StringTok{"15"}\NormalTok{, }\StringTok{"16"}\NormalTok{,}\StringTok{"17"}\NormalTok{, }\StringTok{"18"}\NormalTok{,}\StringTok{"19"}\NormalTok{, }\StringTok{"20"}\NormalTok{,}\StringTok{"21"}\NormalTok{, }\StringTok{"22"}\NormalTok{,}\StringTok{"23"}\NormalTok{,}\StringTok{"24"}\NormalTok{,}\StringTok{"25"}\NormalTok{, }\StringTok{"26"}\NormalTok{)])}\OperatorTok{!=}\DecValTok{0} \OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{,}
+         \KeywordTok{rowSums}\NormalTok{(short_in_buffer[,}\KeywordTok{c}\NormalTok{(}\StringTok{"1"}\NormalTok{, }\StringTok{"2"}\NormalTok{,}\StringTok{"3"}\NormalTok{, }\StringTok{"4"}\NormalTok{,}\StringTok{"5"}\NormalTok{, }\StringTok{"6"}\NormalTok{,}\StringTok{"7"}\NormalTok{, }\StringTok{"8"}\NormalTok{,}\StringTok{"9"}\NormalTok{, }\StringTok{"10"}\NormalTok{,}\StringTok{"11"}\NormalTok{, }\StringTok{"12"}\NormalTok{,}\StringTok{"13"}\NormalTok{, }\StringTok{"14"}\NormalTok{,}\StringTok{"15"}\NormalTok{, }\StringTok{"16"}\NormalTok{,}\StringTok{"17"}\NormalTok{, }\StringTok{"18"}\NormalTok{,}\StringTok{"19"}\NormalTok{, }\StringTok{"20"}\NormalTok{,}\StringTok{"21"}\NormalTok{, }\StringTok{"22"}\NormalTok{,}\StringTok{"23"}\NormalTok{,}\StringTok{"24"}\NormalTok{,}\StringTok{"25"}\NormalTok{, }\StringTok{"26"}\NormalTok{)])}\OperatorTok{==}\DecValTok{0} \OperatorTok{~}\StringTok{ }\DecValTok{0}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(GEOID, plan_yes)}
+\end{Highlighting}
+\end{Shaded}
+
+Similar steps are taken to get the data of current transportation
+system.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{current <-}\StringTok{ }\KeywordTok{st_read}\NormalTok{(}\StringTok{"raw_data/existing_layer.shp"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{st_transform}\NormalTok{(}\DecValTok{32615}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Reading layer
+\texttt{existing\_layer\textquotesingle{}\ from\ data\ source}C:\Users\iris\_\OneDrive\Desktop\Smith\Spring 2020\ECO 324\seminar-paper-Shengqi-Iris-Zhong\raw\_data\existing\_layer.shp'
+using driver `ESRI Shapefile' Simple feature collection with 12 features
+and 2 fields geometry type: LINESTRING dimension: XY bbox: xmin:
+-84.4364 ymin: 33.71804 xmax: -83.98294 ymax: 34.08337 CRS: 4326
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{current_buffers <-}\StringTok{ }\KeywordTok{st_buffer}\NormalTok{(current, }\DataTypeTok{dist =} \DecValTok{500}\NormalTok{)}
+\NormalTok{current_in_buffer <-}\StringTok{ }\KeywordTok{st_intersects}\NormalTok{(gwinnett_tracks, current_buffers, }\DataTypeTok{sparse =}\NormalTok{ F)}
+\KeywordTok{colnames}\NormalTok{(current_in_buffer) <-}\StringTok{ }\NormalTok{current_buffers}\OperatorTok{$}\NormalTok{id}
+\NormalTok{current_in_buffer <-}\StringTok{ }\KeywordTok{as_tibble}\NormalTok{(current_in_buffer)}
+\NormalTok{current_in_buffer}\OperatorTok{$}\NormalTok{GEOID <-}\StringTok{ }\NormalTok{gwinnett_tracks}\OperatorTok{$}\NormalTok{GEOID}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{current_in_buffer <-}\StringTok{ }\NormalTok{current_in_buffer }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{current_yes =} \KeywordTok{case_when}\NormalTok{(}\KeywordTok{rowSums}\NormalTok{(current_in_buffer[,}\KeywordTok{c}\NormalTok{(}\StringTok{"1"}\NormalTok{, }\StringTok{"2"}\NormalTok{,}\StringTok{"3"}\NormalTok{, }\StringTok{"4"}\NormalTok{,}\StringTok{"5"}\NormalTok{, }\StringTok{"6"}\NormalTok{,}\StringTok{"7"}\NormalTok{, }\StringTok{"8"}\NormalTok{,}\StringTok{"9"}\NormalTok{, }\StringTok{"10"}\NormalTok{,}\StringTok{"11"}\NormalTok{, }\StringTok{"12"}\NormalTok{)])}\OperatorTok{!=}\DecValTok{0} \OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{,}
+         \KeywordTok{rowSums}\NormalTok{(current_in_buffer[,}\KeywordTok{c}\NormalTok{(}\StringTok{"1"}\NormalTok{, }\StringTok{"2"}\NormalTok{,}\StringTok{"3"}\NormalTok{, }\StringTok{"4"}\NormalTok{,}\StringTok{"5"}\NormalTok{, }\StringTok{"6"}\NormalTok{,}\StringTok{"7"}\NormalTok{, }\StringTok{"8"}\NormalTok{,}\StringTok{"9"}\NormalTok{, }\StringTok{"10"}\NormalTok{,}\StringTok{"11"}\NormalTok{, }\StringTok{"12"}\NormalTok{)])}\OperatorTok{==}\DecValTok{0} \OperatorTok{~}\StringTok{ }\DecValTok{0}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(GEOID, current_yes)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{census-data-processing}{%
+\subsection{Census data processing}\label{census-data-processing}}
+
+Select the variables in census data: GEOID, median age, median income,
+the percentage of white, the percentage of people using public
+transportation, and the percentage of people who spend more than an hour
+on transportation to work. Finally, join the tables together to get the
+final dataset.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{final_data <-}\StringTok{ }\NormalTok{cbdata_tidy }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{time_pct =}\NormalTok{ time_}\DecValTok{60}\NormalTok{_}\DecValTok{89}\NormalTok{_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_more_}\DecValTok{90}\NormalTok{_pct) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(GEOID, medage, medincome, white_pct, public_pct, time_pct) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{inner_join}\NormalTok{(precinct_tidy_transformed, }\DataTypeTok{by =} \StringTok{"GEOID"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{inner_join}\NormalTok{(short_in_buffer, }\DataTypeTok{by =} \StringTok{"GEOID"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{inner_join}\NormalTok{(current_in_buffer, }\DataTypeTok{by =} \StringTok{"GEOID"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{plan_yes =} \KeywordTok{as.factor}\NormalTok{(plan_yes),}
+         \DataTypeTok{current_yes =} \KeywordTok{as.factor}\NormalTok{(current_yes))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{analysis-variables}{%
+\section{Analysis Variables}\label{analysis-variables}}
+
+The variable used in the final analysis are:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{GEOID:} The geographic identifier of the census tract.\\
+\item
+  \textbf{medage:} The median age of the population in the tract.
+\item
+  \textbf{medincome:} The median income of the population in the tract.
+\item
+  \textbf{white\_pct:} The percentage of white population in the tract.
+\item
+  \textbf{public\_pct:} The percentage of people who go to work by
+  public transportation (excluding taxi or cab).\\
+\item
+  \textbf{time\_pct:} The percentage of people who travel more than an
+  hour to work.\\
+\item
+  \textbf{trump\_pct:} The estimated percentage of votes for Donald
+  Trump in that tract.
+\item
+  \textbf{voter\_turnout:} The estimated percentage of voters who voted
+  in this referendum in the tract.
+\item
+  \textbf{yes\_pct:} The estimated percentage of voters who voted yes in
+  this referendum in the tract.
+\item
+  \textbf{plan\_yes:} Whether the tract is covered by the public
+  transportation planned in the short-range (Y2020 -- 2025), defined by
+  whether any transportation is available within 500 meters. 1 stands
+  for yes, 0 stands for no.\\
+\item
+  \textbf{current\_yes:} Whether the tract is covered by the existing
+  public transportation, defined by whether any transportation is
+  available within 500 meters. 1 stands for yes, 0 stands for no.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{export_summary_table}\NormalTok{(}\KeywordTok{dfSummary}\NormalTok{(final_data))}
+\KeywordTok{save}\NormalTok{(}\StringTok{"final_data"}\NormalTok{, }\DataTypeTok{file =} \StringTok{"processed_data/analysis_data.RData"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{discussion-of-data}{%
+\section{Discussion of Data}\label{discussion-of-data}}
+
+First, the distribution of median income is slightly skewed to the
+right, ranging from 33020 to 156136. It demonstrates that income
+inequality is visible at an aggregate level.
+
+Secondly, the usage of public transit is surprisingly low. The median is
+0, implying that people in over half of the tracts do not use public
+transport. The distribution is highly positively skewed and might
+require data transformation.
+
+The percentage of Trump supporters is relatively evenly distributed,
+with a mean of 0.4. Given that Gwinnett is one of the minority counties
+in which Clinton won over Trump, the result is reasonable.
+
+Finally, as expected, public transportation is accessible to more tracts
+if it expands as planned. Interestingly, through a more detailed look at
+the data, we can see a few census tracts covered by public transit
+within 500 meters of distance at present, but no more in the short-range
+plan. This is possibly due to a reduction in circuitous routing in the
+proposition.
+
+\end{document}

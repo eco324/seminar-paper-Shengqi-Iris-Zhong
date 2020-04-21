@@ -1,0 +1,28 @@
+---
+title: "map trial"
+author: "Shengqi(Iris) Zhong"
+date: "4/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(sf)
+library(tigris)
+library(tmap)
+library(tidycensus)
+```
+
+```{r}
+short_range <- st_read("raw_data/short_range_layer.shp") %>% 
+  st_transform(32615)
+short_range_buffers <- st_buffer(short_range, dist = 1000)
+gwinnett_tracks <- tigris::tracts(state = 13, county = 135, cb = T) %>% st_as_sf() %>% 
+  st_transform(32615)
+in_buffer <- st_intersects(gwinnett_tracks, short_range_buffers, sparse = F)
+colnames(in_buffer) <- short_range_buffers$id
+in_buffer <- as_tibble(in_buffer)
+in_buffer$GEOID <- gwinnett_tracks$GEOID
+```
+
