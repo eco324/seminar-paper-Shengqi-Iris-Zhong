@@ -68,12 +68,13 @@ time\_pct           & The percentage of people who travel more than an hour to w
 trump\_pct          & The estimated percentage of votes for Donald Trump in that tract      \\
 voter\_turnout  & The estimated percentage of voters who voted in this referendum in the tract \\
 yes\_pct           & The estimated percentage of voters who voted yes in this referendum in the tract      \\
-plan\_yes          & Whether the tract is covered by short-range plan. 1 stands for yes, 0 stands for no      \\
-current\_yes          & Whether the tract is covered by the existing public transportation. 1 stands for yes, 0 stands for no      \\
+plan\_yes          & Whether the tract is covered by the public transportation now and in the short-range (Y2020 – 2025), \\ & defined by whether any transportation is available within 500 meters. 1 stands for the tract doesn't have transit both now and in the short-range plan. \\ & 2 stands for the tract has transit now but not in the short-range plan. 3 stands for the tract that doesn't have transit now and will have in the future.\\ & 4 stands for the tract that has public transit both now and in the future.      \\
+
 \hline
 \end{tabular}
 \end{table}
 
+- **current_plan:** Whether the tract is covered by the public transportation now and in the short-range (Y2020 – 2025), defined by whether any transportation is available within 500 meters. 1 stands for the tract doesn't have transit both now and in the short-range plan. 2 stands for the tract has transit now but not in the short-range plan. 3 stands for the tract that doesn't have transit now and will have in the future. 4 stands for the tract that has public transit both now and in the future.
 
 
 ```{r create summary statistic table, echo = F, results = 'asis'}
@@ -89,9 +90,9 @@ stargazer::stargazer(as.data.frame(final_data),
 ```{r}
 
 data_numeric <- final_data %>%
-   mutate(plan_yes = as.numeric(plan_yes),
-          current_yes = as.numeric(current_yes)) %>%
+   mutate(current_plan = as.numeric(current_plan)) %>%
    select(-GEOID)
+
 data_cor = cor(data_numeric)
 
 data_cor_1 <- rcorr(as.matrix(data_numeric))
@@ -99,23 +100,25 @@ M <- data_cor_1$r
 p_mat <- data_cor_1$P
 corrplot(M, type = "upper", order = "hclust", 
          p.mat = p_mat, sig.level = 0.05)
+
+
 ```
 
 
 ## Model specification
 Model 1:
-$yes\_pct = \beta_0+\beta_1*medage+\beta_2*medincome+\beta_3*white\_pct+\beta_4*public\_pct+\beta_5*time\_pct+\beta_6*trump\_pct+\beta_7*voter\_turnout+\beta_8*plan\_yes+\beta_9*current\_yes+\epsilon$
+$yes\_pct = \beta_0+\beta_1*medage+\beta_2*medincome+\beta_3*white\_pct+\beta_4*public\_pct+\beta_5*time\_pct+\beta_6*trump\_pct+\beta_7*voter\_turnout+\beta_8*current\_plan+\epsilon$
 
 # Results
 
 
 
-model 1: no interaction, linear
+model 1: linear
 ```{r}
 
 mod1 <- lm(data = final_data, yes_pct ~ medage + medincome + white_pct 
            + public_pct + time_pct + trump_pct + voter_turnout +
-              plan_yes + current_yes)
+              current_plan)
 summary(mod1)
 ```
 
@@ -142,7 +145,7 @@ all below 5: good, no collinearity problem
 
 model 2: no interaction, logistic
 ```{r}
-mod2 <- glm(data = final_data, yes_pct ~ medage + medincome + white_pct + public_pct + time_pct + trump_pct + voter_turnout + plan_yes + current_yes, family = "binomial")
+mod2 <- glm(data = final_data, yes_pct ~ medage + medincome + white_pct + public_pct + time_pct + trump_pct + voter_turnout + current_plan, family = "binomial")
 summary(mod2)
 ```
 
@@ -183,7 +186,7 @@ find_skewness(data_tf)
 step 3: model them
 
 ```{r}
-mod3 <- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + plan_yes + current_yes)
+mod3 <- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + current_plan)
 summary(mod3)
 ```
 
@@ -207,7 +210,7 @@ model 4: transformation, logistic
 ```{r}
 mod4 <- glm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct 
            + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout +
-              plan_yes + current_yes, family = "binomial")
+              current_plan, family = "binomial")
 summary(mod4)
 ```
 
@@ -223,41 +226,14 @@ stargazer::stargazer(list(mod3, mod4),
                notes.align = "l")
 ```
 
-
-model 5: interaction, transformation, linear
-
+model 5: interaction, transformed, linear
 ```{r}
-mod5 <- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + plan_yes * current_yes)
+mod5 <- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct *current_plan +  log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + white_pct *current_plan)
 summary(mod5)
-anova(mod3,mod5)
-```
-
-Model w/ interaction doesn't differ significantly from the one w/o interaction.
-
-```{r generate model 5 table, echo = F, results = 'asis'}
-
-stargazer::stargazer(list(mod5), 
-               title = "Linear regression with interaction results", 
-               label = "interactionResults",
-               header = F,
-               notes = "Linear regression with interaction result",
-               notes.align = "l")
 ```
 
 
-mod 6: only interaction, transformation, linear
-```{r}
-mod6 <- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + plan_yes : current_yes)
-summary(mod6)
-```
 
 
-```{r generate model 6 table, echo = F, results = 'asis'}
 
-stargazer::stargazer(list(mod6), 
-               title = "Linear regression with interaction-only results", 
-               label = "interactionOnlyResults",
-               header = F,
-               notes = "Linear regression with interaction-only result",
-               notes.align = "l")
-```
+
