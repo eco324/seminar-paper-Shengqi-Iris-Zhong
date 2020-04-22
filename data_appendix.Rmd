@@ -498,7 +498,7 @@ current_in_buffer <- current_in_buffer %>%
 
 ## Census data processing
 
-Select the variables in census data: GEOID, median age, median income, the percentage of white, the percentage of people using public transportation, and the percentage of people who spend more than an hour on transportation to work. Finally, join the tables together to get the final dataset.
+Select the variables in census data: GEOID, median age, median income, the percentage of white, the percentage of people using public transportation, and the percentage of people who spend more than an hour on transportation to work. After joining the datasets together, a categorical variable is created from plan_yes and current_yes. 1 stands for the tract doesn't have transit now and in the short-range plan. 2 stands for the tract has transit now but not in the short-range plan. 3 stands for the tract that doesn't have transit now and will have in the future. 4 stands for the tract that has public transit now and in the future. 
 
 ```{r final data cleaning}
 final_data <- cbdata_tidy %>%
@@ -510,7 +510,8 @@ final_data <- cbdata_tidy %>%
   mutate(current_plan = as.factor(case_when(plan_yes == 0 & current_yes == 0 ~ 1,
                                   plan_yes == 0 & current_yes == 1 ~ 2,
                                   plan_yes == 1 & current_yes == 0 ~ 3,
-                                  plan_yes == 1 & current_yes == 1 ~ 4)))
+                                  plan_yes == 1 & current_yes == 1 ~ 4))) %>%
+  select(-c(plan_yes, current_yes))
 ```
 
 
@@ -527,8 +528,8 @@ The variable used in the final analysis are:
 - **trump_pct:** The estimated percentage of votes for Donald Trump in that tract.
 - **voter_turnout:** The estimated percentage of voters who voted in this referendum in the tract.
 - **yes_pct:** The estimated percentage of voters who voted yes in this referendum in the tract.
-- **plan_yes:** Whether the tract is covered by the public transportation planned in the short-range (Y2020 – 2025), defined by whether any transportation is available within 500 meters. 1 stands for yes, 0 stands for no.  
-- **current_yes:** Whether the tract is covered by the existing public transportation, defined by whether any transportation is available within 500 meters. 1 stands for yes, 0 stands for no.  
+- **current_plan:** Whether the tract is covered by the public transportation now and in the short-range (Y2020 – 2025), defined by whether any transportation is available within 500 meters. 1 stands for the tract doesn't have transit both now and in the short-range plan. 2 stands for the tract has transit now but not in the short-range plan. 3 stands for the tract that doesn't have transit now and will have in the future. 4 stands for the tract that has public transit both now and in the future.
+
 
 ```{r summarize and save data}
 export_summary_table(dfSummary(final_data))
@@ -545,7 +546,7 @@ Secondly, the usage of public transit is surprisingly low. The median is 0, impl
 
 The percentage of Trump supporters is relatively evenly distributed, with a mean of 0.4. Given that Gwinnett is one of the minority counties in which Clinton won over Trump, the result is reasonable. 
 
-Finally, as expected, public transportation is accessible to more tracts if it expands as planned. Interestingly, through a more detailed look at the data, we can see a few census tracts covered by public transit within 500 meters of distance at present, but no more in the short-range plan. This is possibly due to a reduction in circuitous routing in the proposition.
+Finally, as expected, public transportation is accessible to more tracts if it expands as planned. Interestingly, through a more detailed look at the data, we can see one tract covered by public transit within 500 meters of distance at present, but no more in the short-range plan. This is possibly due to a reduction in circuitous routing in the proposition.
 
 ## map trys
 ```{r}
