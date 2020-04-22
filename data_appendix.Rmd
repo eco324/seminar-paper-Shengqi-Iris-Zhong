@@ -554,5 +554,6 @@ gwinnett_track_map <- gwinnett_tracks %>%
   full_join(final_data, by = "GEOID") 
 tm_shape(gwinnett_track_map)  + tm_polygons(col = "current_plan") + tm_shape(short_range) + tm_lines()
 tm_shape(gwinnett_track_map)  + tm_polygons(col = "white_pct") + tm_shape(short_range) + tm_lines()
+tm_shape(gwinnett_track_map)  + tm_polygons(col = "trump_pct") + tm_shape(short_range) + tm_lines()
 ```
 
