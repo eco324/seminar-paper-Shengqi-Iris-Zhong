@@ -507,8 +507,10 @@ final_data <- cbdata_tidy %>%
   inner_join(precinct_tidy_transformed, by = "GEOID") %>%
   inner_join(short_in_buffer, by = "GEOID") %>%
   inner_join(current_in_buffer, by = "GEOID") %>%
-  mutate(plan_yes = as.factor(plan_yes),
-        current_yes = as.factor(current_yes))
+  mutate(current_plan = as.factor(case_when(plan_yes == 0 & current_yes == 0 ~ 1,
+                                  plan_yes == 0 & current_yes == 1 ~ 2,
+                                  plan_yes == 1 & current_yes == 0 ~ 3,
+                                  plan_yes == 1 & current_yes == 1 ~ 4)))
 ```
 
 
@@ -547,10 +549,9 @@ Finally, as expected, public transportation is accessible to more tracts if it e
 
 ## map trys
 ```{r}
-library(tmap)
 gwinnett_track_map <- gwinnett_tracks %>%
-  full_join(final_data, by = "GEOID") %>%
-  mutate(num_plan = plan_yes + current_yes)
-tm_shape(gwinnett_track_map)  + tm_polygons(col = "num_plan") + tm_shape(short_range) + tm_lines()
+  full_join(final_data, by = "GEOID") 
+tm_shape(gwinnett_track_map)  + tm_polygons(col = "current_plan") + tm_shape(short_range) + tm_lines()
+tm_shape(gwinnett_track_map)  + tm_polygons(col = "white_pct") + tm_shape(short_range) + tm_lines()
 ```
 
