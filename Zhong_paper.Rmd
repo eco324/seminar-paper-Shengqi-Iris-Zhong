@@ -20,7 +20,9 @@ knitr::opts_chunk$set(results = 'asis', cache = F)
 library(tidyverse)
 library(lubridate)
 library(stargazer)
-
+library(corrplot)
+library(Hmisc)
+load("processed_data/analysis_data.RData")
 ```
 
 
@@ -38,6 +40,14 @@ referendum
 
 # Data & Methods
 ## Conceptual model
+
+According to previous research, sociodemographic elements can influence people’s voting decisions in the referendum. For example, the effect of income is mixed: on the one hand, people with higher income will pay a smaller portion of their earnings for the implementation of the plan; on the other hand, they will pay a larger amount of tax. Bollino (2008) finds a positive correlation between income and people’s willingness to pay for renewable resources. Burkhardt and Chan (2017) separate the influence of income from tax, and discover their opposite effects on voting. Therefore, it is worth considering the relationship between income and percentage of supporters in this referendum. Voters’ partisanship attachment is found to be a significant factor as well in Burkhardt and Chan’s (2017) paper. Areas with higher proportions of Republicans are less supportive of fiscally costly propositions. In my project, it can be hypothesized that tracts that have a higher proportion of Trump supporters tend to have a lower percentage of agreement to the proposal.  
+
+In addition, some factors related to transportation can intuitively shape people’s attitudes towards public transit. For example, the areas in which people do not use public transit at all might have a higher percentage of refusal of the proposal. People who have to travel a long time to work are more likely to support the extension plan if it helps save time. 
+
+Finally, people favor the proposition if it benefits them. Specifically, tracts that are not covered by public transport at present but will be covered in the expansion plan are predicted to support the proposal more.
+
+
 
 ## Data
 \begin{table}
@@ -65,28 +75,51 @@ current\_yes          & Whether the tract is covered by the existing public tran
 \end{table}
 
 
-- **GEOID:** The geographic identifier of the census tract.  
-- **medage:** The median age of the population in the tract.
-- **medincome:** The median income of the population in the tract.
-- **white_pct:** The percentage of white population in the tract.
-- **public_pct:** The percentage of people who go to work by public transportation (excluding taxi or cab).  
-- **time_pct:** The percentage of people who travel more than an hour to work.  
-- **trump_pct:** The estimated percentage of votes for Donald Trump in that tract.
-- **voter_turnout:** The estimated percentage of voters who voted in this referendum in the tract.
-- **yes_pct:** The estimated percentage of voters who voted yes in this referendum in the tract.
-- **plan_yes:** Whether the tract is covered by the public transportation planned in the short-range (Y2020 – 2025), defined by whether any transportation is available within 500 meters. 1 stands for yes, 0 stands for no.  
-- **current_yes:** Whether the tract is covered by the existing public transportation, defined by whether any transportation is available within 500 meters. 1 stands for yes, 0 stands for no. 
+
+```{r create summary statistic table, echo = F, results = 'asis'}
+
+stargazer::stargazer(as.data.frame(final_data),
+                     label = "summaryStats",
+                     title = "Summary statistics",
+                     header = F,
+                     type = "latex",
+                     digits = 2)
+```
+
+```{r}
+
+data_numeric <- final_data %>%
+   mutate(plan_yes = as.numeric(plan_yes),
+          current_yes = as.numeric(current_yes)) %>%
+   select(-GEOID)
+data_cor = cor(data_numeric)
+
+data_cor_1 <- rcorr(as.matrix(data_numeric))
+M <- data_cor_1$r
+p_mat <- data_cor_1$P
+corrplot(M, type = "upper", order = "hclust", 
+         p.mat = p_mat, sig.level = 0.05)
+```
+
+
+## Model specification
+Model 1:
+$yes\_pct = \beta_0+\beta_1*medage+\beta_2*medincome+\beta_3*white\_pct+\beta_4*public\_pct+\beta_5*time\_pct+\beta_6*trump\_pct+\beta_7*voter\_turnout+\beta_8*plan\_yes+\beta_9*current\_yes+\epsilon$
 
 # Results
 
-model 1: all variables, no interaction, linear
+
+
+model 1: no interaction, linear
 ```{r}
-load("processed_data/analysis_data.RData")
+
 mod1 <- lm(data = final_data, yes_pct ~ medage + medincome + white_pct 
            + public_pct + time_pct + trump_pct + voter_turnout +
               plan_yes + current_yes)
 summary(mod1)
 ```
+
+
 
 model 1 assumption checking
 ```{r}
@@ -107,13 +140,26 @@ all below 5: good, no collinearity problem
 
 
 
-model 2: all variables, no interaction, logistic
+model 2: no interaction, logistic
 ```{r}
 mod2 <- glm(data = final_data, yes_pct ~ medage + medincome + white_pct + public_pct + time_pct + trump_pct + voter_turnout + plan_yes + current_yes, family = "binomial")
 summary(mod2)
 ```
 
-model 3: all variables, no interaction, some transformation, linear
+model 1 & 2 table
+```{r generate model 1 table, echo = F, results = 'asis'}
+
+stargazer::stargazer(list(mod1, mod2), 
+               title = "Initial regression results", 
+               label = "initialResults",
+               header = F,
+               notes = "Initial linear and logistic regression results",
+               notes.align = "l")
+```
+
+
+
+model 3: no interaction, some transformations, linear
 
 step 1: find the skewed variables
 
@@ -127,16 +173,17 @@ medincome, public_pct, voter_turnout
 step 2: transform them
 ```{r}
 data_tf <- final_data %>%
-   mutate(medincome = log(medincome),
-          public_pct = log(public_pct + 0.01),
-          voter_turnout = (voter_turnout)^0.5)
+   mutate(log_medincome = log(medincome),
+          log_public_pct = log(public_pct + 0.01),
+          sqrt_voter_turnout = (voter_turnout)^0.5) %>%
+   select(-c(medincome, public_pct, voter_turnout))
 find_skewness(data_tf)
 ```
 
 step 3: model them
 
 ```{r}
-mod3 <- lm(data = data_tf, yes_pct ~ medage + medincome + white_pct + public_pct + time_pct + trump_pct + voter_turnout + plan_yes + current_yes)
+mod3 <- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + plan_yes + current_yes)
 summary(mod3)
 ```
 
@@ -154,12 +201,63 @@ vif(mod3)
 
 all below 5: no collinearity
 
-model 4: all variables, interaction, no transformation, linear
+
+
+model 4: transformation, logistic
+```{r}
+mod4 <- glm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct 
+           + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout +
+              plan_yes + current_yes, family = "binomial")
+summary(mod4)
+```
+
+
+model 3 & 4 table
+```{r generate model 3&4 table, echo = F, results = 'asis'}
+
+stargazer::stargazer(list(mod3, mod4), 
+               title = "Data-transformed regression results", 
+               label = "transformedResults",
+               header = F,
+               notes = "Data-transformed linear and logistic regression results",
+               notes.align = "l")
+```
+
+
+model 5: interaction, transformation, linear
 
 ```{r}
-mod4 <- lm(data = final_data, yes_pct ~ medage + medincome + white_pct + public_pct + time_pct + trump_pct + voter_turnout + plan_yes * current_yes)
-summary(mod4)
-anova(mod1,mod4)
+mod5 <- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + plan_yes * current_yes)
+summary(mod5)
+anova(mod3,mod5)
 ```
 
 Model w/ interaction doesn't differ significantly from the one w/o interaction.
+
+```{r generate model 5 table, echo = F, results = 'asis'}
+
+stargazer::stargazer(list(mod5), 
+               title = "Linear regression with interaction results", 
+               label = "interactionResults",
+               header = F,
+               notes = "Linear regression with interaction result",
+               notes.align = "l")
+```
+
+
+mod 6: only interaction, transformation, linear
+```{r}
+mod6 <- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + plan_yes : current_yes)
+summary(mod6)
+```
+
+
+```{r generate model 6 table, echo = F, results = 'asis'}
+
+stargazer::stargazer(list(mod6), 
+               title = "Linear regression with interaction-only results", 
+               label = "interactionOnlyResults",
+               header = F,
+               notes = "Linear regression with interaction-only result",
+               notes.align = "l")
+```

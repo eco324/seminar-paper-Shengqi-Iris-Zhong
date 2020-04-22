@@ -173,6 +173,22 @@ xx
 ## Warning: package 'stargazer' was built under R version 3.5.2
 \end{verbatim}
 
+\begin{verbatim}
+## Warning: package 'corrplot' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'Hmisc' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'survival' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'Formula' was built under R version 3.5.2
+\end{verbatim}
+
 \hypertarget{literature-review}{%
 \section{Literature Review}\label{literature-review}}
 
@@ -231,6 +247,35 @@ current transportation future plan referendum
 \hypertarget{conceptual-model}{%
 \subsection{Conceptual model}\label{conceptual-model}}
 
+According to previous research, sociodemographic elements can influence
+people's voting decisions in the referendum. For example, the effect of
+income is mixed: on the one hand, people with higher income will pay a
+smaller portion of their earnings for the implementation of the plan; on
+the other hand, they will pay a larger amount of tax. Bollino (2008)
+finds a positive correlation between income and people's willingness to
+pay for renewable resources. Burkhardt and Chan (2017) separate the
+influence of income from tax, and discover their opposite effects on
+voting. Therefore, it is worth considering the relationship between
+income and percentage of supporters in this referendum. Voters'
+partisanship attachment is found to be a significant factor as well in
+Burkhardt and Chan's (2017) paper. Areas with higher proportions of
+Republicans are less supportive of fiscally costly propositions. In my
+project, it can be hypothesized that tracts that have a higher
+proportion of Trump supporters tend to have a lower percentage of
+agreement to the proposal.
+
+In addition, some factors related to transportation can intuitively
+shape people's attitudes towards public transit. For example, the areas
+in which people do not use public transit at all might have a higher
+percentage of refusal of the proposal. People who have to travel a long
+time to work are more likely to support the extension plan if it helps
+save time.
+
+Finally, people favor the proposition if it benefits them. Specifically,
+tracts that are not covered by public transport at present but will be
+covered in the expansion plan are predicted to support the proposal
+more.
+
 \hypertarget{data}{%
 \subsection{Data}\label{data}}
 
@@ -258,51 +303,60 @@ current\_yes          & Whether the tract is covered by the existing public tran
 \end{tabular}
 \end{table}
 
-\begin{itemize}
-\tightlist
-\item
-  \textbf{GEOID:} The geographic identifier of the census tract.\\
-\item
-  \textbf{medage:} The median age of the population in the tract.
-\item
-  \textbf{medincome:} The median income of the population in the tract.
-\item
-  \textbf{white\_pct:} The percentage of white population in the tract.
-\item
-  \textbf{public\_pct:} The percentage of people who go to work by
-  public transportation (excluding taxi or cab).\\
-\item
-  \textbf{time\_pct:} The percentage of people who travel more than an
-  hour to work.\\
-\item
-  \textbf{trump\_pct:} The estimated percentage of votes for Donald
-  Trump in that tract.
-\item
-  \textbf{voter\_turnout:} The estimated percentage of voters who voted
-  in this referendum in the tract.
-\item
-  \textbf{yes\_pct:} The estimated percentage of voters who voted yes in
-  this referendum in the tract.
-\item
-  \textbf{plan\_yes:} Whether the tract is covered by the public
-  transportation planned in the short-range (Y2020 -- 2025), defined by
-  whether any transportation is available within 500 meters. 1 stands
-  for yes, 0 stands for no.\\
-\item
-  \textbf{current\_yes:} Whether the tract is covered by the existing
-  public transportation, defined by whether any transportation is
-  available within 500 meters. 1 stands for yes, 0 stands for no.
-\end{itemize}
+\begin{table}[!htbp] \centering 
+  \caption{Summary statistics} 
+  \label{summaryStats} 
+\begin{tabular}{@{\extracolsep{5pt}}lccccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+Statistic & \multicolumn{1}{c}{N} & \multicolumn{1}{c}{Mean} & \multicolumn{1}{c}{St. Dev.} & \multicolumn{1}{c}{Min} & \multicolumn{1}{c}{Pctl(25)} & \multicolumn{1}{c}{Pctl(75)} & \multicolumn{1}{c}{Max} \\ 
+\hline \\[-1.8ex] 
+medage & 113 & 35.56 & 4.58 & 26 & 32.8 & 38.8 & 52 \\ 
+medincome & 113 & 69,439.24 & 24,358.44 & 33,020 & 51,429 & 82,845 & 156,136 \\ 
+white\_pct & 113 & 0.48 & 0.15 & 0.17 & 0.38 & 0.61 & 0.89 \\ 
+public\_pct & 113 & 0.01 & 0.01 & 0 & 0.002 & 0.02 & 0 \\ 
+time\_pct & 113 & 0.16 & 0.05 & 0.04 & 0.12 & 0.20 & 0.31 \\ 
+trump\_pct & 113 & 0.40 & 0.15 & 0.11 & 0.27 & 0.52 & 0.69 \\ 
+voter\_turnout & 113 & 0.16 & 0.06 & 0.05 & 0.13 & 0.18 & 0.37 \\ 
+yes\_pct & 113 & 0.53 & 0.14 & 0.27 & 0.42 & 0.61 & 0.84 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_numeric <-}\StringTok{ }\NormalTok{final_data }\OperatorTok{%>%}
+\StringTok{   }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{plan_yes =} \KeywordTok{as.numeric}\NormalTok{(plan_yes),}
+          \DataTypeTok{current_yes =} \KeywordTok{as.numeric}\NormalTok{(current_yes)) }\OperatorTok{%>%}
+\StringTok{   }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{GEOID)}
+\NormalTok{data_cor =}\StringTok{ }\KeywordTok{cor}\NormalTok{(data_numeric)}
+
+\NormalTok{data_cor_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{rcorr}\NormalTok{(}\KeywordTok{as.matrix}\NormalTok{(data_numeric))}
+\NormalTok{M <-}\StringTok{ }\NormalTok{data_cor_}\DecValTok{1}\OperatorTok{$}\NormalTok{r}
+\NormalTok{p_mat <-}\StringTok{ }\NormalTok{data_cor_}\DecValTok{1}\OperatorTok{$}\NormalTok{P}
+\KeywordTok{corrplot}\NormalTok{(M, }\DataTypeTok{type =} \StringTok{"upper"}\NormalTok{, }\DataTypeTok{order =} \StringTok{"hclust"}\NormalTok{, }
+         \DataTypeTok{p.mat =}\NormalTok{ p_mat, }\DataTypeTok{sig.level =} \FloatTok{0.05}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\hypertarget{model-specification}{%
+\subsection{Model specification}\label{model-specification}}
+
+Model 1:
+\(yes\_pct = \beta_0+\beta_1*medage+\beta_2*medincome+\beta_3*white\_pct+\beta_4*public\_pct+\beta_5*time\_pct+\beta_6*trump\_pct+\beta_7*voter\_turnout+\beta_8*plan\_yes+\beta_9*current\_yes+\epsilon\)
 
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
-model 1: all variables, no interaction, linear
+model 1: no interaction, linear
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{load}\NormalTok{(}\StringTok{"processed_data/analysis_data.RData"}\NormalTok{)}
-\NormalTok{mod1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ final_data, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{+}\StringTok{ }\NormalTok{public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{voter_turnout }\OperatorTok{+}\StringTok{ }\NormalTok{plan_yes }\OperatorTok{+}\StringTok{ }\NormalTok{current_yes)}
+\NormalTok{mod1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ final_data, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }
+           \OperatorTok{+}\StringTok{ }\NormalTok{public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{voter_turnout }\OperatorTok{+}
+\StringTok{              }\NormalTok{plan_yes }\OperatorTok{+}\StringTok{ }\NormalTok{current_yes)}
 \KeywordTok{summary}\NormalTok{(mod1)}
 \end{Highlighting}
 \end{Shaded}
@@ -341,7 +395,7 @@ model 1 assumption checking
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-2-1.pdf}
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-3-1.pdf}
 
 collinearity:
 
@@ -395,7 +449,7 @@ trump_pct voter_turnout      plan_yes   current_yes
 
 all below 5: good, no collinearity problem
 
-model 2: all variables, no interaction, logistic
+model 2: no interaction, logistic
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -439,7 +493,66 @@ Residual deviance: 0.83282 on 103 degrees of freedom AIC: 133.92
 
 Number of Fisher Scoring iterations: 4
 
-model 3: all variables, no interaction, some transformation, linear
+model 1 \& 2 table
+
+\begin{table}[!htbp] \centering 
+  \caption{Initial regression results} 
+  \label{initialResults} 
+\begin{tabular}{@{\extracolsep{5pt}}lcc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{2}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-3} 
+\\[-1.8ex] & \multicolumn{2}{c}{yes\_pct} \\ 
+\\[-1.8ex] & \textit{OLS} & \textit{logistic} \\ 
+\\[-1.8ex] & (1) & (2)\\ 
+\hline \\[-1.8ex] 
+ medage & 0.003$^{*}$ & 0.011 \\ 
+  & (0.001) & (0.072) \\ 
+  & & \\ 
+ medincome & 0.00000 & 0.00000 \\ 
+  & (0.00000) & (0.00001) \\ 
+  & & \\ 
+ white\_pct & 0.118$^{**}$ & 0.567 \\ 
+  & (0.053) & (2.627) \\ 
+  & & \\ 
+ public\_pct & 0.839$^{**}$ & 3.642 \\ 
+  & (0.336) & (17.064) \\ 
+  & & \\ 
+ time\_pct & $-$0.303$^{***}$ & $-$1.376 \\ 
+  & (0.090) & (4.462) \\ 
+  & & \\ 
+ trump\_pct & $-$0.888$^{***}$ & $-$3.790 \\ 
+  & (0.057) & (2.839) \\ 
+  & & \\ 
+ voter\_turnout & $-$0.328$^{**}$ & $-$1.453 \\ 
+  & (0.126) & (6.216) \\ 
+  & & \\ 
+ plan\_yes1 & $-$0.030$^{**}$ & $-$0.128 \\ 
+  & (0.012) & (0.567) \\ 
+  & & \\ 
+ current\_yes1 & 0.046$^{***}$ & 0.189 \\ 
+  & (0.012) & (0.591) \\ 
+  & & \\ 
+ Constant & 0.802$^{***}$ & 1.315 \\ 
+  & (0.047) & (2.311) \\ 
+  & & \\ 
+\hline \\[-1.8ex] 
+Observations & 113 & 113 \\ 
+R$^{2}$ & 0.917 &  \\ 
+Adjusted R$^{2}$ & 0.910 &  \\ 
+Log Likelihood &  & $-$56.958 \\ 
+Akaike Inf. Crit. &  & 133.915 \\ 
+Residual Std. Error & 0.042 (df = 103) &  \\ 
+F Statistic & 126.471$^{***}$ (df = 9; 103) &  \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{2}{l}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+ & \multicolumn{2}{l}{Initial linear and logistic regression results} \\ 
+\end{tabular} 
+\end{table}
+
+model 3: no interaction, some transformations, linear
 
 step 1: find the skewed variables
 
@@ -478,6 +591,12 @@ step 1: find the skewed variables
 \end{verbatim}
 
 \begin{verbatim}
+## The following object is masked from 'package:Hmisc':
+## 
+##     describe
+\end{verbatim}
+
+\begin{verbatim}
 ## The following object is masked from 'package:base':
 ## 
 ##     transform
@@ -498,9 +617,10 @@ step 2: transform them
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{data_tf <-}\StringTok{ }\NormalTok{final_data }\OperatorTok{%>%}
-\StringTok{   }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{medincome =} \KeywordTok{log}\NormalTok{(medincome),}
-          \DataTypeTok{public_pct =} \KeywordTok{log}\NormalTok{(public_pct }\OperatorTok{+}\StringTok{ }\FloatTok{0.01}\NormalTok{),}
-          \DataTypeTok{voter_turnout =}\NormalTok{ (voter_turnout)}\OperatorTok{^}\FloatTok{0.5}\NormalTok{)}
+\StringTok{   }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{log_medincome =} \KeywordTok{log}\NormalTok{(medincome),}
+          \DataTypeTok{log_public_pct =} \KeywordTok{log}\NormalTok{(public_pct }\OperatorTok{+}\StringTok{ }\FloatTok{0.01}\NormalTok{),}
+          \DataTypeTok{sqrt_voter_turnout =}\NormalTok{ (voter_turnout)}\OperatorTok{^}\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{   }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\KeywordTok{c}\NormalTok{(medincome, public_pct, voter_turnout))}
 \KeywordTok{find_skewness}\NormalTok{(data_tf)}
 \end{Highlighting}
 \end{Shaded}
@@ -511,14 +631,14 @@ step 3: model them
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{mod3 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_tf, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{+}\StringTok{ }\NormalTok{public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{voter_turnout }\OperatorTok{+}\StringTok{ }\NormalTok{plan_yes }\OperatorTok{+}\StringTok{ }\NormalTok{current_yes)}
+\NormalTok{mod3 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_tf, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{log_medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{+}\StringTok{ }\NormalTok{log_public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{sqrt_voter_turnout }\OperatorTok{+}\StringTok{ }\NormalTok{plan_yes }\OperatorTok{+}\StringTok{ }\NormalTok{current_yes)}
 \KeywordTok{summary}\NormalTok{(mod3)}
 \end{Highlighting}
 \end{Shaded}
 
-Call: lm(formula = yes\_pct \textasciitilde{} medage + medincome +
-white\_pct + public\_pct + time\_pct + trump\_pct + voter\_turnout +
-plan\_yes + current\_yes, data = data\_tf)
+Call: lm(formula = yes\_pct \textasciitilde{} medage + log\_medincome +
+white\_pct + log\_public\_pct + time\_pct + trump\_pct +
+sqrt\_voter\_turnout + plan\_yes + current\_yes, data = data\_tf)
 
 Residuals: Min 1Q Median 3Q Max -0.099662 -0.030760 -0.004331 0.027626
 0.097867
@@ -527,11 +647,11 @@ Coefficients: Estimate Std. Error t value
 Pr(\textgreater\textbar t\textbar)\\
 (Intercept) 1.022033 0.217430 4.701 8.07e-06 \textbf{\emph{ medage
 0.003595 0.001506 2.386 0.01884 }\\
-medincome -0.007268 0.022156 -0.328 0.74356\\
+log\_medincome -0.007268 0.022156 -0.328 0.74356\\
 white\_pct 0.119648 0.050332 2.377 0.01929 *\\
-public\_pct 0.022875 0.008179 2.797 0.00616 } time\_pct -0.279306
+log\_public\_pct 0.022875 0.008179 2.797 0.00616 } time\_pct -0.279306
 0.089340 -3.126 0.00230 ** trump\_pct -0.859270 0.058269 -14.747
-\textless{} 2e-16 \emph{\textbf{ voter\_turnout -0.321784 0.103026
+\textless{} 2e-16 \emph{\textbf{ sqrt\_voter\_turnout -0.321784 0.103026
 -3.123 0.00232 } plan\_yes1 -0.031542 0.011317 -2.787 0.00633 \textbf{
 current\_yes1 0.045541 0.011848 3.844 0.00021 }} --- Signif. codes: 0
 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 ' ' 1
@@ -549,7 +669,7 @@ model 3 assumption checking
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-8-1.pdf}
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-9-1.pdf}
 
 collinearity:
 
@@ -560,67 +680,326 @@ collinearity:
 \end{Shaded}
 
 \begin{verbatim}
-   medage     medincome     white_pct    public_pct      time_pct 
- 3.149466      3.713809      3.629803      1.133155      1.587723 
-trump_pct voter_turnout      plan_yes   current_yes 
- 4.919508      3.621155      1.737295      2.336190 
+        medage      log_medincome          white_pct     log_public_pct 
+      3.149466           3.713809           3.629803           1.133155 
+      time_pct          trump_pct sqrt_voter_turnout           plan_yes 
+      1.587723           4.919508           3.621155           1.737295 
+   current_yes 
+      2.336190 
 \end{verbatim}
 
 all below 5: no collinearity
 
-model 4: all variables, interaction, no transformation, linear
+model 4: transformation, logistic
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{mod4 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ final_data, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{+}\StringTok{ }\NormalTok{public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{voter_turnout }\OperatorTok{+}\StringTok{ }\NormalTok{plan_yes }\OperatorTok{*}\StringTok{ }\NormalTok{current_yes)}
+\NormalTok{mod4 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_tf, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{log_medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }
+           \OperatorTok{+}\StringTok{ }\NormalTok{log_public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{sqrt_voter_turnout }\OperatorTok{+}
+\StringTok{              }\NormalTok{plan_yes }\OperatorTok{+}\StringTok{ }\NormalTok{current_yes, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \KeywordTok{summary}\NormalTok{(mod4)}
 \end{Highlighting}
 \end{Shaded}
 
-Call: lm(formula = yes\_pct \textasciitilde{} medage + medincome +
-white\_pct + public\_pct + time\_pct + trump\_pct + voter\_turnout +
-plan\_yes * current\_yes, data = final\_data)
+Call: glm(formula = yes\_pct \textasciitilde{} medage + log\_medincome +
+white\_pct + log\_public\_pct + time\_pct + trump\_pct +
+sqrt\_voter\_turnout + plan\_yes + current\_yes, family = ``binomial'',
+data = data\_tf)
 
-Residuals: Min 1Q Median 3Q Max -0.103714 -0.032077 -0.002399 0.030226
-0.101740
+Deviance Residuals: Min 1Q Median 3Q Max\\
+-0.215991 -0.067982 -0.000552 0.062025 0.210621
+
+Coefficients: Estimate Std. Error z value
+Pr(\textgreater\textbar z\textbar) (Intercept) 2.25723 10.86650 0.208
+0.835 medage 0.01485 0.07514 0.198 0.843 log\_medincome -0.02970 1.10820
+-0.027 0.979 white\_pct 0.57743 2.54810 0.227 0.821 log\_public\_pct
+0.09802 0.41609 0.236 0.814 time\_pct -1.27653 4.49740 -0.284 0.777
+trump\_pct -3.65734 2.95408 -1.238 0.216 sqrt\_voter\_turnout -1.46993
+5.21101 -0.282 0.778 plan\_yes1 -0.13583 0.56655 -0.240 0.811
+current\_yes1 0.18584 0.58959 0.315 0.753
+
+(Dispersion parameter for binomial family taken to be 1)
+
+\begin{verbatim}
+Null deviance: 9.05063  on 112  degrees of freedom
+\end{verbatim}
+
+Residual deviance: 0.79989 on 103 degrees of freedom AIC: 134.11
+
+Number of Fisher Scoring iterations: 4
+
+model 3 \& 4 table
+
+\begin{table}[!htbp] \centering 
+  \caption{Data-transformed regression results} 
+  \label{transformedResults} 
+\begin{tabular}{@{\extracolsep{5pt}}lcc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{2}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-3} 
+\\[-1.8ex] & \multicolumn{2}{c}{yes\_pct} \\ 
+\\[-1.8ex] & \textit{OLS} & \textit{logistic} \\ 
+\\[-1.8ex] & (1) & (2)\\ 
+\hline \\[-1.8ex] 
+ medage & 0.004$^{**}$ & 0.015 \\ 
+  & (0.002) & (0.075) \\ 
+  & & \\ 
+ log\_medincome & $-$0.007 & $-$0.030 \\ 
+  & (0.022) & (1.108) \\ 
+  & & \\ 
+ white\_pct & 0.120$^{**}$ & 0.577 \\ 
+  & (0.050) & (2.548) \\ 
+  & & \\ 
+ log\_public\_pct & 0.023$^{***}$ & 0.098 \\ 
+  & (0.008) & (0.416) \\ 
+  & & \\ 
+ time\_pct & $-$0.279$^{***}$ & $-$1.277 \\ 
+  & (0.089) & (4.497) \\ 
+  & & \\ 
+ trump\_pct & $-$0.859$^{***}$ & $-$3.657 \\ 
+  & (0.058) & (2.954) \\ 
+  & & \\ 
+ sqrt\_voter\_turnout & $-$0.322$^{***}$ & $-$1.470 \\ 
+  & (0.103) & (5.211) \\ 
+  & & \\ 
+ plan\_yes1 & $-$0.032$^{***}$ & $-$0.136 \\ 
+  & (0.011) & (0.567) \\ 
+  & & \\ 
+ current\_yes1 & 0.046$^{***}$ & 0.186 \\ 
+  & (0.012) & (0.590) \\ 
+  & & \\ 
+ Constant & 1.022$^{***}$ & 2.257 \\ 
+  & (0.217) & (10.867) \\ 
+  & & \\ 
+\hline \\[-1.8ex] 
+Observations & 113 & 113 \\ 
+R$^{2}$ & 0.920 &  \\ 
+Adjusted R$^{2}$ & 0.913 &  \\ 
+Log Likelihood &  & $-$57.057 \\ 
+Akaike Inf. Crit. &  & 134.115 \\ 
+Residual Std. Error & 0.041 (df = 103) &  \\ 
+F Statistic & 131.428$^{***}$ (df = 9; 103) &  \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{2}{l}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+ & \multicolumn{2}{l}{Data-transformed linear and logistic regression results} \\ 
+\end{tabular} 
+\end{table}
+
+model 5: interaction, transformation, linear
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod5 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_tf, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{log_medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{+}\StringTok{ }\NormalTok{log_public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{sqrt_voter_turnout }\OperatorTok{+}\StringTok{ }\NormalTok{plan_yes }\OperatorTok{*}\StringTok{ }\NormalTok{current_yes)}
+\KeywordTok{summary}\NormalTok{(mod5)}
+\end{Highlighting}
+\end{Shaded}
+
+Call: lm(formula = yes\_pct \textasciitilde{} medage + log\_medincome +
+white\_pct + log\_public\_pct + time\_pct + trump\_pct +
+sqrt\_voter\_turnout + plan\_yes * current\_yes, data = data\_tf)
+
+Residuals: Min 1Q Median 3Q Max -0.099920 -0.031591 -0.003479 0.027983
+0.098568
 
 Coefficients: Estimate Std. Error t value
 Pr(\textgreater\textbar t\textbar)\\
-(Intercept) 8.041e-01 4.707e-02 17.085 \textless{} 2e-16 \textbf{\emph{
-medage 2.738e-03 1.481e-03 1.849 0.06739 .\\
-medincome 1.326e-07 2.930e-07 0.453 0.65183\\
-white\_pct 1.143e-01 5.326e-02 2.147 0.03420 }\\
-public\_pct 8.173e-01 3.382e-01 2.417 0.01743 *\\
-time\_pct -3.057e-01 9.048e-02 -3.378 0.00103 } trump\_pct -8.859e-01
-5.709e-02 -15.517 \textless{} 2e-16 \textbf{\emph{ voter\_turnout
--3.257e-01 1.262e-01 -2.582 0.01125 }\\
-plan\_yes1 -3.176e-02 1.201e-02 -2.645 0.00945 } current\_yes1 1.888e-02
-4.399e-02 0.429 0.66866\\
-plan\_yes1:current\_yes1 2.899e-02 4.476e-02 0.648 0.51864\\
+(Intercept) 1.031840 0.218778 4.716 7.64e-06 \textbf{\emph{ medage
+0.003603 0.001511 2.384 0.01899 }\\
+log\_medincome -0.008331 0.022302 -0.374 0.70952\\
+white\_pct 0.116703 0.050746 2.300 0.02350 *\\
+log\_public\_pct 0.022304 0.008263 2.699 0.00814 } time\_pct -0.281374
+0.089698 -3.137 0.00223 ** trump\_pct -0.856963 0.058590 -14.626
+\textless{} 2e-16 *\textbf{ sqrt\_voter\_turnout -0.319107 0.103460
+-3.084 0.00263 } plan\_yes1 -0.033367 0.011777 -2.833 0.00555 **
+current\_yes1 0.021184 0.043430 0.488 0.62677\\
+plan\_yes1:current\_yes1 0.025766 0.044187 0.583 0.56111\\
 --- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 '
 ' 1
 
-Residual standard error: 0.04197 on 102 degrees of freedom Multiple
-R-squared: 0.9174, Adjusted R-squared: 0.9093 F-statistic: 113.2 on 10
+Residual standard error: 0.04125 on 102 degrees of freedom Multiple
+R-squared: 0.9202, Adjusted R-squared: 0.9123 F-statistic: 117.6 on 10
 and 102 DF, p-value: \textless{} 2.2e-16
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{anova}\NormalTok{(mod1,mod4)}
+\KeywordTok{anova}\NormalTok{(mod3,mod5)}
 \end{Highlighting}
 \end{Shaded}
 
 Analysis of Variance Table
 
-Model 1: yes\_pct \textasciitilde{} medage + medincome + white\_pct +
-public\_pct + time\_pct + trump\_pct + voter\_turnout + plan\_yes +
-current\_yes Model 2: yes\_pct \textasciitilde{} medage + medincome +
-white\_pct + public\_pct + time\_pct + trump\_pct + voter\_turnout +
-plan\_yes * current\_yes Res.Df RSS Df Sum of Sq F Pr(\textgreater F) 1
-103 0.18044\\
-2 102 0.17970 1 0.00073903 0.4195 0.5186
+Model 1: yes\_pct \textasciitilde{} medage + log\_medincome + white\_pct
++ log\_public\_pct + time\_pct + trump\_pct + sqrt\_voter\_turnout +
+plan\_yes + current\_yes Model 2: yes\_pct \textasciitilde{} medage +
+log\_medincome + white\_pct + log\_public\_pct + time\_pct + trump\_pct
++ sqrt\_voter\_turnout + plan\_yes * current\_yes Res.Df RSS Df Sum of
+Sq F Pr(\textgreater F) 1 103 0.17417\\
+2 102 0.17360 1 0.00057868 0.34 0.5611
 
 Model w/ interaction doesn't differ significantly from the one w/o
 interaction.
+
+\begin{table}[!htbp] \centering 
+  \caption{Linear regression with interaction results} 
+  \label{interactionResults} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & yes\_pct \\ 
+\hline \\[-1.8ex] 
+ medage & 0.004$^{**}$ \\ 
+  & (0.002) \\ 
+  & \\ 
+ log\_medincome & $-$0.008 \\ 
+  & (0.022) \\ 
+  & \\ 
+ white\_pct & 0.117$^{**}$ \\ 
+  & (0.051) \\ 
+  & \\ 
+ log\_public\_pct & 0.022$^{***}$ \\ 
+  & (0.008) \\ 
+  & \\ 
+ time\_pct & $-$0.281$^{***}$ \\ 
+  & (0.090) \\ 
+  & \\ 
+ trump\_pct & $-$0.857$^{***}$ \\ 
+  & (0.059) \\ 
+  & \\ 
+ sqrt\_voter\_turnout & $-$0.319$^{***}$ \\ 
+  & (0.103) \\ 
+  & \\ 
+ plan\_yes1 & $-$0.033$^{***}$ \\ 
+  & (0.012) \\ 
+  & \\ 
+ current\_yes1 & 0.021 \\ 
+  & (0.043) \\ 
+  & \\ 
+ plan\_yes1:current\_yes1 & 0.026 \\ 
+  & (0.044) \\ 
+  & \\ 
+ Constant & 1.032$^{***}$ \\ 
+  & (0.219) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 113 \\ 
+R$^{2}$ & 0.920 \\ 
+Adjusted R$^{2}$ & 0.912 \\ 
+Residual Std. Error & 0.041 (df = 102) \\ 
+F Statistic & 117.561$^{***}$ (df = 10; 102) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{l}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+ & \multicolumn{1}{l}{Linear regression with interaction result} \\ 
+\end{tabular} 
+\end{table}
+
+mod 6: only interaction, transformation, linear
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod6 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_tf, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{log_medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{+}\StringTok{ }\NormalTok{log_public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{sqrt_voter_turnout }\OperatorTok{+}\StringTok{ }\NormalTok{plan_yes }\OperatorTok{:}\StringTok{ }\NormalTok{current_yes)}
+\KeywordTok{summary}\NormalTok{(mod6)}
+\end{Highlighting}
+\end{Shaded}
+
+Call: lm(formula = yes\_pct \textasciitilde{} medage + log\_medincome +
+white\_pct + log\_public\_pct + time\_pct + trump\_pct +
+sqrt\_voter\_turnout + plan\_yes:current\_yes, data = data\_tf)
+
+Residuals: Min 1Q Median 3Q Max -0.099920 -0.031591 -0.003479 0.027983
+0.098568
+
+Coefficients: (1 not defined because of singularities) Estimate Std.
+Error t value Pr(\textgreater\textbar t\textbar)\\
+(Intercept) 1.045422 0.216525 4.828 4.85e-06 \textbf{\emph{ medage
+0.003603 0.001511 2.384 0.018988 }\\
+log\_medincome -0.008331 0.022302 -0.374 0.709522\\
+white\_pct 0.116703 0.050746 2.300 0.023501 *\\
+log\_public\_pct 0.022304 0.008263 2.699 0.008137 } time\_pct -0.281374
+0.089698 -3.137 0.002232 ** trump\_pct -0.856963 0.058590 -14.626
+\textless{} 2e-16 \emph{\textbf{ sqrt\_voter\_turnout -0.319107 0.103460
+-3.084 0.002625 } plan\_yes0:current\_yes0 -0.013583 0.011459 -1.185
+0.238638\\
+plan\_yes1:current\_yes0 -0.046950 0.012129 -3.871 0.000192 }**
+plan\_yes0:current\_yes1 0.007601 0.042599 0.178 0.858746\\
+plan\_yes1:current\_yes1 NA NA NA NA\\
+--- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 '
+' 1
+
+Residual standard error: 0.04125 on 102 degrees of freedom Multiple
+R-squared: 0.9202, Adjusted R-squared: 0.9123 F-statistic: 117.6 on 10
+and 102 DF, p-value: \textless{} 2.2e-16
+
+\begin{table}[!htbp] \centering 
+  \caption{Linear regression with interaction-only results} 
+  \label{interactionOnlyResults} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & yes\_pct \\ 
+\hline \\[-1.8ex] 
+ medage & 0.004$^{**}$ \\ 
+  & (0.002) \\ 
+  & \\ 
+ log\_medincome & $-$0.008 \\ 
+  & (0.022) \\ 
+  & \\ 
+ white\_pct & 0.117$^{**}$ \\ 
+  & (0.051) \\ 
+  & \\ 
+ log\_public\_pct & 0.022$^{***}$ \\ 
+  & (0.008) \\ 
+  & \\ 
+ time\_pct & $-$0.281$^{***}$ \\ 
+  & (0.090) \\ 
+  & \\ 
+ trump\_pct & $-$0.857$^{***}$ \\ 
+  & (0.059) \\ 
+  & \\ 
+ sqrt\_voter\_turnout & $-$0.319$^{***}$ \\ 
+  & (0.103) \\ 
+  & \\ 
+ plan\_yes0:current\_yes0 & $-$0.014 \\ 
+  & (0.011) \\ 
+  & \\ 
+ plan\_yes1:current\_yes0 & $-$0.047$^{***}$ \\ 
+  & (0.012) \\ 
+  & \\ 
+ plan\_yes0:current\_yes1 & 0.008 \\ 
+  & (0.043) \\ 
+  & \\ 
+ plan\_yes1:current\_yes1 &  \\ 
+  &  \\ 
+  & \\ 
+ Constant & 1.045$^{***}$ \\ 
+  & (0.217) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 113 \\ 
+R$^{2}$ & 0.920 \\ 
+Adjusted R$^{2}$ & 0.912 \\ 
+Residual Std. Error & 0.041 (df = 102) \\ 
+F Statistic & 117.561$^{***}$ (df = 10; 102) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{l}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+ & \multicolumn{1}{l}{Linear regression with interaction-only result} \\ 
+\end{tabular} 
+\end{table}
 
 \end{document}

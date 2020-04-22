@@ -508,7 +508,7 @@ final_data <- cbdata_tidy %>%
   inner_join(short_in_buffer, by = "GEOID") %>%
   inner_join(current_in_buffer, by = "GEOID") %>%
   mutate(plan_yes = as.factor(plan_yes),
-         current_yes = as.factor(current_yes))
+        current_yes = as.factor(current_yes))
 ```
 
 
@@ -544,3 +544,13 @@ Secondly, the usage of public transit is surprisingly low. The median is 0, impl
 The percentage of Trump supporters is relatively evenly distributed, with a mean of 0.4. Given that Gwinnett is one of the minority counties in which Clinton won over Trump, the result is reasonable. 
 
 Finally, as expected, public transportation is accessible to more tracts if it expands as planned. Interestingly, through a more detailed look at the data, we can see a few census tracts covered by public transit within 500 meters of distance at present, but no more in the short-range plan. This is possibly due to a reduction in circuitous routing in the proposition.
+
+## map trys
+```{r}
+library(tmap)
+gwinnett_track_map <- gwinnett_tracks %>%
+  full_join(final_data, by = "GEOID") %>%
+  mutate(num_plan = plan_yes + current_yes)
+tm_shape(gwinnett_track_map)  + tm_polygons(col = "num_plan") + tm_shape(short_range) + tm_lines()
+```
+
