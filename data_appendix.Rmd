@@ -374,8 +374,23 @@ A copy of the maps can be obtained at the official website of Gwinnett County wi
 5. Under the Reports title, there are detailed descriptions of the transit plan from short-term to long-term period. Under the **Maps** title, users can find the maps that are used in this research. 
 6. Click on the map that is interested and save the PDF file to get a copy. 
 
+## Georgia precinct shapefile
 
+**Citation:** Reapportionment. (n.d.). Retrieved April 22, 2020, from http://www.legis.ga.gov/Joint/reapportionment/en-US/default.aspx
+**DOI:** N/A  
+**Date Downloaded:** Apr 22, 2020  
+**Filenames:** raw_data/VTD2018-Shapefile
+**Unit of observation:** precinct   
+**Dates covered:** 2018
 
+### To obtain a copy
+
+A copy of the shapefile can be obtained at the Georgia General Assembly website: 
+
+1. Go to http://www.legis.ga.gov/Joint/reapportionment/en-US/default.aspx. 
+2. Scroll down to the end of the page. Select and download VTD2018-Shapefile.zip.
+3. Extract the files from the zipped folder. 
+ 
 
 # Data processing and combination
 
