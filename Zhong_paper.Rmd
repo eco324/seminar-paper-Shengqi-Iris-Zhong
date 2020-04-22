@@ -12,7 +12,7 @@ output:
   pdf_document:
     number_sections: true
     keep_tex: true
-bibliography: sample.bib
+# bibliography: sample.bib
 ---
 
 ```{r setup, echo = F, message = F}
@@ -30,4 +30,136 @@ Allen et al. (2016) study the reasoning of the failure of a referendum on a cong
 
 Another crucial factor is the accessibility of the proposed transit system. Kinsey et al. (2010) examine the relationship between the distance to the scheduled railway station and voter turnout by studying the Seattle monorail referendum. They introduce the concept of diffused and concentrated benefit/cost. People who live far from the monorail enjoy the diffused benefit of less traffic congestion, and bear the diffused cost of increased tax. People living close to the rail experience the same diffused benefit and cost, but they also gain the concentrated benefit of easily accessing the public good. Finally, those who live very close to the railway have the same benefits and costs, but they also face the concentrated cost such as inconvenience during construction. Since “people are more strongly motivated to avoid losses than to approach gains,” they expect a higher turnout rate in farther places with votes for “no,” which is verified from their analyses. Besides distance, they also find out precincts with a higher percentage of people of lower socioeconomic status or young people have a lower turnout rate. Interestingly, there is a significant interaction between partisanship and distance, which would be also tested in my study. In essence, the effect of distance on turnout is weakened by partisanship, and vanishes beyond a threshold of distance. Even though my dependent variable is voters’ responses rather than turnout, it can be inferred from Kinsey et al.’s findings that people farther away from the transit system would vote against the referendum more. However, the relationship might be non-linear and requires some form of transformation. Regarding the methods, they utilize the spatial lag model to correct for autocorrelation, which is proper to use in my project as well since both studies use precinct-level data. 
 
-# Data
+# Background
+
+current transportation
+future plan
+referendum
+
+# Data & Methods
+## Conceptual model
+
+## Data
+\begin{table}
+\centering
+\caption{Variable definitions}
+\label{variableDefinitions}
+\begin{tabular}{ll}
+\hline
+\hline
+Variable name      & Description                                   \\
+\hline
+GEOID          & The geographic identifier of the census tract                 \\
+medage        & The median age of the population in the tract               \\
+medincome        & The median income of the population in the tract               \\
+white\_pct           & The percentage of white population in the tract      \\
+public\_pct          & The percentage of people who go to work by public transportation (excluding taxi or cab)      \\
+time\_pct           & The percentage of people who travel more than an hour to work      \\
+trump\_pct          & The estimated percentage of votes for Donald Trump in that tract      \\
+voter\_turnout  & The estimated percentage of voters who voted in this referendum in the tract \\
+yes\_pct           & The estimated percentage of voters who voted yes in this referendum in the tract      \\
+plan\_yes          & Whether the tract is covered by short-range plan. 1 stands for yes, 0 stands for no      \\
+current\_yes          & Whether the tract is covered by the existing public transportation. 1 stands for yes, 0 stands for no      \\
+\hline
+\end{tabular}
+\end{table}
+
+
+- **GEOID:** The geographic identifier of the census tract.  
+- **medage:** The median age of the population in the tract.
+- **medincome:** The median income of the population in the tract.
+- **white_pct:** The percentage of white population in the tract.
+- **public_pct:** The percentage of people who go to work by public transportation (excluding taxi or cab).  
+- **time_pct:** The percentage of people who travel more than an hour to work.  
+- **trump_pct:** The estimated percentage of votes for Donald Trump in that tract.
+- **voter_turnout:** The estimated percentage of voters who voted in this referendum in the tract.
+- **yes_pct:** The estimated percentage of voters who voted yes in this referendum in the tract.
+- **plan_yes:** Whether the tract is covered by the public transportation planned in the short-range (Y2020 – 2025), defined by whether any transportation is available within 500 meters. 1 stands for yes, 0 stands for no.  
+- **current_yes:** Whether the tract is covered by the existing public transportation, defined by whether any transportation is available within 500 meters. 1 stands for yes, 0 stands for no. 
+
+# Results
+
+model 1: all variables, no interaction, linear
+```{r}
+load("processed_data/analysis_data.RData")
+mod1 <- lm(data = final_data, yes_pct ~ medage + medincome + white_pct 
+           + public_pct + time_pct + trump_pct + voter_turnout +
+              plan_yes + current_yes)
+summary(mod1)
+```
+
+model 1 assumption checking
+```{r}
+
+plot(predict(mod1),resid(mod1),col="midnightblue",pch=18,main="Residual plot - Model 1")
+abline(0,0,col="red")
+```
+
+collinearity:
+```{r}
+library(car)
+vif(mod1)
+```
+
+all below 5: good, no collinearity problem
+
+
+
+
+
+model 2: all variables, no interaction, logistic
+```{r}
+mod2 <- glm(data = final_data, yes_pct ~ medage + medincome + white_pct + public_pct + time_pct + trump_pct + voter_turnout + plan_yes + current_yes, family = "binomial")
+summary(mod2)
+```
+
+model 3: all variables, no interaction, some transformation, linear
+
+step 1: find the skewed variables
+
+```{r}
+library(dlookr)
+find_skewness(final_data)
+```
+
+medincome, public_pct, voter_turnout
+
+step 2: transform them
+```{r}
+data_tf <- final_data %>%
+   mutate(medincome = log(medincome),
+          public_pct = log(public_pct + 0.01),
+          voter_turnout = (voter_turnout)^0.5)
+find_skewness(data_tf)
+```
+
+step 3: model them
+
+```{r}
+mod3 <- lm(data = data_tf, yes_pct ~ medage + medincome + white_pct + public_pct + time_pct + trump_pct + voter_turnout + plan_yes + current_yes)
+summary(mod3)
+```
+
+model 3 assumption checking
+```{r}
+
+plot(predict(mod3),resid(mod3),col="midnightblue",pch=18,main="Residual plot - Model 3")
+abline(0,0,col="red")
+```
+
+collinearity:
+```{r}
+vif(mod3)
+```
+
+all below 5: no collinearity
+
+model 4: all variables, interaction, no transformation, linear
+
+```{r}
+mod4 <- lm(data = final_data, yes_pct ~ medage + medincome + white_pct + public_pct + time_pct + trump_pct + voter_turnout + plan_yes * current_yes)
+summary(mod4)
+anova(mod1,mod4)
+```
+
+Model w/ interaction doesn't differ significantly from the one w/o interaction.
