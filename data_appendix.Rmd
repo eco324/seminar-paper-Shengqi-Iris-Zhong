@@ -563,7 +563,7 @@ The percentage of Trump supporters is relatively evenly distributed, with a mean
 
 Finally, as expected, public transportation is accessible to more tracts if it expands as planned. Interestingly, through a more detailed look at the data, we can see one tract covered by public transit within 500 meters of distance at present, but no more in the short-range plan. This is possibly due to a reduction in circuitous routing in the proposition.
 
-## map trys
+# map trys
 ```{r}
 gwinnett_track_map <- gwinnett_tracks %>%
   full_join(final_data, by = "GEOID") 

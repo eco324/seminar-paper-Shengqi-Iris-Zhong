@@ -50,6 +50,22 @@ Finally, people favor the proposition if it benefits them. Specifically, tracts 
 
 
 ## Data
+
+First, the ballot results of the Gwinnett County referendum on Mar 19th, 2019 is obtained from a website powered by Scytl, a trusted source of election outcomes. The cross-sectional dataset contains the voting information of all 157 precincts in the county.  The dependent variable -- the proportion of supporters of the referendum, and the voter turnout rate are calculated from this data source.
+
+The result of the 2016 Presidential Election is chosen to reflect partisanship. A cross-sectional precinct-level election data is obtained from the MIT Election Data and Science Lab website. The number of votes for Trump at each precinct in Gwinnett county comes from this dataset. 
+
+Next, cross-sectional sociodemographic characteristics at the census tract level are found in Census Bureau via an R package called `tidycensus`. The data comes from the American Community Survey 5-year estimate published in 2018. The median age and median income are collected here. In addition, the proportion of white, the percentage of people who go to work by public transportation, and the percentage of people who travel more than an hour to work are calculated by dividing the relevant variables by the total population or the survey sample size. 
+
+The information on whether the tract enjoys the proximity of public transportation now and future can be acquired from spatial maps and analyses.  First, a precinct-level shapefile of Gwinnett County made in 2018 is obtained from the Georgia General Assembly. Gwinnett County maps with current and proposed future public transit systems are available on the Gwinnett County government website. I select the short-range expansion plan (Y2020 – 2025) because the cost and benefit of the expansion in the far future are discounted more. After modifications in QGIS, the maps are then transformed into spatial data readable in R. 500-meter buffer zones are created around bus and railway routes. The categorical variable *current_plan* has four levels: 1 represents no transportation near this tract at present and in the future; 2 represents the tracts that are accessible to public transit currently but not in the future; 3 stands for the tracts that do not have transit at present but will do in the expansion plan; 4 represents the tracts that have and will have public transit for now and for the future. 
+
+As noted above, both referendum and 2016 election data are collected at the precinct level. However, the other datasets are performed at the census tract level. Therefore, referendum and election data are redistributed by the areas shared by the precinct and the tract. See the data appendix for detailed steps of transformation. Such a method assumes the population density within the precinct is constant, and the values of the target factors are uniform across individuals in each precinct. 
+
+The final dataset joins the datasets above by GEOID. It is cross-sectional, measured with the unit of the census tract. A description of the variables can be found in *Table 1*. 
+
+
+
+
 \begin{table}
 \centering
 \caption{Variable definitions}
@@ -68,13 +84,12 @@ time\_pct           & The percentage of people who travel more than an hour to w
 trump\_pct          & The estimated percentage of votes for Donald Trump in that tract      \\
 voter\_turnout  & The estimated percentage of voters who voted in this referendum in the tract \\
 yes\_pct           & The estimated percentage of voters who voted yes in this referendum in the tract      \\
-plan\_yes          & Whether the tract is covered by the public transportation now and in the short-range (Y2020 – 2025), \\ & defined by whether any transportation is available within 500 meters. 1 stands for the tract doesn't have transit both now and in the short-range plan. \\ & 2 stands for the tract has transit now but not in the short-range plan. 3 stands for the tract that doesn't have transit now and will have in the future.\\ & 4 stands for the tract that has public transit both now and in the future.      \\
+plan\_yes          & Whether the tract is covered by the public transportation now and in the short-range, \\ & defined by whether any transportation is available within 500 meters. \\ & 1 stands for the tract doesn't have transit both now and in the short-range plan. \\ & 2 stands for the tract has transit now but not in the short-range plan. \\ & 3 stands for the tract that doesn't have transit now and will have in the future.\\ & 4 stands for the tract that has public transit both now and in the future      \\
 
 \hline
 \end{tabular}
 \end{table}
 
-- **current_plan:** Whether the tract is covered by the public transportation now and in the short-range (Y2020 – 2025), defined by whether any transportation is available within 500 meters. 1 stands for the tract doesn't have transit both now and in the short-range plan. 2 stands for the tract has transit now but not in the short-range plan. 3 stands for the tract that doesn't have transit now and will have in the future. 4 stands for the tract that has public transit both now and in the future.
 
 
 ```{r create summary statistic table, echo = F, results = 'asis'}
@@ -103,6 +118,8 @@ corrplot(M, type = "upper", order = "hclust",
 
 
 ```
+
+
 
 
 ```{r}

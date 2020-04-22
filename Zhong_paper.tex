@@ -279,6 +279,58 @@ more.
 \hypertarget{data}{%
 \subsection{Data}\label{data}}
 
+First, the ballot results of the Gwinnett County referendum on Mar 19th,
+2019 is obtained from a website powered by Scytl, a trusted source of
+election outcomes. The cross-sectional dataset contains the voting
+information of all 157 precincts in the county. The dependent variable
+-- the proportion of supporters of the referendum, and the voter turnout
+rate are calculated from this data source.
+
+The result of the 2016 Presidential Election is chosen to reflect
+partisanship. A cross-sectional precinct-level election data is obtained
+from the MIT Election Data and Science Lab website. The number of votes
+for Trump at each precinct in Gwinnett county comes from this dataset.
+
+Next, cross-sectional sociodemographic characteristics at the census
+tract level are found in Census Bureau via an R package called
+\texttt{tidycensus}. The data comes from the American Community Survey
+5-year estimate published in 2018. The median age and median income are
+collected here. In addition, the proportion of white, the percentage of
+people who go to work by public transportation, and the percentage of
+people who travel more than an hour to work are calculated by dividing
+the relevant variables by the total population or the survey sample
+size.
+
+The information on whether the tract enjoys the proximity of public
+transportation now and future can be acquired from spatial maps and
+analyses. First, a precinct-level shapefile of Gwinnett County made in
+2018 is obtained from the Georgia General Assembly. Gwinnett County maps
+with current and proposed future public transit systems are available on
+the Gwinnett County government website. I select the short-range
+expansion plan (Y2020 -- 2025) because the cost and benefit of the
+expansion in the far future are discounted more. After modifications in
+QGIS, the maps are then transformed into spatial data readable in R.
+500-meter buffer zones are created around bus and railway routes. The
+categorical variable \emph{current\_plan} has four levels: 1 represents
+no transportation near this tract at present and in the future; 2
+represents the tracts that are accessible to public transit currently
+but not in the future; 3 stands for the tracts that do not have transit
+at present but will do in the expansion plan; 4 represents the tracts
+that have and will have public transit for now and for the future.
+
+As noted above, both referendum and 2016 election data are collected at
+the precinct level. However, the other datasets are performed at the
+census tract level. Therefore, referendum and election data are
+redistributed by the areas shared by the precinct and the tract. See the
+data appendix for detailed steps of transformation. Such a method
+assumes the population density within the precinct is constant, and the
+values of the target factors are uniform across individuals in each
+precinct.
+
+The final dataset joins the datasets above by GEOID. It is
+cross-sectional, measured with the unit of the census tract. A
+description of the variables can be found in \emph{Table 1}.
+
 \begin{table}
 \centering
 \caption{Variable definitions}
@@ -297,24 +349,11 @@ time\_pct           & The percentage of people who travel more than an hour to w
 trump\_pct          & The estimated percentage of votes for Donald Trump in that tract      \\
 voter\_turnout  & The estimated percentage of voters who voted in this referendum in the tract \\
 yes\_pct           & The estimated percentage of voters who voted yes in this referendum in the tract      \\
-plan\_yes          & Whether the tract is covered by the public transportation now and in the short-range (Y2020 – 2025), \\ & defined by whether any transportation is available within 500 meters. 1 stands for the tract doesn't have transit both now and in the short-range plan. \\ & 2 stands for the tract has transit now but not in the short-range plan. 3 stands for the tract that doesn't have transit now and will have in the future.\\ & 4 stands for the tract that has public transit both now and in the future.      \\
+plan\_yes          & Whether the tract is covered by the public transportation now and in the short-range, \\ & defined by whether any transportation is available within 500 meters. \\ & 1 stands for the tract doesn't have transit both now and in the short-range plan. \\ & 2 stands for the tract has transit now but not in the short-range plan. \\ & 3 stands for the tract that doesn't have transit now and will have in the future.\\ & 4 stands for the tract that has public transit both now and in the future      \\
 
 \hline
 \end{tabular}
 \end{table}
-
-\begin{itemize}
-\tightlist
-\item
-  \textbf{current\_plan:} Whether the tract is covered by the public
-  transportation now and in the short-range (Y2020 -- 2025), defined by
-  whether any transportation is available within 500 meters. 1 stands
-  for the tract doesn't have transit both now and in the short-range
-  plan. 2 stands for the tract has transit now but not in the
-  short-range plan. 3 stands for the tract that doesn't have transit now
-  and will have in the future. 4 stands for the tract that has public
-  transit both now and in the future.
-\end{itemize}
 
 \begin{table}[!htbp] \centering 
   \caption{Summary statistics} 
@@ -339,8 +378,8 @@ yes\_pct & 113 & 0.53 & 0.14 & 0.27 & 0.42 & 0.61 & 0.84 \\
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{data_numeric <-}\StringTok{ }\NormalTok{final_data }\OperatorTok{%>%}
-\StringTok{   }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{plan_yes =} \KeywordTok{as.numeric}\NormalTok{(current_plan)) }\OperatorTok{%>%}
-\StringTok{   }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\KeywordTok{c}\NormalTok{(current_plan,GEOID))}
+\StringTok{   }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{current_plan =} \KeywordTok{as.numeric}\NormalTok{(current_plan)) }\OperatorTok{%>%}
+\StringTok{   }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{GEOID)}
 
 \NormalTok{data_cor =}\StringTok{ }\KeywordTok{cor}\NormalTok{(data_numeric)}
 
@@ -354,6 +393,24 @@ yes\_pct & 113 & 0.53 & 0.14 & 0.27 & 0.42 & 0.61 & 0.84 \\
 
 \includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-1-1.pdf}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(final_data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ trump_pct, }\DataTypeTok{y =}\NormalTok{ medincome)) }\OperatorTok{+}
+\StringTok{   }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =}\NormalTok{ white_pct))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(final_data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ white_pct, }\DataTypeTok{y =}\NormalTok{ yes_pct))}\OperatorTok{+}
+\StringTok{   }\KeywordTok{geom_point}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-3-1.pdf}
+
 \hypertarget{model-specification}{%
 \subsection{Model specification}\label{model-specification}}
 
@@ -363,7 +420,7 @@ Model 1:
 \hypertarget{results}{%
 \section{Results}\label{results}}
 
-model 1: no interaction, linear
+model 1: linear
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -410,7 +467,7 @@ model 1 assumption checking
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-3-1.pdf}
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-5-1.pdf}
 
 collinearity:
 
@@ -692,7 +749,7 @@ model 3 assumption checking
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-9-1.pdf}
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-11-1.pdf}
 
 collinearity:
 
@@ -822,5 +879,44 @@ F Statistic & 117.561$^{***}$ (df = 10; 102) &  \\
  & \multicolumn{2}{l}{Data-transformed linear and logistic regression results} \\ 
 \end{tabular} 
 \end{table}
+
+model 5: interaction, transformed, linear
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mod5 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_tf, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{log_medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{*}\NormalTok{current_plan }\OperatorTok{+}\StringTok{  }\NormalTok{log_public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{sqrt_voter_turnout }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{*}\NormalTok{current_plan)}
+\KeywordTok{summary}\NormalTok{(mod5)}
+\end{Highlighting}
+\end{Shaded}
+
+Call: lm(formula = yes\_pct \textasciitilde{} medage + log\_medincome +
+white\_pct * current\_plan + log\_public\_pct + time\_pct + trump\_pct +
+sqrt\_voter\_turnout + white\_pct * current\_plan, data = data\_tf)
+
+Residuals: Min 1Q Median 3Q Max -0.09875 -0.02948 0.00000 0.03070
+0.10049
+
+Coefficients: (1 not defined because of singularities) Estimate Std.
+Error t value Pr(\textgreater\textbar t\textbar)\\
+(Intercept) 0.947549 0.235565 4.022 0.000112 \textbf{\emph{ medage
+0.003453 0.001531 2.255 0.026322 }\\
+log\_medincome -0.003324 0.023006 -0.144 0.885408\\
+white\_pct 0.153396 0.062665 2.448 0.016113 *\\
+current\_plan2 0.030804 0.044649 0.690 0.491852\\
+current\_plan3 -0.016083 0.045354 -0.355 0.723630\\
+current\_plan4 0.050913 0.038418 1.325 0.188106\\
+log\_public\_pct 0.021718 0.008335 2.605 0.010575 *\\
+time\_pct -0.277527 0.090574 -3.064 0.002806 } trump\_pct -0.877144
+0.063856 -13.736 \textless{} 2e-16 **\emph{ sqrt\_voter\_turnout
+-0.271902 0.114201 -2.381 0.019164 }\\
+white\_pct:current\_plan2 NA NA NA NA\\
+white\_pct:current\_plan3 -0.032225 0.085696 -0.376 0.707687\\
+white\_pct:current\_plan4 -0.072575 0.071308 -1.018 0.311239\\
+--- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 '
+' 1
+
+Residual standard error: 0.04145 on 100 degrees of freedom Multiple
+R-squared: 0.921, Adjusted R-squared: 0.9115 F-statistic: 97.13 on 12
+and 100 DF, p-value: \textless{} 2.2e-16
 
 \end{document}
