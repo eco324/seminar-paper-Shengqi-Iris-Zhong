@@ -146,7 +146,7 @@ xxxxx
 Model 2 is identical to Model 1, except that it uses logistic regression. Even though the dependent variable is not binary, previous research has used logistic regression in a similar scenario (???). 
 
 
-$logit(yes\_pct_t) = \beta_0+\beta_1medincome_t+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6public\_pct_t+\beta_7time\_pct_t+\beta_8voter\_turnout_t+\epsilon_4$
+$logit(yes\_pct_t) = \beta_0+\beta_1medincome_t+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6public\_pct_t+\beta_7time\_pct_t+\beta_8voter\_turnout_t+\epsilon_t$
 
 
 

@@ -446,8 +446,9 @@ Four models are tested in the analysis. The dependent variable is
 \emph{yes\_pct}, the proportion of supporters of the referendum in a
 tract. Independent variables include \emph{medincome},
 \emph{white\_pct}, \emph{trump\_pct}, and \emph{current\_plan}. For more
-information about these variables, refer to \emph{Table ???}. Model 1
-adopts linear regression model with all the original variables:
+information about these variables, refer to \emph{Table ???}.
+
+Model 1 adopts linear regression model with all the original variables:
 
 \(yes\_pct_t = \beta_0+\beta_1medincome_t+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6public\_pct_t+\beta_7time\_pct_t+\beta_8voter\_turnout_t+\epsilon_t\)
 
@@ -468,7 +469,7 @@ square root transformation on these three variables.
 Finally, Model 4 adopts the same transformation as Model 3, with
 logistic regression.
 
-\(logit(yes\_pct_t) = \beta_0+\beta_1log(medincome_t)+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6log(public\_pct_t + 0,01)+\beta_7time\_pct_t+\beta_8\sqrt{voter\_turnout_t}+\epsilon_t\)
+\(logit(yes\_pct_t) = \beta_0+\beta_1log(medincome_t)+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6log(public\_pct_t + 0.01)+\beta_7time\_pct_t+\beta_8\sqrt{voter\_turnout_t}+\epsilon_t\)
 
 \hypertarget{results-discussion}{%
 \section{Results \& Discussion}\label{results-discussion}}
