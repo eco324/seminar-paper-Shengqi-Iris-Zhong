@@ -22,6 +22,7 @@ library(lubridate)
 library(stargazer)
 library(corrplot)
 library(Hmisc)
+library(dlookr)
 load("processed_data/analysis_data.RData")
 ```
 
@@ -39,11 +40,12 @@ future plan
 referendum
 
 # Data & Methods
+
 ## Conceptual model
 
 According to previous research, sociodemographic elements can influence people’s voting decisions in the referendum. For example, the effect of income is mixed: on the one hand, people with higher income will pay a smaller portion of their earnings for the implementation of the plan; on the other hand, they will pay a larger amount of tax. Bollino (2008) finds a positive correlation between income and people’s willingness to pay for renewable resources. Burkhardt and Chan (2017) separate the influence of income from tax, and discover their opposite effects on voting. Therefore, it is worth considering the relationship between income and percentage of supporters in this referendum. Voters’ partisanship attachment is found to be a significant factor as well in Burkhardt and Chan’s (2017) paper. Areas with higher proportions of Republicans are less supportive of fiscally costly propositions. In my project, it can be hypothesized that tracts that have a higher proportion of Trump supporters tend to have a lower percentage of agreement to the proposal.  
 
-In addition, some factors related to transportation can intuitively shape people’s attitudes towards public transit. For example, the areas in which people do not use public transit at all might have a higher percentage of refusal of the proposal. People who have to travel a long time to work are more likely to support the extension plan if it helps save time. 
+In addition, some factors related to transportation can intuitively shape people’s attitudes towards public transit. For example, the areas in which people do not use public transit at all might have a higher percentage of refusal of the proposal. People who have to travel a long time to work are more likely to support the extension plan if it helps save time. These two factors serve as controls in the models.
 
 Finally, people favor the proposition if it benefits them. Specifically, tracts that are not covered by public transport at present but will be covered in the expansion plan are predicted to support the proposal more.
 
@@ -51,15 +53,15 @@ Finally, people favor the proposition if it benefits them. Specifically, tracts 
 
 ## Data
 
-First, the ballot results of the Gwinnett County referendum on Mar 19th, 2019 is obtained from a website powered by Scytl, a trusted source of election outcomes. The cross-sectional dataset contains the voting information of all 157 precincts in the county.  The dependent variable -- the proportion of supporters of the referendum, and the voter turnout rate are calculated from this data source.
+The ballot results of the Gwinnett County referendum on Mar 19th, 2019 is obtained from a website powered by Scytl, a trusted source of election outcomes. The cross-sectional dataset contains the voting information of all 157 precincts in the county. The dependent variable -- the proportion of supporters of the referendum, and the voter turnout rate are calculated from this data source.
 
 The result of the 2016 Presidential Election is chosen to reflect partisanship. A cross-sectional precinct-level election data is obtained from the MIT Election Data and Science Lab website. The number of votes for Trump at each precinct in Gwinnett county comes from this dataset. 
 
 Next, cross-sectional sociodemographic characteristics at the census tract level are found in Census Bureau via an R package called `tidycensus`. The data comes from the American Community Survey 5-year estimate published in 2018. The median age and median income are collected here. In addition, the proportion of white, the percentage of people who go to work by public transportation, and the percentage of people who travel more than an hour to work are calculated by dividing the relevant variables by the total population or the survey sample size. 
 
-The information on whether the tract enjoys the proximity of public transportation now and future can be acquired from spatial maps and analyses.  First, a precinct-level shapefile of Gwinnett County made in 2018 is obtained from the Georgia General Assembly. Gwinnett County maps with current and proposed future public transit systems are available on the Gwinnett County government website. I select the short-range expansion plan (Y2020 – 2025) because the cost and benefit of the expansion in the far future are discounted more. After modifications in QGIS, the maps are then transformed into spatial data readable in R. 500-meter buffer zones are created around bus and railway routes. The categorical variable *current_plan* has four levels: 1 represents no transportation near this tract at present and in the future; 2 represents the tracts that are accessible to public transit currently but not in the future; 3 stands for the tracts that do not have transit at present but will do in the expansion plan; 4 represents the tracts that have and will have public transit for now and for the future. 
+The information on whether the tract enjoys the proximity of public transportation now and future can be acquired from spatial maps and analyses. First, a precinct-level shapefile of Gwinnett County made in 2018 is obtained from the Georgia General Assembly. Gwinnett County maps with current and proposed future public transit systems are available on the Gwinnett County government website. I select the short-range expansion plan (Y2020 – 2025) because the cost and benefit of the expansion in the far future are discounted more. After modifications in QGIS software, the maps are then transformed into spatial data readable in R. Five-hundred-meter buffer zones are created around bus and railway routes. The categorical variable *current_plan* has four levels: 1 represents no transportation near this tract at present and in the future; 2 represents the tracts that are accessible to public transit currently but not in the future; 3 stands for the tracts that do not have transit at present but will do in the expansion plan; 4 represents the tracts that have and will have public transit for now and for the future. 
 
-As noted above, both referendum and 2016 election data are collected at the precinct level. However, the other datasets are performed at the census tract level. Therefore, referendum and election data are redistributed by the areas shared by the precinct and the tract. See the data appendix for detailed steps of transformation. Such a method assumes the population density within the precinct is constant, and the values of the target factors are uniform across individuals in each precinct. 
+As noted above, both referendum and 2016 election data are collected at the precinct level. However, the other datasets are performed at the census tract level. Therefore, referendum and election data are redistributed by the areas shared by the precinct and the tract. See the data appendix for detailed steps of transformation. 
 
 The final dataset joins the datasets above by GEOID. It is cross-sectional, measured with the unit of the census tract. A description of the variables can be found in *Table 1*. 
 
@@ -102,11 +104,10 @@ stargazer::stargazer(as.data.frame(final_data),
                      digits = 2)
 ```
 
-```{r}
+```{r create correlation matrix}
 
 data_numeric <- final_data %>%
-   mutate(current_plan = as.numeric(current_plan)) %>%
-   select(-GEOID)
+   select(-c(current_plan,GEOID))
 
 data_cor = cor(data_numeric)
 
@@ -119,29 +120,50 @@ corrplot(M, type = "upper", order = "hclust",
 
 ```
 
+*Table 2* lists the summary statistics. Median income is skewed to the right, with a few tracts demonstrating high income levels. Such a pattern of inequality is universally observed.
 
+The usage of public transit is low. On average, only one percent of the population relies on public transportation to go to work. As proved by later analyses, the distribution is highly skewed, and will be transformed in some models. 
+**public_pct max needs to be fixed**
 
+The variable *current_plan* is not in *Table 2* because it is a categorical variable. In sum, 31 tracts do not have access to public transport within 500 meters, both now and in the short-range. There is one tract that is categorized as 2, indicating that it has public transit at present, but not in the short-range proposition. It could be due to the plan of reducing circuitous routing. Twenty-two tracts do not enjoy the proximity of public transport now, but will in the short-range. Lastly, 59 tracts have public transit available both at present and in the short-range plan. Since a level of this variable contains only one value (“2”), problems with degrees of freedom will potentially arise. 
 
-```{r}
-ggplot(final_data, aes(x = trump_pct, y = medincome)) +
-   geom_point(aes(colour = white_pct))
-```
+A correlation matrix is created from `corrplot` package to investigate the correlation between each pair of factors (see *Figure ???*). Positive correlations are in blue colors, and negative correlations are in red colors. The magnitude is reflected by the color intensity and the size of the dot. Non-significant (p > 0.05) correlations are marked with a cross. *Current_plan* is omitted in the matrix because it is categorical. The dependent variable *yes_pct* is significantly correlated with every independent variable. *Medage*, *voter_turnout*, *medincome*, *white_pct*, and *trump_pct* are all strongly positively correlated with each other, and all of them are negatively associated with *yes_pct*. Given the number of strong, significant correlations among the factors, it is essential to check collinearity in the regression model. 
 
-
-
-
-```{r}
-ggplot(final_data, aes(x = white_pct, y = yes_pct))+
-   geom_point()
-```
+The major limitation of the data is the unit conversion from precinct to census tract. Such a method assumes that residents in one precinct have the same characteristics, and population density is identical. Clearly, the assumptions cannot be satisfied in a real dataset. 
 
 
 ## Model specification
-Model 1:
-$yes\_pct = \beta_0+\beta_1*medage+\beta_2*medincome+\beta_3*white\_pct+\beta_4*public\_pct+\beta_5*time\_pct+\beta_6*trump\_pct+\beta_7*voter\_turnout+\beta_8*current\_plan+\epsilon$
 
-# Results
+Four models are tested in the analysis. The dependent variable is *yes_pct*, the proportion of supporters of the referendum in a tract. Independent variables include *medincome*, *white_pct*, *trump_pct*, and *current_plan*. For more information about these variables, refer to *Table ???*. 
 
+Model 1 adopts linear regression model with all the original variables:
+
+
+$yes\_pct_t = \beta_0+\beta_1medincome_t+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6public\_pct_t+\beta_7time\_pct_t+\beta_8voter\_turnout_t+\epsilon_t$    
+
+xxxxx
+
+Model 2 is identical to Model 1, except that it uses logistic regression. Even though the dependent variable is not binary, previous research has used logistic regression in a similar scenario (???). 
+
+
+$logit(yes\_pct_t) = \beta_0+\beta_1medincome_t+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6public\_pct_t+\beta_7time\_pct_t+\beta_8voter\_turnout_t+\epsilon_4$
+
+
+
+```{r include=FALSE}
+find_skewness(final_data)
+```
+
+*Medincome*, *public_pct* and *voter_turnout* are found to be skewed. Thus, Model 3 uses multiple linear regression after log or square root transformation on these three variables.
+
+$yes\_pct_t = \beta_0+\beta_1log(medincome_t)+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6log(public\_pct_t + 0,01)+\beta_7time\_pct_t+\beta_8\sqrt{voter\_turnout_t}+\epsilon_t$     
+
+Finally, Model 4 adopts the same transformation as Model 3, with logistic regression.
+
+$logit(yes\_pct_t) = \beta_0+\beta_1log(medincome_t)+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6log(public\_pct_t + 0.01)+\beta_7time\_pct_t+\beta_8\sqrt{voter\_turnout_t}+\epsilon_t$ 
+
+
+# Results & Discussion
 
 
 model 1: linear
@@ -197,10 +219,7 @@ model 3: no interaction, some transformations, linear
 
 step 1: find the skewed variables
 
-```{r}
-library(dlookr)
-find_skewness(final_data)
-```
+
 
 medincome, public_pct, voter_turnout
 
@@ -257,14 +276,28 @@ stargazer::stargazer(list(mod3, mod4),
                notes.align = "l")
 ```
 
-model 5: interaction, transformed, linear
 ```{r}
-mod5 <- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct *current_plan +  log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + white_pct *current_plan)
+
+mod5<- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct + trump_pct
+           + log_public_pct + time_pct  + sqrt_voter_turnout +
+              current_plan)
 summary(mod5)
+anova(mod5,mod3)
+```
+
+
+
+```{r}
+ggplot(final_data, aes(x = trump_pct, y = medincome)) +
+   geom_point(aes(colour = white_pct))
 ```
 
 
 
 
+```{r}
+ggplot(final_data, aes(x = white_pct, y = yes_pct))+
+   geom_point()
+```
 
-
+# References

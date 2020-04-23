@@ -189,6 +189,14 @@ xx
 ## Warning: package 'Formula' was built under R version 3.5.2
 \end{verbatim}
 
+\begin{verbatim}
+## Warning: package 'dlookr' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'mice' was built under R version 3.5.3
+\end{verbatim}
+
 \hypertarget{literature-review}{%
 \section{Literature Review}\label{literature-review}}
 
@@ -269,7 +277,7 @@ shape people's attitudes towards public transit. For example, the areas
 in which people do not use public transit at all might have a higher
 percentage of refusal of the proposal. People who have to travel a long
 time to work are more likely to support the extension plan if it helps
-save time.
+save time. These two factors serve as controls in the models.
 
 Finally, people favor the proposition if it benefits them. Specifically,
 tracts that are not covered by public transport at present but will be
@@ -279,8 +287,8 @@ more.
 \hypertarget{data}{%
 \subsection{Data}\label{data}}
 
-First, the ballot results of the Gwinnett County referendum on Mar 19th,
-2019 is obtained from a website powered by Scytl, a trusted source of
+The ballot results of the Gwinnett County referendum on Mar 19th, 2019
+is obtained from a website powered by Scytl, a trusted source of
 election outcomes. The cross-sectional dataset contains the voting
 information of all 157 precincts in the county. The dependent variable
 -- the proportion of supporters of the referendum, and the voter turnout
@@ -309,23 +317,21 @@ with current and proposed future public transit systems are available on
 the Gwinnett County government website. I select the short-range
 expansion plan (Y2020 -- 2025) because the cost and benefit of the
 expansion in the far future are discounted more. After modifications in
-QGIS, the maps are then transformed into spatial data readable in R.
-500-meter buffer zones are created around bus and railway routes. The
-categorical variable \emph{current\_plan} has four levels: 1 represents
-no transportation near this tract at present and in the future; 2
-represents the tracts that are accessible to public transit currently
-but not in the future; 3 stands for the tracts that do not have transit
-at present but will do in the expansion plan; 4 represents the tracts
-that have and will have public transit for now and for the future.
+QGIS software, the maps are then transformed into spatial data readable
+in R. Five-hundred-meter buffer zones are created around bus and railway
+routes. The categorical variable \emph{current\_plan} has four levels: 1
+represents no transportation near this tract at present and in the
+future; 2 represents the tracts that are accessible to public transit
+currently but not in the future; 3 stands for the tracts that do not
+have transit at present but will do in the expansion plan; 4 represents
+the tracts that have and will have public transit for now and for the
+future.
 
 As noted above, both referendum and 2016 election data are collected at
 the precinct level. However, the other datasets are performed at the
 census tract level. Therefore, referendum and election data are
 redistributed by the areas shared by the precinct and the tract. See the
-data appendix for detailed steps of transformation. Such a method
-assumes the population density within the precinct is constant, and the
-values of the target factors are uniform across individuals in each
-precinct.
+data appendix for detailed steps of transformation.
 
 The final dataset joins the datasets above by GEOID. It is
 cross-sectional, measured with the unit of the census tract. A
@@ -378,8 +384,7 @@ yes\_pct & 113 & 0.53 & 0.14 & 0.27 & 0.42 & 0.61 & 0.84 \\
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{data_numeric <-}\StringTok{ }\NormalTok{final_data }\OperatorTok{%>%}
-\StringTok{   }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{current_plan =} \KeywordTok{as.numeric}\NormalTok{(current_plan)) }\OperatorTok{%>%}
-\StringTok{   }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{GEOID)}
+\StringTok{   }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\KeywordTok{c}\NormalTok{(current_plan,GEOID))}
 
 \NormalTok{data_cor =}\StringTok{ }\KeywordTok{cor}\NormalTok{(data_numeric)}
 
@@ -391,34 +396,82 @@ yes\_pct & 113 & 0.53 & 0.14 & 0.27 & 0.42 & 0.61 & 0.84 \\
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-1-1.pdf}
+\includegraphics{Zhong_paper_files/figure-latex/create correlation matrix-1.pdf}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(final_data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ trump_pct, }\DataTypeTok{y =}\NormalTok{ medincome)) }\OperatorTok{+}
-\StringTok{   }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =}\NormalTok{ white_pct))}
-\end{Highlighting}
-\end{Shaded}
+\emph{Table 2} lists the summary statistics. Median income is skewed to
+the right, with a few tracts demonstrating high income levels. Such a
+pattern of inequality is universally observed.
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-2-1.pdf}
+The usage of public transit is low. On average, only one percent of the
+population relies on public transportation to go to work. As proved by
+later analyses, the distribution is highly skewed, and will be
+transformed in some models. \textbf{public\_pct max needs to be fixed}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(final_data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ white_pct, }\DataTypeTok{y =}\NormalTok{ yes_pct))}\OperatorTok{+}
-\StringTok{   }\KeywordTok{geom_point}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
+The variable \emph{current\_plan} is not in \emph{Table 2} because it is
+a categorical variable. In sum, 31 tracts do not have access to public
+transport within 500 meters, both now and in the short-range. There is
+one tract that is categorized as 2, indicating that it has public
+transit at present, but not in the short-range proposition. It could be
+due to the plan of reducing circuitous routing. Twenty-two tracts do not
+enjoy the proximity of public transport now, but will in the
+short-range. Lastly, 59 tracts have public transit available both at
+present and in the short-range plan. Since a level of this variable
+contains only one value (``2''), problems with degrees of freedom will
+potentially arise.
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-3-1.pdf}
+A correlation matrix is created from \texttt{corrplot} package to
+investigate the correlation between each pair of factors (see
+\emph{Figure ???}). Positive correlations are in blue colors, and
+negative correlations are in red colors. The magnitude is reflected by
+the color intensity and the size of the dot. Non-significant (p
+\textgreater{} 0.05) correlations are marked with a cross.
+\emph{Current\_plan} is omitted in the matrix because it is categorical.
+The dependent variable \emph{yes\_pct} is significantly correlated with
+every independent variable. \emph{Medage}, \emph{voter\_turnout},
+\emph{medincome}, \emph{white\_pct}, and \emph{trump\_pct} are all
+strongly positively correlated with each other, and all of them are
+negatively associated with \emph{yes\_pct}. Given the number of strong,
+significant correlations among the factors, it is essential to check
+collinearity in the regression model.
+
+The major limitation of the data is the unit conversion from precinct to
+census tract. Such a method assumes that residents in one precinct have
+the same characteristics, and population density is identical. Clearly,
+the assumptions cannot be satisfied in a real dataset.
 
 \hypertarget{model-specification}{%
 \subsection{Model specification}\label{model-specification}}
 
-Model 1:
-\(yes\_pct = \beta_0+\beta_1*medage+\beta_2*medincome+\beta_3*white\_pct+\beta_4*public\_pct+\beta_5*time\_pct+\beta_6*trump\_pct+\beta_7*voter\_turnout+\beta_8*current\_plan+\epsilon\)
+Four models are tested in the analysis. The dependent variable is
+\emph{yes\_pct}, the proportion of supporters of the referendum in a
+tract. Independent variables include \emph{medincome},
+\emph{white\_pct}, \emph{trump\_pct}, and \emph{current\_plan}. For more
+information about these variables, refer to \emph{Table ???}. Model 1
+adopts linear regression model with all the original variables:
 
-\hypertarget{results}{%
-\section{Results}\label{results}}
+\(yes\_pct_t = \beta_0+\beta_1medincome_t+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6public\_pct_t+\beta_7time\_pct_t+\beta_8voter\_turnout_t+\epsilon_t\)
+
+xxxxx
+
+Model 2 is identical to Model 1, except that it uses logistic
+regression. Even though the dependent variable is not binary, previous
+research has used logistic regression in a similar scenario (???).
+
+\(logit(yes\_pct_t) = \beta_0+\beta_1medincome_t+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6public\_pct_t+\beta_7time\_pct_t+\beta_8voter\_turnout_t+\epsilon_4\)
+
+\emph{Medincome}, \emph{public\_pct} and \emph{voter\_turnout} are found
+to be skewed. Thus, Model 3 uses multiple linear regression after log or
+square root transformation on these three variables.
+
+\(yes\_pct_t = \beta_0+\beta_1log(medincome_t)+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6log(public\_pct_t + 0,01)+\beta_7time\_pct_t+\beta_8\sqrt{voter\_turnout_t}+\epsilon_t\)
+
+Finally, Model 4 adopts the same transformation as Model 3, with
+logistic regression.
+
+\(logit(yes\_pct_t) = \beta_0+\beta_1log(medincome_t)+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6log(public\_pct_t + 0,01)+\beta_7time\_pct_t+\beta_8\sqrt{voter\_turnout_t}+\epsilon_t\)
+
+\hypertarget{results-discussion}{%
+\section{Results \& Discussion}\label{results-discussion}}
 
 model 1: linear
 
@@ -467,7 +520,7 @@ model 1 assumption checking
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-5-1.pdf}
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-3-1.pdf}
 
 collinearity:
 
@@ -634,60 +687,6 @@ model 3: no interaction, some transformations, linear
 
 step 1: find the skewed variables
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(dlookr)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Warning: package 'dlookr' was built under R version 3.5.3
-\end{verbatim}
-
-\begin{verbatim}
-## Loading required package: mice
-\end{verbatim}
-
-\begin{verbatim}
-## Warning: package 'mice' was built under R version 3.5.3
-\end{verbatim}
-
-\begin{verbatim}
-## 
-## Attaching package: 'mice'
-\end{verbatim}
-
-\begin{verbatim}
-## The following objects are masked from 'package:base':
-## 
-##     cbind, rbind
-\end{verbatim}
-
-\begin{verbatim}
-## 
-## Attaching package: 'dlookr'
-\end{verbatim}
-
-\begin{verbatim}
-## The following object is masked from 'package:Hmisc':
-## 
-##     describe
-\end{verbatim}
-
-\begin{verbatim}
-## The following object is masked from 'package:base':
-## 
-##     transform
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{find_skewness}\NormalTok{(final_data)}
-\end{Highlighting}
-\end{Shaded}
-
-{[}1{]} 3 5 8
-
 medincome, public\_pct, voter\_turnout
 
 step 2: transform them
@@ -749,7 +748,7 @@ model 3 assumption checking
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-11-1.pdf}
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-8-1.pdf}
 
 collinearity:
 
@@ -880,43 +879,77 @@ F Statistic & 117.561$^{***}$ (df = 10; 102) &  \\
 \end{tabular} 
 \end{table}
 
-model 5: interaction, transformed, linear
-
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{mod5 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_tf, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{log_medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{*}\NormalTok{current_plan }\OperatorTok{+}\StringTok{  }\NormalTok{log_public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{sqrt_voter_turnout }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{*}\NormalTok{current_plan)}
+\NormalTok{mod5<-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_tf, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{log_medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct}
+           \OperatorTok{+}\StringTok{ }\NormalTok{log_public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct  }\OperatorTok{+}\StringTok{ }\NormalTok{sqrt_voter_turnout }\OperatorTok{+}
+\StringTok{              }\NormalTok{current_plan)}
 \KeywordTok{summary}\NormalTok{(mod5)}
 \end{Highlighting}
 \end{Shaded}
 
 Call: lm(formula = yes\_pct \textasciitilde{} medage + log\_medincome +
-white\_pct * current\_plan + log\_public\_pct + time\_pct + trump\_pct +
-sqrt\_voter\_turnout + white\_pct * current\_plan, data = data\_tf)
+white\_pct + trump\_pct + log\_public\_pct + time\_pct +
+sqrt\_voter\_turnout + current\_plan, data = data\_tf)
 
-Residuals: Min 1Q Median 3Q Max -0.09875 -0.02948 0.00000 0.03070
-0.10049
+Residuals: Min 1Q Median 3Q Max -0.099920 -0.031591 -0.003479 0.027983
+0.098568
 
-Coefficients: (1 not defined because of singularities) Estimate Std.
-Error t value Pr(\textgreater\textbar t\textbar)\\
-(Intercept) 0.947549 0.235565 4.022 0.000112 \textbf{\emph{ medage
-0.003453 0.001531 2.255 0.026322 }\\
-log\_medincome -0.003324 0.023006 -0.144 0.885408\\
-white\_pct 0.153396 0.062665 2.448 0.016113 *\\
-current\_plan2 0.030804 0.044649 0.690 0.491852\\
-current\_plan3 -0.016083 0.045354 -0.355 0.723630\\
-current\_plan4 0.050913 0.038418 1.325 0.188106\\
-log\_public\_pct 0.021718 0.008335 2.605 0.010575 *\\
-time\_pct -0.277527 0.090574 -3.064 0.002806 } trump\_pct -0.877144
-0.063856 -13.736 \textless{} 2e-16 **\emph{ sqrt\_voter\_turnout
--0.271902 0.114201 -2.381 0.019164 }\\
-white\_pct:current\_plan2 NA NA NA NA\\
-white\_pct:current\_plan3 -0.032225 0.085696 -0.376 0.707687\\
-white\_pct:current\_plan4 -0.072575 0.071308 -1.018 0.311239\\
+Coefficients: Estimate Std. Error t value
+Pr(\textgreater\textbar t\textbar)\\
+(Intercept) 1.031840 0.218778 4.716 7.64e-06 \textbf{\emph{ medage
+0.003603 0.001511 2.384 0.01899 }\\
+log\_medincome -0.008331 0.022302 -0.374 0.70952\\
+white\_pct 0.116703 0.050746 2.300 0.02350 *\\
+trump\_pct -0.856963 0.058590 -14.626 \textless{} 2e-16 }*
+log\_public\_pct 0.022304 0.008263 2.699 0.00814 \textbf{ time\_pct
+-0.281374 0.089698 -3.137 0.00223 } sqrt\_voter\_turnout -0.319107
+0.103460 -3.084 0.00263 \textbf{ current\_plan2 0.021184 0.043430 0.488
+0.62677\\
+current\_plan3 -0.033367 0.011777 -2.833 0.00555 } current\_plan4
+0.013583 0.011459 1.185 0.23864\\
 --- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 '
 ' 1
 
-Residual standard error: 0.04145 on 100 degrees of freedom Multiple
-R-squared: 0.921, Adjusted R-squared: 0.9115 F-statistic: 97.13 on 12
-and 100 DF, p-value: \textless{} 2.2e-16
+Residual standard error: 0.04125 on 102 degrees of freedom Multiple
+R-squared: 0.9202, Adjusted R-squared: 0.9123 F-statistic: 117.6 on 10
+and 102 DF, p-value: \textless{} 2.2e-16
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{anova}\NormalTok{(mod5,mod3)}
+\end{Highlighting}
+\end{Shaded}
+
+Analysis of Variance Table
+
+Model 1: yes\_pct \textasciitilde{} medage + log\_medincome + white\_pct
++ trump\_pct + log\_public\_pct + time\_pct + sqrt\_voter\_turnout +
+current\_plan Model 2: yes\_pct \textasciitilde{} medage +
+log\_medincome + white\_pct + log\_public\_pct + time\_pct + trump\_pct
++ sqrt\_voter\_turnout + current\_plan Res.Df RSS Df Sum of Sq F
+Pr(\textgreater F) 1 102 0.1736\\
+2 102 0.1736 0 -8.3267e-17
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(final_data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ trump_pct, }\DataTypeTok{y =}\NormalTok{ medincome)) }\OperatorTok{+}
+\StringTok{   }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =}\NormalTok{ white_pct))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(final_data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ white_pct, }\DataTypeTok{y =}\NormalTok{ yes_pct))}\OperatorTok{+}
+\StringTok{   }\KeywordTok{geom_point}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+\hypertarget{references}{%
+\section{References}\label{references}}
 
 \end{document}
