@@ -3,11 +3,11 @@ title: Data Appendix to The Influence of Individual Characterisitcs on Public Tr
   Planning
 author: "Iris Zhong"
 output:
-  pdf_document:
-    number_sections: yes
-    toc: yes
   html_document:
     df_print: paged
+    toc: yes
+  pdf_document:
+    number_sections: yes
     toc: yes
 ---
 
@@ -567,8 +567,11 @@ Finally, as expected, public transportation is accessible to more tracts if it e
 ```{r}
 gwinnett_track_map <- gwinnett_tracks %>%
   full_join(final_data, by = "GEOID") 
-tm_shape(gwinnett_track_map)  + tm_polygons(col = "current_plan") + tm_shape(short_range) + tm_lines()
-tm_shape(gwinnett_track_map)  + tm_polygons(col = "white_pct") + tm_shape(short_range) + tm_lines()
-tm_shape(gwinnett_track_map)  + tm_polygons(col = "trump_pct") + tm_shape(short_range) + tm_lines()
+plan_map <- tm_shape(gwinnett_track_map)  + tm_polygons(col = "current_plan") + tm_shape(short_range) + tm_lines()
+white_map <- tm_shape(gwinnett_track_map)  + tm_polygons(col = "white_pct") + tm_shape(short_range) + tm_lines()
+trump_map <- tm_shape(gwinnett_track_map)  + tm_polygons(col = "trump_pct") + tm_shape(short_range) + tm_lines()
+vote_map <- tm_shape(gwinnett_track_map)  + tm_polygons(col = "yes_pct") + tm_shape(short_range) + tm_lines()
+tmap_arrange(plan_map, white_map, trump_map, vote_map)
+
 ```
 

@@ -134,57 +134,55 @@ The major limitation of the data is the unit conversion from precinct to census 
 
 ## Model specification
 
-Four models are tested in the analysis. The dependent variable is *yes_pct*, the proportion of supporters of the referendum in a tract. Independent variables include *medincome*, *white_pct*, *trump_pct*, and *current_plan*. For more information about these variables, refer to *Table ???*. 
+Four models are tested in the analysis. 
 
 Model 1 adopts linear regression model with all the original variables:
 
 
 $yes\_pct_t = \beta_0+\beta_1medincome_t+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6public\_pct_t+\beta_7time\_pct_t+\beta_8voter\_turnout_t+\epsilon_t$    
 
-xxxxx
+where $t$ indexes census tract. Since all variables are measured in the same scope, no fixed effects are tested. The dependent variable is *yes_pct*, the proportion of supporters of the referendum in a tract. Independent variables include *medincome*, *white_pct*, *trump_pct*, and *current_plan*. For more information about these variables, refer to *Table ???*. I hypothesize that the effect of *medincome* is ambiguous. As explained in the Conceptual Model section,  people with higher income pay a larger amount of tax, but the tax takes up a smaller portion of their earnings compared to those with lower income.  *White_pct* is hypothesized to have a negative effect on *yes_pct*, based on the negative correlation between the two variables. A higher percentage of Trump supporters is expected to predict a lower percentage of votes for “yes” in the referendum, as evidenced by common sense and previous literature (???). Finally, since tracts that do not have public transit now and will have it in the short-range benefit the most from the proposition, I predict that the tracts with this feature will have a higher level of *yes_pct* than the others.
 
-Model 2 is identical to Model 1, except that it uses logistic regression. Even though the dependent variable is not binary, previous research has used logistic regression in a similar scenario (???). 
-
-
-$logit(yes\_pct_t) = \beta_0+\beta_1medincome_t+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6public\_pct_t+\beta_7time\_pct_t+\beta_8voter\_turnout_t+\epsilon_t$
+*Medage*, *public_pct*, *time_pct*, and *voter_turnout* add to the model as controls. For example, tracts with higher voter turnout are hypothesized to have a lower *yes_pct*, according to the rule of loss aversion – people who believe the referendum incur losses to them are inclined to participate in the referendum actively and vote against it, but people who like the proposition are less motivated to vote in nature. 
 
 
 
-```{r include=FALSE}
+
+
+```{r check skewness, include=FALSE}
 find_skewness(final_data)
 ```
 
-*Medincome*, *public_pct* and *voter_turnout* are found to be skewed. Thus, Model 3 uses multiple linear regression after log or square root transformation on these three variables.
+*Medincome*, *public_pct* and *voter_turnout* are found to be positively skewed. Thus, Model 2 uses multiple linear regression after log or square root transformation on these three variables. Among them, since many of the values in *public_pct* are 0, a constant has to add to the variable before taking log transformation.
 
-$yes\_pct_t = \beta_0+\beta_1log(medincome_t)+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6log(public\_pct_t + 0,01)+\beta_7time\_pct_t+\beta_8\sqrt{voter\_turnout_t}+\epsilon_t$     
+$yes\_pct_t = \beta_0+\beta_1log(medincome_t)+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6log(public\_pct_t + 0.01)+\beta_7time\_pct_t+\beta_8\sqrt{voter\_turnout_t}+\epsilon_t$     
 
-Finally, Model 4 adopts the same transformation as Model 3, with logistic regression.
-
-$logit(yes\_pct_t) = \beta_0+\beta_1log(medincome_t)+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6log(public\_pct_t + 0.01)+\beta_7time\_pct_t+\beta_8\sqrt{voter\_turnout_t}+\epsilon_t$ 
 
 
 # Results & Discussion
 
 
-model 1: linear
+## model 1: linear
 ```{r}
 
-mod1 <- lm(data = final_data, yes_pct ~ medage + medincome + white_pct 
-           + public_pct + time_pct + trump_pct + voter_turnout +
-              current_plan)
+mod1 <- lm(data = final_data, yes_pct ~ medincome + white_pct + trump_pct 
+           + current_plan + medage + public_pct + time_pct +
+              voter_turnout)
 summary(mod1)
 ```
 
 
 
-model 1 assumption checking
-```{r}
 
-plot(predict(mod1),resid(mod1),col="midnightblue",pch=18,main="Residual plot - Model 1")
-abline(0,0,col="red")
+### model 1 assumption checking
+```{r}
+ggplot(mod1, aes(x = predict(mod1),y =resid(mod1))) +
+      geom_point() +
+   geom_hline(yintercept = 0)
+
 ```
 
-collinearity:
+### collinearity:
 ```{r}
 library(car)
 vif(mod1)
@@ -192,11 +190,38 @@ vif(mod1)
 
 all below 5: good, no collinearity problem
 
+```{r}
+extreme <- data.frame(medage = c(max(final_data$medage), min(final_data$medage)),
+                      medincome = c(max(final_data$medincome), min(final_data$medincome)),
+                      white_pct = c(max(final_data$white_pct), min(final_data$white_pct)),
+                      public_pct = c(max(final_data$public_pct), min(final_data$public_pct)),
+                      time_pct = c(min(final_data$time_pct), max(final_data$time_pct)),
+                      trump_pct = c(min(final_data$trump_pct), max(final_data$trump_pct)),
+                      voter_turnout = c(min(final_data$voter_turnout), max(final_data$voter_turnout)),
+                      current_plan = c(3,2))
+                      
+extreme <- extreme %>%
+   mutate(current_plan = as.factor(current_plan))
+```
 
 
 
+### Predicted values
+```{r}
+values_compare <- final_data %>%
+   mutate(predicted = predict(mod1, newdata = final_data)) %>%
+   select(yes_pct, predicted)
 
-model 2: no interaction, logistic
+```
+
+
+```{r}
+predict(mod1, newdata = extreme)
+```
+
+
+
+## model 2: no interaction, logistic
 ```{r}
 mod2 <- glm(data = final_data, yes_pct ~ medage + medincome + white_pct + public_pct + time_pct + trump_pct + voter_turnout + current_plan, family = "binomial")
 summary(mod2)
@@ -215,9 +240,9 @@ stargazer::stargazer(list(mod1, mod2),
 
 
 
-model 3: no interaction, some transformations, linear
+## model 3: no interaction, some transformations, linear
 
-step 1: find the skewed variables
+### step 1: find the skewed variables
 
 
 
@@ -233,21 +258,21 @@ data_tf <- final_data %>%
 find_skewness(data_tf)
 ```
 
-step 3: model them
+### step 3: model them
 
 ```{r}
 mod3 <- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + current_plan)
 summary(mod3)
 ```
 
-model 3 assumption checking
+### model 3 assumption checking
 ```{r}
 
 plot(predict(mod3),resid(mod3),col="midnightblue",pch=18,main="Residual plot - Model 3")
 abline(0,0,col="red")
 ```
 
-collinearity:
+### collinearity:
 ```{r}
 vif(mod3)
 ```
@@ -256,7 +281,7 @@ all below 5: no collinearity
 
 
 
-model 4: transformation, logistic
+## model 4: transformation, logistic
 ```{r}
 mod4 <- glm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct 
            + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout +
@@ -276,14 +301,6 @@ stargazer::stargazer(list(mod3, mod4),
                notes.align = "l")
 ```
 
-```{r}
-
-mod5<- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct + trump_pct
-           + log_public_pct + time_pct  + sqrt_voter_turnout +
-              current_plan)
-summary(mod5)
-anova(mod5,mod3)
-```
 
 
 
@@ -293,11 +310,22 @@ ggplot(final_data, aes(x = trump_pct, y = medincome)) +
 ```
 
 
+```{r}
+mod5 <- lm(data = data_tf, log(yes_pct/(1-yes_pct)) ~ medage + log_medincome + white_pct + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + current_plan)
+summary(mod5)
+```
+
+
 
 
 ```{r}
 ggplot(final_data, aes(x = white_pct, y = yes_pct))+
    geom_point()
 ```
+
+
+
+
+
 
 # References
