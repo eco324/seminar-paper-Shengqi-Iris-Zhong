@@ -197,6 +197,18 @@ xx
 ## Warning: package 'mice' was built under R version 3.5.3
 \end{verbatim}
 
+\begin{verbatim}
+## Warning: package 'car' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'carData' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'patchwork' was built under R version 3.5.3
+\end{verbatim}
+
 \hypertarget{literature-review}{%
 \section{Literature Review}\label{literature-review}}
 
@@ -247,7 +259,21 @@ studies use precinct-level data.
 \hypertarget{background}{%
 \section{Background}\label{background}}
 
-current transportation future plan referendum
+\hypertarget{current-transportation}{%
+\subsection{current transportation}\label{current-transportation}}
+
+\hypertarget{connect-gwinnett-transit-plan}{%
+\subsection{Connect Gwinnett: Transit
+Plan}\label{connect-gwinnett-transit-plan}}
+
+\hypertarget{plan-overview}{%
+\subsubsection{Plan overview}\label{plan-overview}}
+
+\hypertarget{financing}{%
+\subsubsection{Financing}\label{financing}}
+
+\hypertarget{referendum}{%
+\subsection{referendum}\label{referendum}}
 
 \hypertarget{data-methods}{%
 \section{Data \& Methods}\label{data-methods}}
@@ -334,8 +360,10 @@ redistributed by the areas shared by the precinct and the tract. See the
 data appendix for detailed steps of transformation.
 
 The final dataset joins the datasets above by GEOID. It is
-cross-sectional, measured with the unit of the census tract. A
-description of the variables can be found in \emph{Table 1}.
+cross-sectional, measured with the unit of the census tract. Since there
+are 113 census tracts in Gwinnett, the dataset has 113 observations,
+with no missing data. A description of the variables can be found in
+\emph{Table 1}.
 
 \begin{table}
 \centering
@@ -476,550 +504,189 @@ in the referendum actively and vote against it, but people who like the
 proposition are less motivated to vote in nature.
 
 \emph{Medincome}, \emph{public\_pct} and \emph{voter\_turnout} are found
-to be positively skewed. Thus, \emph{Medincome}, \emph{public\_pct} and
-\emph{voter\_turnout} are found to be positively skewed. Thus, Model 2
-uses multiple linear regression after log or square root transformation
-on these three variables. Among them, \emph{public\_pct} is transformed
-by adding 0.01 to the original number and taking its natural log. Since
-many of its values are 0, a constant has to add to the variable before
-taking log transformation.
+to be positively skewed. Thus, Model 2 uses multiple linear regression
+after log or square root transformation on these three variables. Among
+them, since many of the values in \emph{public\_pct} are 0, a constant
+has to add to the variable before taking log transformation.
 
 \(yes\_pct_t = \beta_0+\beta_1log(medincome_t)+\beta_2white\_pct_t+\beta_3trump\_pct_t+\beta_4current\_plan_t+\beta_5medage_t+\beta_6log(public\_pct_t + 0.01)+\beta_7time\_pct_t+\beta_8\sqrt{voter\_turnout_t}+\epsilon_t\)
 
 \hypertarget{results-discussion}{%
 \section{Results \& Discussion}\label{results-discussion}}
 
-\hypertarget{model-1-linear}{%
-\subsection{model 1: linear}\label{model-1-linear}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{mod1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ final_data, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }
-           \OperatorTok{+}\StringTok{ }\NormalTok{public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{voter_turnout }\OperatorTok{+}
-\StringTok{              }\NormalTok{current_plan)}
-\KeywordTok{summary}\NormalTok{(mod1)}
-\end{Highlighting}
-\end{Shaded}
-
-Call: lm(formula = yes\_pct \textasciitilde{} medage + medincome +
-white\_pct + public\_pct + time\_pct + trump\_pct + voter\_turnout +
-current\_plan, data = final\_data)
-
-Residuals: Min 1Q Median 3Q Max -0.103714 -0.032077 -0.002399 0.030226
-0.101740
-
-Coefficients: Estimate Std. Error t value
-Pr(\textgreater\textbar t\textbar)\\
-(Intercept) 8.041e-01 4.707e-02 17.085 \textless{} 2e-16 \textbf{\emph{
-medage 2.738e-03 1.481e-03 1.849 0.06739 .\\
-medincome 1.326e-07 2.930e-07 0.453 0.65183\\
-white\_pct 1.143e-01 5.326e-02 2.147 0.03420 }\\
-public\_pct 8.173e-01 3.382e-01 2.417 0.01743 *\\
-time\_pct -3.057e-01 9.048e-02 -3.378 0.00103 } trump\_pct -8.859e-01
-5.709e-02 -15.517 \textless{} 2e-16 \textbf{\emph{ voter\_turnout
--3.257e-01 1.262e-01 -2.582 0.01125 }\\
-current\_plan2 1.888e-02 4.399e-02 0.429 0.66866\\
-current\_plan3 -3.176e-02 1.201e-02 -2.645 0.00945 } current\_plan4
-1.612e-02 1.155e-02 1.395 0.16606\\
---- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 '
-' 1
-
-Residual standard error: 0.04197 on 102 degrees of freedom Multiple
-R-squared: 0.9174, Adjusted R-squared: 0.9093 F-statistic: 113.2 on 10
-and 102 DF, p-value: \textless{} 2.2e-16
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(margins)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Warning: package 'margins' was built under R version 3.5.3
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(}\KeywordTok{margins}\NormalTok{(mod1))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-    factor     AME     SE        z      p   lower   upper
-\end{verbatim}
-
-current\_plan2 0.0189 0.0440 0.4292 0.6678 -0.0673 0.1051 current\_plan3
--0.0318 0.0120 -2.6453 0.0082 -0.0553 -0.0082 current\_plan4 0.0161
-0.0116 1.3949 0.1630 -0.0065 0.0388 medage 0.0027 0.0015 1.8488 0.0645
--0.0002 0.0056 medincome 0.0000 0.0000 0.4525 0.6509 -0.0000 0.0000
-public\_pct 0.8173 0.3382 2.4168 0.0157 0.1545 1.4801 time\_pct -0.3057
-0.0905 -3.3784 0.0007 -0.4830 -0.1283 trump\_pct -0.8859 0.0571 -15.5168
-0.0000 -0.9978 -0.7740 voter\_turnout -0.3257 0.1262 -2.5816 0.0098
--0.5729 -0.0784 white\_pct 0.1143 0.0533 2.1466 0.0318 0.0099 0.2187
-
-\hypertarget{model-1-assumption-checking}{%
-\subsubsection{model 1 assumption
-checking}\label{model-1-assumption-checking}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(}\KeywordTok{predict}\NormalTok{(mod1),}\KeywordTok{resid}\NormalTok{(mod1),}\DataTypeTok{col=}\StringTok{"midnightblue"}\NormalTok{,}\DataTypeTok{pch=}\DecValTok{18}\NormalTok{,}\DataTypeTok{main=}\StringTok{"Residual plot - Model 1"}\NormalTok{)}
-\KeywordTok{abline}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DataTypeTok{col=}\StringTok{"red"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-3-1.pdf}
-
-\hypertarget{collinearity}{%
-\subsubsection{collinearity:}\label{collinearity}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(car)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Warning: package 'car' was built under R version 3.5.3
-\end{verbatim}
-
-\begin{verbatim}
-## Loading required package: carData
-\end{verbatim}
-
-\begin{verbatim}
-## Warning: package 'carData' was built under R version 3.5.3
-\end{verbatim}
-
-\begin{verbatim}
-## 
-## Attaching package: 'car'
-\end{verbatim}
-
-\begin{verbatim}
-## The following object is masked from 'package:dplyr':
-## 
-##     recode
-\end{verbatim}
-
-\begin{verbatim}
-## The following object is masked from 'package:purrr':
-## 
-##     some
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{vif}\NormalTok{(mod1)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-              GVIF Df GVIF^(1/(2*Df))
-\end{verbatim}
-
-medage 2.921005 1 1.709095 medincome 3.237296 1 1.799249 white\_pct
-3.900578 1 1.974988 public\_pct 1.163004 1 1.078427 time\_pct 1.563279 1
-1.250312 trump\_pct 4.533128 1 2.129114 voter\_turnout 3.372750 1
-1.836505 current\_plan 1.853504 3 1.108321
-
-all below 5: good, no collinearity problem
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{extreme <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{medage =} \KeywordTok{c}\NormalTok{(}\KeywordTok{max}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{medage), }\KeywordTok{min}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{medage)),}
-                      \DataTypeTok{medincome =} \KeywordTok{c}\NormalTok{(}\KeywordTok{max}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{medincome), }\KeywordTok{min}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{medincome)),}
-                      \DataTypeTok{white_pct =} \KeywordTok{c}\NormalTok{(}\KeywordTok{max}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{white_pct), }\KeywordTok{min}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{white_pct)),}
-                      \DataTypeTok{public_pct =} \KeywordTok{c}\NormalTok{(}\KeywordTok{max}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{public_pct), }\KeywordTok{min}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{public_pct)),}
-                      \DataTypeTok{time_pct =} \KeywordTok{c}\NormalTok{(}\KeywordTok{min}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{time_pct), }\KeywordTok{max}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{time_pct)),}
-                      \DataTypeTok{trump_pct =} \KeywordTok{c}\NormalTok{(}\KeywordTok{min}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{trump_pct), }\KeywordTok{max}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{trump_pct)),}
-                      \DataTypeTok{voter_turnout =} \KeywordTok{c}\NormalTok{(}\KeywordTok{min}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{voter_turnout), }\KeywordTok{max}\NormalTok{(final_data}\OperatorTok{$}\NormalTok{voter_turnout)),}
-                      \DataTypeTok{current_plan =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{))}
-                      
-\NormalTok{extreme <-}\StringTok{ }\NormalTok{extreme }\OperatorTok{%>%}
-\StringTok{   }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{current_plan =} \KeywordTok{as.factor}\NormalTok{(current_plan))}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{predicted-values}{%
-\subsubsection{Predicted values}\label{predicted-values}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{values_compare <-}\StringTok{ }\NormalTok{final_data }\OperatorTok{%>%}
-\StringTok{   }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{predicted =} \KeywordTok{predict}\NormalTok{(mod1, }\DataTypeTok{newdata =}\NormalTok{ final_data)) }\OperatorTok{%>%}
-\StringTok{   }\KeywordTok{select}\NormalTok{(yes_pct, predicted)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{predict}\NormalTok{(mod1, }\DataTypeTok{newdata =}\NormalTok{ extreme)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-     1          2 
-\end{verbatim}
-
-0.95747322 0.09349941
-
-\hypertarget{model-2-no-interaction-logistic}{%
-\subsection{model 2: no interaction,
-logistic}\label{model-2-no-interaction-logistic}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{mod2 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ final_data, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{+}\StringTok{ }\NormalTok{public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{voter_turnout }\OperatorTok{+}\StringTok{ }\NormalTok{current_plan, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(mod2)}
-\end{Highlighting}
-\end{Shaded}
-
-Call: glm(formula = yes\_pct \textasciitilde{} medage + medincome +
-white\_pct + public\_pct + time\_pct + trump\_pct + voter\_turnout +
-current\_plan, family = ``binomial'', data = final\_data)
-
-Deviance Residuals: Min 1Q Median 3Q Max\\
--0.224855 -0.066351 -0.001643 0.067049 0.208799
-
-Coefficients: Estimate Std. Error z value
-Pr(\textgreater\textbar z\textbar) (Intercept) 1.328e+00 2.320e+00 0.572
-0.567 medage 1.070e-02 7.223e-02 0.148 0.882 medincome 6.272e-07
-1.435e-05 0.044 0.965 white\_pct 5.506e-01 2.639e+00 0.209 0.835
-public\_pct 3.528e+00 1.715e+01 0.206 0.837 time\_pct -1.390e+00
-4.468e+00 -0.311 0.756 trump\_pct -3.779e+00 2.844e+00 -1.329 0.184
-voter\_turnout -1.441e+00 6.219e+00 -0.232 0.817 current\_plan2
-5.722e-02 2.128e+00 0.027 0.979 current\_plan3 -1.378e-01 5.889e-01
--0.234 0.815 current\_plan4 5.908e-02 5.632e-01 0.105 0.916
-
-(Dispersion parameter for binomial family taken to be 1)
-
-\begin{verbatim}
-Null deviance: 9.05063  on 112  degrees of freedom
-\end{verbatim}
-
-Residual deviance: 0.82869 on 102 degrees of freedom AIC: 135.96
-
-Number of Fisher Scoring iterations: 4
-
-model 1 \& 2 table
+\hypertarget{regression-results}{%
+\subsection{Regression results}\label{regression-results}}
 
 \begin{table}[!htbp] \centering 
-  \caption{Initial regression results} 
-  \label{initialResults} 
-\begin{tabular}{@{\extracolsep{5pt}}lcc} 
+  \caption{Primary regression} 
+  \label{Primary} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
- & \multicolumn{2}{c}{\textit{Dependent variable:}} \\ 
-\cline{2-3} 
-\\[-1.8ex] & \multicolumn{2}{c}{yes\_pct} \\ 
-\\[-1.8ex] & \textit{OLS} & \textit{logistic} \\ 
-\\[-1.8ex] & (1) & (2)\\ 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & yes\_pct \\ 
 \hline \\[-1.8ex] 
- medage & 0.003$^{*}$ & 0.011 \\ 
-  & (0.001) & (0.072) \\ 
-  & & \\ 
- medincome & 0.00000 & 0.00000 \\ 
-  & (0.00000) & (0.00001) \\ 
-  & & \\ 
- white\_pct & 0.114$^{**}$ & 0.551 \\ 
-  & (0.053) & (2.639) \\ 
-  & & \\ 
- public\_pct & 0.817$^{**}$ & 3.528 \\ 
-  & (0.338) & (17.153) \\ 
-  & & \\ 
- time\_pct & $-$0.306$^{***}$ & $-$1.390 \\ 
-  & (0.090) & (4.468) \\ 
-  & & \\ 
- trump\_pct & $-$0.886$^{***}$ & $-$3.779 \\ 
-  & (0.057) & (2.844) \\ 
-  & & \\ 
- voter\_turnout & $-$0.326$^{**}$ & $-$1.441 \\ 
-  & (0.126) & (6.219) \\ 
-  & & \\ 
- current\_plan2 & 0.019 & 0.057 \\ 
-  & (0.044) & (2.128) \\ 
-  & & \\ 
- current\_plan3 & $-$0.032$^{***}$ & $-$0.138 \\ 
-  & (0.012) & (0.589) \\ 
-  & & \\ 
- current\_plan4 & 0.016 & 0.059 \\ 
-  & (0.012) & (0.563) \\ 
-  & & \\ 
- Constant & 0.804$^{***}$ & 1.328 \\ 
-  & (0.047) & (2.320) \\ 
-  & & \\ 
+ medincome & 0.00000 \\ 
+  & (0.00000) \\ 
+  & \\ 
+ white\_pct & 0.114$^{**}$ \\ 
+  & (0.053) \\ 
+  & \\ 
+ trump\_pct & $-$0.886$^{***}$ \\ 
+  & (0.057) \\ 
+  & \\ 
+ current\_plan2 & 0.019 \\ 
+  & (0.044) \\ 
+  & \\ 
+ current\_plan3 & $-$0.032$^{***}$ \\ 
+  & (0.012) \\ 
+  & \\ 
+ current\_plan4 & 0.016 \\ 
+  & (0.012) \\ 
+  & \\ 
+ medage & 0.003$^{*}$ \\ 
+  & (0.001) \\ 
+  & \\ 
+ public\_pct & 0.817$^{**}$ \\ 
+  & (0.338) \\ 
+  & \\ 
+ time\_pct & $-$0.306$^{***}$ \\ 
+  & (0.090) \\ 
+  & \\ 
+ voter\_turnout & $-$0.326$^{**}$ \\ 
+  & (0.126) \\ 
+  & \\ 
+ Constant & 0.804$^{***}$ \\ 
+  & (0.047) \\ 
+  & \\ 
 \hline \\[-1.8ex] 
-Observations & 113 & 113 \\ 
-R$^{2}$ & 0.917 &  \\ 
-Adjusted R$^{2}$ & 0.909 &  \\ 
-Log Likelihood &  & $-$56.978 \\ 
-Akaike Inf. Crit. &  & 135.955 \\ 
-Residual Std. Error & 0.042 (df = 102) &  \\ 
-F Statistic & 113.224$^{***}$ (df = 10; 102) &  \\ 
+Observations & 113 \\ 
+R$^{2}$ & 0.917 \\ 
+Adjusted R$^{2}$ & 0.909 \\ 
+Residual Std. Error & 0.042 (df = 102) \\ 
+F Statistic & 113.224$^{***}$ (df = 10; 102) \\ 
 \hline 
 \hline \\[-1.8ex] 
-\textit{Note:}  & \multicolumn{2}{l}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
- & \multicolumn{2}{l}{Initial linear and logistic regression results} \\ 
+\textit{Note:}  & \multicolumn{1}{l}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
 \end{tabular} 
 \end{table}
 
-\hypertarget{model-3-no-interaction-some-transformations-linear}{%
-\subsection{model 3: no interaction, some transformations,
-linear}\label{model-3-no-interaction-some-transformations-linear}}
+\emph{Table ???} provides the results of Model 1. The equation is
+statistically significant (F(10, 102) = 113.22, p \textless{} 0.05).
+Adjusted \(R^2\) is 0.909, indicating that the independent variables in
+this specification explain a large portion of the variance in the
+dependent variable. Consistent with the hypothesis, \emph{medincome} is
+not a significant predictor of \emph{yes\_pct}. \emph{Trump\_pct}
+significantly predicts \emph{yes\_pct} as expected, and results in a
+large coefficient: a one percent increase in the proportion of Trump
+supporters decreases the percentage of voters in favor of the referendum
+by 0.886\%, holding other variables constant.
 
-\hypertarget{step-1-find-the-skewed-variables}{%
-\subsubsection{step 1: find the skewed
-variables}\label{step-1-find-the-skewed-variables}}
+However, unlike the outcome from the correlation matrix (see
+\emph{Figure ???}), \emph{white\_pct} significantly predicts
+\emph{yes\_pct} in a positive direction. A higher percentage of the
+white population in the tract is associated with higher support of the
+proposition when holding other explanatory variables constant.
 
-medincome, public\_pct, voter\_turnout
-
-step 2: transform them
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{data_tf <-}\StringTok{ }\NormalTok{final_data }\OperatorTok{%>%}
-\StringTok{   }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{log_medincome =} \KeywordTok{log}\NormalTok{(medincome),}
-          \DataTypeTok{log_public_pct =} \KeywordTok{log}\NormalTok{(public_pct }\OperatorTok{+}\StringTok{ }\FloatTok{0.01}\NormalTok{),}
-          \DataTypeTok{sqrt_voter_turnout =}\NormalTok{ (voter_turnout)}\OperatorTok{^}\FloatTok{0.5}\NormalTok{) }\OperatorTok{%>%}
-\StringTok{   }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\KeywordTok{c}\NormalTok{(medincome, public_pct, voter_turnout))}
-\KeywordTok{find_skewness}\NormalTok{(data_tf)}
-\end{Highlighting}
-\end{Shaded}
-
-integer(0)
-
-\hypertarget{step-3-model-them}{%
-\subsubsection{step 3: model them}\label{step-3-model-them}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{mod3 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_tf, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{log_medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{+}\StringTok{ }\NormalTok{log_public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{sqrt_voter_turnout }\OperatorTok{+}\StringTok{ }\NormalTok{current_plan)}
-\KeywordTok{summary}\NormalTok{(mod3)}
-\end{Highlighting}
-\end{Shaded}
-
-Call: lm(formula = yes\_pct \textasciitilde{} medage + log\_medincome +
-white\_pct + log\_public\_pct + time\_pct + trump\_pct +
-sqrt\_voter\_turnout + current\_plan, data = data\_tf)
-
-Residuals: Min 1Q Median 3Q Max -0.099920 -0.031591 -0.003479 0.027983
-0.098568
-
-Coefficients: Estimate Std. Error t value
-Pr(\textgreater\textbar t\textbar)\\
-(Intercept) 1.031840 0.218778 4.716 7.64e-06 \textbf{\emph{ medage
-0.003603 0.001511 2.384 0.01899 }\\
-log\_medincome -0.008331 0.022302 -0.374 0.70952\\
-white\_pct 0.116703 0.050746 2.300 0.02350 *\\
-log\_public\_pct 0.022304 0.008263 2.699 0.00814 } time\_pct -0.281374
-0.089698 -3.137 0.00223 ** trump\_pct -0.856963 0.058590 -14.626
-\textless{} 2e-16 *\textbf{ sqrt\_voter\_turnout -0.319107 0.103460
--3.084 0.00263 } current\_plan2 0.021184 0.043430 0.488 0.62677\\
-current\_plan3 -0.033367 0.011777 -2.833 0.00555 ** current\_plan4
-0.013583 0.011459 1.185 0.23864\\
---- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 '
-' 1
-
-Residual standard error: 0.04125 on 102 degrees of freedom Multiple
-R-squared: 0.9202, Adjusted R-squared: 0.9123 F-statistic: 117.6 on 10
-and 102 DF, p-value: \textless{} 2.2e-16
-
-\hypertarget{model-3-assumption-checking}{%
-\subsubsection{model 3 assumption
-checking}\label{model-3-assumption-checking}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(}\KeywordTok{predict}\NormalTok{(mod3),}\KeywordTok{resid}\NormalTok{(mod3),}\DataTypeTok{col=}\StringTok{"midnightblue"}\NormalTok{,}\DataTypeTok{pch=}\DecValTok{18}\NormalTok{,}\DataTypeTok{main=}\StringTok{"Residual plot - Model 3"}\NormalTok{)}
-\KeywordTok{abline}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DataTypeTok{col=}\StringTok{"red"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-11-1.pdf}
-
-\hypertarget{collinearity-1}{%
-\subsubsection{collinearity:}\label{collinearity-1}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{vif}\NormalTok{(mod3)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-                   GVIF Df GVIF^(1/(2*Df))
-\end{verbatim}
-
-medage 3.149713 1 1.774743 log\_medincome 3.738783 1 1.933593 white\_pct
-3.666112 1 1.914709 log\_public\_pct 1.149252 1 1.072032 time\_pct
-1.590210 1 1.261035 trump\_pct 4.942057 1 2.223074 sqrt\_voter\_turnout
-3.628296 1 1.904809 current\_plan 1.883541 3 1.111295
-
-all below 5: no collinearity
-
-\hypertarget{model-4-transformation-logistic}{%
-\subsection{model 4: transformation,
-logistic}\label{model-4-transformation-logistic}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{mod4 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_tf, yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{log_medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }
-           \OperatorTok{+}\StringTok{ }\NormalTok{log_public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{sqrt_voter_turnout }\OperatorTok{+}
-\StringTok{              }\NormalTok{current_plan, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Warning in eval(family$initialize): non-integer #successes in a binomial glm!
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(mod4)}
-\end{Highlighting}
-\end{Shaded}
-
-Call: glm(formula = yes\_pct \textasciitilde{} medage + log\_medincome +
-white\_pct + log\_public\_pct + time\_pct + trump\_pct +
-sqrt\_voter\_turnout + current\_plan, family = ``binomial'', data =
-data\_tf)
-
-Deviance Residuals: Min 1Q Median 3Q Max\\
--0.21662 -0.06950 0.00000 0.06082 0.20908
-
-Coefficients: Estimate Std. Error z value
-Pr(\textgreater\textbar z\textbar) (Intercept) 2.30500 10.89739 0.212
-0.832 medage 0.01489 0.07514 0.198 0.843 log\_medincome -0.03485 1.11172
--0.031 0.975 white\_pct 0.56326 2.55987 0.220 0.826 log\_public\_pct
-0.09511 0.41908 0.227 0.820 time\_pct -1.28743 4.50172 -0.286 0.775
-trump\_pct -3.64687 2.95956 -1.232 0.218 sqrt\_voter\_turnout -1.45781
-5.21572 -0.280 0.780 current\_plan2 0.06583 2.13728 0.031 0.975
-current\_plan3 -0.14496 0.58781 -0.247 0.805 current\_plan4 0.04787
-0.56805 0.084 0.933
-
-(Dispersion parameter for binomial family taken to be 1)
-
-\begin{verbatim}
-Null deviance: 9.0506  on 112  degrees of freedom
-\end{verbatim}
-
-Residual deviance: 0.7965 on 102 degrees of freedom AIC: 136.15
-
-Number of Fisher Scoring iterations: 4
-
-model 3 \& 4 table
+Another unanticipated result is \emph{current\_plan}. In contrast to
+baseline tracts that do not access public transit service both now and
+in the short-range (\emph{current\_plan 1}), only \emph{current\_plan 3}
+tracts differ from them significantly, in the opposite direction to the
+hypothesis. That is to say, tracts planned to be newly added to the
+public transit service have a significantly higher rejection of the
+proposition than the other tracts. The control variables are all
+significant factors. \emph{Medage} and \emph{public\_pct} positively
+predict the level of \emph{yes\_pct}, while \emph{time\_pct} and
+\emph{voter\_turnout} negatively predict \emph{yes\_pct}.
 
 \begin{table}[!htbp] \centering 
-  \caption{Data-transformed regression results} 
-  \label{transformedResults} 
-\begin{tabular}{@{\extracolsep{5pt}}lcc} 
+  \caption{Transformed regression} 
+  \label{Transformed} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
- & \multicolumn{2}{c}{\textit{Dependent variable:}} \\ 
-\cline{2-3} 
-\\[-1.8ex] & \multicolumn{2}{c}{yes\_pct} \\ 
-\\[-1.8ex] & \textit{OLS} & \textit{logistic} \\ 
-\\[-1.8ex] & (1) & (2)\\ 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & yes\_pct \\ 
 \hline \\[-1.8ex] 
- medage & 0.004$^{**}$ & 0.015 \\ 
-  & (0.002) & (0.075) \\ 
-  & & \\ 
- log\_medincome & $-$0.008 & $-$0.035 \\ 
-  & (0.022) & (1.112) \\ 
-  & & \\ 
- white\_pct & 0.117$^{**}$ & 0.563 \\ 
-  & (0.051) & (2.560) \\ 
-  & & \\ 
- log\_public\_pct & 0.022$^{***}$ & 0.095 \\ 
-  & (0.008) & (0.419) \\ 
-  & & \\ 
- time\_pct & $-$0.281$^{***}$ & $-$1.287 \\ 
-  & (0.090) & (4.502) \\ 
-  & & \\ 
- trump\_pct & $-$0.857$^{***}$ & $-$3.647 \\ 
-  & (0.059) & (2.960) \\ 
-  & & \\ 
- sqrt\_voter\_turnout & $-$0.319$^{***}$ & $-$1.458 \\ 
-  & (0.103) & (5.216) \\ 
-  & & \\ 
- current\_plan2 & 0.021 & 0.066 \\ 
-  & (0.043) & (2.137) \\ 
-  & & \\ 
- current\_plan3 & $-$0.033$^{***}$ & $-$0.145 \\ 
-  & (0.012) & (0.588) \\ 
-  & & \\ 
- current\_plan4 & 0.014 & 0.048 \\ 
-  & (0.011) & (0.568) \\ 
-  & & \\ 
- Constant & 1.032$^{***}$ & 2.305 \\ 
-  & (0.219) & (10.897) \\ 
-  & & \\ 
+ log\_medincome & $-$0.008 \\ 
+  & (0.022) \\ 
+  & \\ 
+ white\_pct & 0.117$^{**}$ \\ 
+  & (0.051) \\ 
+  & \\ 
+ trump\_pct & $-$0.857$^{***}$ \\ 
+  & (0.059) \\ 
+  & \\ 
+ current\_plan2 & 0.021 \\ 
+  & (0.043) \\ 
+  & \\ 
+ current\_plan3 & $-$0.033$^{***}$ \\ 
+  & (0.012) \\ 
+  & \\ 
+ current\_plan4 & 0.014 \\ 
+  & (0.011) \\ 
+  & \\ 
+ medage & 0.004$^{**}$ \\ 
+  & (0.002) \\ 
+  & \\ 
+ log\_public\_pct & 0.022$^{***}$ \\ 
+  & (0.008) \\ 
+  & \\ 
+ time\_pct & $-$0.281$^{***}$ \\ 
+  & (0.090) \\ 
+  & \\ 
+ sqrt\_voter\_turnout & $-$0.319$^{***}$ \\ 
+  & (0.103) \\ 
+  & \\ 
+ Constant & 1.032$^{***}$ \\ 
+  & (0.219) \\ 
+  & \\ 
 \hline \\[-1.8ex] 
-Observations & 113 & 113 \\ 
-R$^{2}$ & 0.920 &  \\ 
-Adjusted R$^{2}$ & 0.912 &  \\ 
-Log Likelihood &  & $-$57.076 \\ 
-Akaike Inf. Crit. &  & 136.153 \\ 
-Residual Std. Error & 0.041 (df = 102) &  \\ 
-F Statistic & 117.561$^{***}$ (df = 10; 102) &  \\ 
+Observations & 113 \\ 
+R$^{2}$ & 0.920 \\ 
+Adjusted R$^{2}$ & 0.912 \\ 
+Residual Std. Error & 0.041 (df = 102) \\ 
+F Statistic & 117.561$^{***}$ (df = 10; 102) \\ 
 \hline 
 \hline \\[-1.8ex] 
-\textit{Note:}  & \multicolumn{2}{l}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
- & \multicolumn{2}{l}{Data-transformed linear and logistic regression results} \\ 
+\textit{Note:}  & \multicolumn{1}{l}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
 \end{tabular} 
 \end{table}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(final_data, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ trump_pct, }\DataTypeTok{y =}\NormalTok{ medincome)) }\OperatorTok{+}
-\StringTok{   }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =}\NormalTok{ white_pct))}
-\end{Highlighting}
-\end{Shaded}
+Model 2 uses multiple linear regression as well, except that the skewed
+variables \emph{medincome}, \emph{public\_pct}, and
+\emph{voter\_turnout} are transformed. The overall outcome is identical
+to Model 1 (see \emph{Table ???}). After log transformation, the effect
+of median income is still insignificant.
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-14-1.pdf}
+A series of assumptions are examined. First, linearity and
+homoscedasticity assumptions are met, as illustrated by the residual
+plots. Next, because several factors correlate with each other (see
+\emph{Figure ???}), VIFs are calculated to detect multicollinearity.
+Since all of the independent variables exhibit a VIF below 5 in both
+models, no collinearity issue is detected. Lastly, there is a potential
+fault of using linear regression in this dataset. The value of the
+dependent variable \emph{yes\_pct} is restricted to the range of 0 to 1,
+because it represents a percentage. On the other hand, the predicted
+outcome from linear regression is unbounded. As a result, I calculate
+the predicted values from the two models with the actual datasets. The
+predicted outcome is close to the actual value of \emph{yes\_pct}, all
+between 0 and 1. Then, I continue testing by finding the minimum and
+maximum values of each independent variable in the dataset (to see the
+actual minimum and maximum values, see \emph{Table ???}), and plug them
+into the models accordingly to gain the extreme predicted
+\emph{yes\_pct}. The extreme values for Model 1 are 0.09 and 0.96, and
+0.11 and 0.95 in Model 2, all within the interval {[}0,1{]}. Therefore,
+the range of the dependent variable in these two regression models meets
+the assumption.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{mod5 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_tf, }\KeywordTok{log}\NormalTok{(yes_pct}\OperatorTok{/}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{yes_pct)) }\OperatorTok{~}\StringTok{ }\NormalTok{medage }\OperatorTok{+}\StringTok{ }\NormalTok{log_medincome }\OperatorTok{+}\StringTok{ }\NormalTok{white_pct }\OperatorTok{+}\StringTok{ }\NormalTok{log_public_pct }\OperatorTok{+}\StringTok{ }\NormalTok{time_pct }\OperatorTok{+}\StringTok{ }\NormalTok{trump_pct }\OperatorTok{+}\StringTok{ }\NormalTok{sqrt_voter_turnout }\OperatorTok{+}\StringTok{ }\NormalTok{current_plan)}
-\KeywordTok{summary}\NormalTok{(mod5)}
-\end{Highlighting}
-\end{Shaded}
+\hypertarget{discussion}{%
+\subsection{Discussion}\label{discussion}}
 
-Call: lm(formula = log(yes\_pct/(1 - yes\_pct)) \textasciitilde{} medage
-+ log\_medincome + white\_pct + log\_public\_pct + time\_pct +
-trump\_pct + sqrt\_voter\_turnout + current\_plan, data = data\_tf)
-
-Residuals: Min 1Q Median 3Q Max -0.4368 -0.1517 -0.0092 0.1308 0.4520
-
-Coefficients: Estimate Std. Error t value
-Pr(\textgreater\textbar t\textbar)\\
-(Intercept) 2.432798 0.982200 2.477 0.01490 *\\
-medage 0.014778 0.006785 2.178 0.03171 *\\
-log\_medincome -0.045983 0.100124 -0.459 0.64702\\
-white\_pct 0.630292 0.227825 2.767 0.00673 ** log\_public\_pct 0.090592
-0.037098 2.442 0.01633 *\\
-time\_pct -1.259363 0.402697 -3.127 0.00230 ** trump\_pct -3.730362
-0.263039 -14.182 \textless{} 2e-16 *\textbf{ sqrt\_voter\_turnout
--1.501691 0.464481 -3.233 0.00165 } current\_plan2 0.058520 0.194978
-0.300 0.76468\\
-current\_plan3 -0.145459 0.052872 -2.751 0.00703 ** current\_plan4
-0.049736 0.051445 0.967 0.33594\\
---- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 '
-' 1
-
-Residual standard error: 0.1852 on 102 degrees of freedom Multiple
-R-squared: 0.9143, Adjusted R-squared: 0.9059 F-statistic: 108.8 on 10
-and 102 DF, p-value: \textless{} 2.2e-16
+\hypertarget{mediating-factor}{%
+\subsection{Mediating factor}\label{mediating-factor}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1028,7 +695,54 @@ and 102 DF, p-value: \textless{} 2.2e-16
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-16-1.pdf}
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(psych)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'psych' was built under R version 3.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'psych'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:car':
+## 
+##     logit
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dlookr':
+## 
+##     describe
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:Hmisc':
+## 
+##     describe
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:ggplot2':
+## 
+##     %+%, alpha
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mediate}\NormalTok{(yes_pct }\OperatorTok{~}\StringTok{ }\NormalTok{white_pct }\OperatorTok{+}\StringTok{ }\NormalTok{(trump_pct), }\DataTypeTok{data =}\NormalTok{ final_data, }\DataTypeTok{n.iter =} \DecValTok{10000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-3-1.pdf}
 
 \hypertarget{references}{%
 \section{References}\label{references}}

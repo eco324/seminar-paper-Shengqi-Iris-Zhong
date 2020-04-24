@@ -23,6 +23,8 @@ library(stargazer)
 library(corrplot)
 library(Hmisc)
 library(dlookr)
+library(car)
+library(patchwork)
 load("processed_data/analysis_data.RData")
 ```
 
@@ -35,9 +37,17 @@ Another crucial factor is the accessibility of the proposed transit system. Kins
 
 # Background
 
-current transportation
-future plan
-referendum
+## current transportation
+
+
+## Connect Gwinnett: Transit Plan
+
+### Plan overview
+
+### Financing
+
+
+## referendum
 
 # Data & Methods
 
@@ -63,7 +73,7 @@ The information on whether the tract enjoys the proximity of public transportati
 
 As noted above, both referendum and 2016 election data are collected at the precinct level. However, the other datasets are performed at the census tract level. Therefore, referendum and election data are redistributed by the areas shared by the precinct and the tract. See the data appendix for detailed steps of transformation. 
 
-The final dataset joins the datasets above by GEOID. It is cross-sectional, measured with the unit of the census tract. A description of the variables can be found in *Table 1*. 
+The final dataset joins the datasets above by GEOID. It is cross-sectional, measured with the unit of the census tract. Since there are 113 census tracts in Gwinnett, the dataset has 113 observations, with no missing data. A description of the variables can be found in *Table 1*. 
 
 
 
@@ -161,9 +171,9 @@ $yes\_pct_t = \beta_0+\beta_1log(medincome_t)+\beta_2white\_pct_t+\beta_3trump\_
 
 # Results & Discussion
 
+## Regression results 
 
-## model 1: linear
-```{r}
+```{r create mod1, include = F}
 
 mod1 <- lm(data = final_data, yes_pct ~ medincome + white_pct + trump_pct 
            + current_plan + medage + public_pct + time_pct +
@@ -171,26 +181,73 @@ mod1 <- lm(data = final_data, yes_pct ~ medincome + white_pct + trump_pct
 summary(mod1)
 ```
 
+```{r generate mod1 table, echo = F, results = 'asis'}
+
+stargazer::stargazer(list(mod1), 
+               title = "Primary regression", 
+               label = "Primary",
+               header = F,
+               notes.align = "l")
+```
+
+*Table ???* provides the results of Model 1. The equation is statistically significant (F(10, 102) = 113.22, p < 0.05). Adjusted $R^2$ is 0.909, indicating that the independent variables in this specification explain a large portion of the variance in the dependent variable. Consistent with the hypothesis, *medincome* is not a significant predictor of *yes_pct*. *Trump_pct* significantly predicts *yes_pct* as expected, and results in a large coefficient: a one percent increase in the proportion of Trump supporters decreases the percentage of voters in favor of the referendum by 0.886%, holding other variables constant. 
+
+However, unlike the outcome from the correlation matrix (see *Figure ???*), *white_pct* significantly predicts *yes_pct* in a positive direction. A higher percentage of the white population in the tract is associated with higher support of the proposition when holding other explanatory variables constant. 
+
+ Another unanticipated result is *current_plan*. In contrast to baseline tracts that do not access public transit service both now and in the short-range (*current_plan 1*), only *current_plan 3* tracts differ from them significantly, in the opposite direction to the hypothesis. That is to say, tracts planned to be newly added to the public transit service have a significantly higher rejection of the proposition than the other tracts. 
+The control variables are all significant factors. *Medage* and *public_pct* positively predict the level of *yes_pct*, while *time_pct* and *voter_turnout* negatively predict *yes_pct*.
+
+```{r create transformed dataset, include = F}
+data_tf <- final_data %>%
+   mutate(log_medincome = log(medincome),
+          log_public_pct = log(public_pct + 0.01),
+          sqrt_voter_turnout = (voter_turnout)^0.5) %>%
+   select(-c(medincome, public_pct, voter_turnout))
+
+```
 
 
+```{r create mod2, include = F}
+mod2 <- lm(data = data_tf, yes_pct ~ log_medincome + white_pct + trump_pct 
+           + current_plan + medage + log_public_pct + time_pct +
+              sqrt_voter_turnout)
+summary(mod2)
+```
 
-### model 1 assumption checking
-```{r}
-ggplot(mod1, aes(x = predict(mod1),y =resid(mod1))) +
+```{r generate mod2 table, echo = F, results = 'asis'}
+
+stargazer::stargazer(list(mod2), 
+               title = "Transformed regression", 
+               label = "Transformed",
+               header = F,
+               notes.align = "l")
+```
+
+Model 2 uses multiple linear regression as well, except that the skewed variables *medincome*, *public_pct*, and *voter_turnout* are transformed. The overall outcome is identical to Model 1 (see *Table ???*). After log transformation, the effect of median income is still insignificant. 
+
+```{r plot mod1 residuals, include = F}
+mod1resid <- ggplot(mod1, aes(x = predict(mod1),y =resid(mod1))) +
       geom_point() +
-   geom_hline(yintercept = 0)
+   geom_hline(yintercept = 0, color = "coral") +
+   labs(title = "Residual plot - Model 1",
+        xlab = "predicted values",
+        ylab = "residuals")
 
 ```
 
-### collinearity:
-```{r}
-library(car)
-vif(mod1)
+
+```{r check collinearity mod1, include = F}
+
+vif1 <- vif(mod1)
+stargazer::stargazer(list(vif1), 
+               title = "VIF", 
+               label = "initialResults",
+               header = F,
+               notes = "Initial linear and logistic regression results",
+               notes.align = "l")
 ```
 
-all below 5: good, no collinearity problem
-
-```{r}
+```{r make extreme data frame, include = F}
 extreme <- data.frame(medage = c(max(final_data$medage), min(final_data$medage)),
                       medincome = c(max(final_data$medincome), min(final_data$medincome)),
                       white_pct = c(max(final_data$white_pct), min(final_data$white_pct)),
@@ -204,125 +261,68 @@ extreme <- extreme %>%
    mutate(current_plan = as.factor(current_plan))
 ```
 
-
-
-### Predicted values
-```{r}
-values_compare <- final_data %>%
-   mutate(predicted = predict(mod1, newdata = final_data)) %>%
-   select(yes_pct, predicted)
-
-```
-
-
-```{r}
+```{r predict extreme values, include = F}
 predict(mod1, newdata = extreme)
 ```
 
+```{r make mod2 residual plot, include= F}
 
+mod2resid <- ggplot(mod1, aes(x = predict(mod2),y =resid(mod2))) +
+      geom_point() +
+   geom_hline(yintercept = 0, color = "coral") +
+   labs(title = "Residual plot - Model 2",
+        xlab = "predicted values",
+        ylab = "residuals")
 
-## model 2: no interaction, logistic
-```{r}
-mod2 <- glm(data = final_data, yes_pct ~ medage + medincome + white_pct + public_pct + time_pct + trump_pct + voter_turnout + current_plan, family = "binomial")
-summary(mod2)
 ```
 
-model 1 & 2 table
-```{r generate model 1 table, echo = F, results = 'asis'}
-
-stargazer::stargazer(list(mod1, mod2), 
-               title = "Initial regression results", 
-               label = "initialResults",
-               header = F,
-               notes = "Initial linear and logistic regression results",
-               notes.align = "l")
+```{r, include = F}
+vif(mod2)
 ```
 
-
-
-## model 3: no interaction, some transformations, linear
-
-### step 1: find the skewed variables
-
-
-
-medincome, public_pct, voter_turnout
-
-step 2: transform them
-```{r}
-data_tf <- final_data %>%
-   mutate(log_medincome = log(medincome),
-          log_public_pct = log(public_pct + 0.01),
-          sqrt_voter_turnout = (voter_turnout)^0.5) %>%
-   select(-c(medincome, public_pct, voter_turnout))
-find_skewness(data_tf)
+```{r make extreme data_tf, include = F}
+extreme_tf <- data.frame(medage = c(max(final_data$medage), min(final_data$medage)),
+                      log_medincome = c(max(log(final_data$medincome)), min(log(final_data$medincome))),
+                      white_pct = c(max(final_data$white_pct), min(final_data$white_pct)),
+                      log_public_pct = c(max(log(final_data$public_pct+0.01)), min(log(final_data$public_pct+0.01))),
+                      time_pct = c(min(final_data$time_pct), max(final_data$time_pct)),
+                      trump_pct = c(min(final_data$trump_pct), max(final_data$trump_pct)),
+                      sqrt_voter_turnout = c(min(sqrt(final_data$voter_turnout)), max(sqrt(final_data$voter_turnout))),
+                      current_plan = c(3,2))
+                      
+extreme_tf <- extreme_tf %>%
+   mutate(current_plan = as.factor(current_plan))
 ```
 
-### step 3: model them
-
-```{r}
-mod3 <- lm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + current_plan)
-summary(mod3)
+```{r predict extreme values tf, include = F}
+predict(mod2, newdata = extreme_tf)
 ```
 
-### model 3 assumption checking
-```{r}
-
-plot(predict(mod3),resid(mod3),col="midnightblue",pch=18,main="Residual plot - Model 3")
-abline(0,0,col="red")
-```
-
-### collinearity:
-```{r}
-vif(mod3)
-```
-
-all below 5: no collinearity
+A series of assumptions are examined. First, linearity and homoscedasticity assumptions are met, as illustrated by the residual plots.  Next, because several factors correlate with each other (see *Figure ???*), VIFs are calculated to detect multicollinearity.  Since all of the independent variables exhibit a VIF below 5 in both models, no collinearity issue is detected. Lastly,  there is a potential fault of using linear regression in this dataset. The value of the dependent variable *yes_pct* is restricted to the range of 0 to 1, because it represents a percentage. On the other hand, the predicted outcome from linear regression is unbounded. As a result, I calculate the predicted values from the two models with the actual datasets. The predicted outcome is close to the actual value of *yes_pct*, all between 0 and 1. Then, I continue testing by finding the minimum and maximum values of each independent variable in the dataset (to see the actual minimum and maximum values, see *Table ???*), and plug them into the models accordingly to gain the extreme predicted *yes_pct*. The extreme values for Model 1 are 0.09 and 0.96, and 0.11 and 0.95 in Model 2, all within the interval [0,1]. Therefore, the range of the dependent variable in these two regression models meets the assumption. 
 
 
-
-## model 4: transformation, logistic
-```{r}
-mod4 <- glm(data = data_tf, yes_pct ~ medage + log_medincome + white_pct 
-           + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout +
-              current_plan, family = "binomial")
-summary(mod4)
-```
+## Discussion
 
 
-model 3 & 4 table
-```{r generate model 3&4 table, echo = F, results = 'asis'}
-
-stargazer::stargazer(list(mod3, mod4), 
-               title = "Data-transformed regression results", 
-               label = "transformedResults",
-               header = F,
-               notes = "Data-transformed linear and logistic regression results",
-               notes.align = "l")
-```
-
-
-
-
-```{r}
-ggplot(final_data, aes(x = trump_pct, y = medincome)) +
-   geom_point(aes(colour = white_pct))
-```
-
-
-```{r}
-mod5 <- lm(data = data_tf, log(yes_pct/(1-yes_pct)) ~ medage + log_medincome + white_pct + log_public_pct + time_pct + trump_pct + sqrt_voter_turnout + current_plan)
-summary(mod5)
-```
-
-
-
+## Mediating factor
 
 ```{r}
 ggplot(final_data, aes(x = white_pct, y = yes_pct))+
    geom_point()
 ```
 
+
+```{r results = F}
+library(psych)
+mediate(yes_pct ~ white_pct + (trump_pct), data = final_data, n.iter = 10000)
+```
+
+
+
+```{r eval=FALSE, include=FALSE}
+library(MBESS)
+with(final_data, mediation(x = white_pct, mediator = trump_pct, dv = yes_pct, bootstrap = TRUE, which.boot = "BCa", B = 10000))
+```
 
 
 
