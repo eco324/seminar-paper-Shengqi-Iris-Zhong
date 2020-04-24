@@ -194,7 +194,7 @@ stargazer::stargazer(list(mod1),
 
 However, unlike the outcome from the correlation matrix (see *Figure ???*), *white_pct* significantly predicts *yes_pct* in a positive direction. A higher percentage of the white population in the tract is associated with higher support of the proposition when holding other explanatory variables constant. 
 
- Another unanticipated result is *current_plan*. In contrast to baseline tracts that do not access public transit service both now and in the short-range (*current_plan 1*), only *current_plan 3* tracts differ from them significantly, in the opposite direction to the hypothesis. That is to say, tracts planned to be newly added to the public transit service have a significantly higher rejection of the proposition than the other tracts. 
+Another unanticipated result is *current_plan*. In contrast to baseline tracts that do not access public transit service both now and in the short-range (*current_plan 1*), only *current_plan 3* tracts differ from them significantly, in the opposite direction to the hypothesis. That is to say, tracts planned to be newly added to the public transit service have a significantly higher rejection of the proposition than the other tracts. 
 The control variables are all significant factors. *Medage* and *public_pct* positively predict the level of *yes_pct*, while *time_pct* and *voter_turnout* negatively predict *yes_pct*.
 
 ```{r create transformed dataset, include = F}
@@ -237,14 +237,7 @@ mod1resid <- ggplot(mod1, aes(x = predict(mod1),y =resid(mod1))) +
 
 
 ```{r check collinearity mod1, include = F}
-
 vif1 <- vif(mod1)
-stargazer::stargazer(list(vif1), 
-               title = "VIF", 
-               label = "initialResults",
-               header = F,
-               notes = "Initial linear and logistic regression results",
-               notes.align = "l")
 ```
 
 ```{r make extreme data frame, include = F}
@@ -324,6 +317,14 @@ library(MBESS)
 with(final_data, mediation(x = white_pct, mediator = trump_pct, dv = yes_pct, bootstrap = TRUE, which.boot = "BCa", B = 10000))
 ```
 
+
+## Try shit
+
+```{r}
+mod5<- lm(data = data_tf, yes_pct ~ white_pct + trump_pct) 
+summary(mod5)
+vif(mod5)
+```
 
 
 
