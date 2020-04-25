@@ -15,8 +15,8 @@ output:
 # bibliography: sample.bib
 ---
 
-```{r setup, echo = F, message = F}
-knitr::opts_chunk$set(results = 'asis', cache = F)
+```{r setup, echo = F, message = F, warning = F}
+knitr::opts_chunk$set(results = 'asis', cache = F, warning = F, message = F, echo = F)
 library(tidyverse)
 library(lubridate)
 library(stargazer)
@@ -25,13 +25,23 @@ library(Hmisc)
 library(dlookr)
 library(car)
 library(patchwork)
+library(sf)
+library(tmap)
 load("processed_data/analysis_data.RData")
+load("processed_data/map_data.RData")
 ```
 
 
-# Literature Review
+# Literature Review (Unfinished)
+
+Referendum data, characterized as dichotomously coded from the survey, has been widely used in economic research. The estimation outcome with the referendum approach is compared to that of the individual stochastic valuation approach in Bollino’s paper, which estimates the Italians’ WTP of using renewable energy to produce electricity (2010). The estimated WTP from the referendum approach depends on how the original Likert-scale data is coded into a binary variable, and most of the outcomes are similar to the results from the individual stochastic valuation approach. Even though he ignores the sociodemographic factors in the referendum approach, the study justifies that it can provide similar conclusions with other models. 
+
+
+Similarly, Burkhardt and Chan (2017) also utilize referendum data to estimate WTP for public goods, but at an aggregate zip code level with a log-likelihood function. They look into thirteen referenda in California and find out the price of the public good is negatively correlated with support for the proposition. For the referenda that failed, they calculate the amount of cost that needs to be cut off for the proposition to pass by finding the difference between WTP and price. Even though my project does not involve assessing voters’ WTP, this procedure should be considered in future studies so that an estimation of the necessary reduction in cost to reach enough support can be computed. 
+
 
 Allen et al. (2016) study the reasoning of the failure of a referendum on a congestion charging scheme in Edinburgh. Instead of using direct voting data, they conduct a survey after the referendum, which allows them to ask more specific questions. Researchers can gain detailed data by surveying, because the unit of measurement is each individual; however, a possible disadvantage of surveying is that respondents who turn in the questionnaire tend to have stronger attitudes towards the proposal, generating sampling bias. They conclude that people who use cars as the primary transportation mean, demonstrate a misconception of the pricing plan, or question the effectiveness of the scheme at reducing congestion are more likely to oppose it. Their findings can give insights to the similar failure in the Gwinnett referendum. Voters against the proposal could be those who rarely use public transportation and those who are not convinced by the effectiveness of expanding public transit in alleviating the traffic. 
+
 
 Another crucial factor is the accessibility of the proposed transit system. Kinsey et al. (2010) examine the relationship between the distance to the scheduled railway station and voter turnout by studying the Seattle monorail referendum. They introduce the concept of diffused and concentrated benefit/cost. People who live far from the monorail enjoy the diffused benefit of less traffic congestion, and bear the diffused cost of increased tax. People living close to the rail experience the same diffused benefit and cost, but they also gain the concentrated benefit of easily accessing the public good. Finally, those who live very close to the railway have the same benefits and costs, but they also face the concentrated cost such as inconvenience during construction. Since “people are more strongly motivated to avoid losses than to approach gains,” they expect a higher turnout rate in farther places with votes for “no,” which is verified from their analyses. Besides distance, they also find out precincts with a higher percentage of people of lower socioeconomic status or young people have a lower turnout rate. Interestingly, there is a significant interaction between partisanship and distance, which would be also tested in my study. In essence, the effect of distance on turnout is weakened by partisanship, and vanishes beyond a threshold of distance. Even though my dependent variable is voters’ responses rather than turnout, it can be inferred from Kinsey et al.’s findings that people farther away from the transit system would vote against the referendum more. However, the relationship might be non-linear and requires some form of transformation. Regarding the methods, they utilize the spatial lag model to correct for autocorrelation, which is proper to use in my project as well since both studies use precinct-level data. 
 
@@ -55,7 +65,7 @@ Another crucial factor is the accessibility of the proposed transit system. Kins
 
 According to previous research, sociodemographic elements can influence people’s voting decisions in the referendum. For example, the effect of income is mixed: on the one hand, people with higher income will pay a smaller portion of their earnings for the implementation of the plan; on the other hand, they will pay a larger amount of tax. Bollino (2008) finds a positive correlation between income and people’s willingness to pay for renewable resources. Burkhardt and Chan (2017) separate the influence of income from tax, and discover their opposite effects on voting. Therefore, it is worth considering the relationship between income and percentage of supporters in this referendum. Voters’ partisanship attachment is found to be a significant factor as well in Burkhardt and Chan’s (2017) paper. Areas with higher proportions of Republicans are less supportive of fiscally costly propositions. In my project, it can be hypothesized that tracts that have a higher proportion of Trump supporters tend to have a lower percentage of agreement to the proposal.  
 
-In addition, some factors related to transportation can intuitively shape people’s attitudes towards public transit. For example, the areas in which people do not use public transit at all might have a higher percentage of refusal of the proposal. People who have to travel a long time to work are more likely to support the extension plan if it helps save time. These two factors serve as controls in the models.
+In addition, some factors related to transportation can intuitively shape people’s attitudes towards public transit. For example, the areas in which people do not use public transit at all might have a higher percentage of refusal of the proposal, because they have alternative transportation means. People who have to travel a long time to work are more likely to support the extension plan if it helps save time. These two factors serve as controls in the models.
 
 Finally, people favor the proposition if it benefits them. Specifically, tracts that are not covered by public transport at present but will be covered in the expansion plan are predicted to support the proposal more.
 
@@ -144,7 +154,7 @@ The major limitation of the data is the unit conversion from precinct to census 
 
 ## Model specification
 
-Four models are tested in the analysis. 
+Two models are tested in the analysis. 
 
 Model 1 adopts linear regression model with all the original variables:
 
@@ -154,7 +164,6 @@ $yes\_pct_t = \beta_0+\beta_1medincome_t+\beta_2white\_pct_t+\beta_3trump\_pct_t
 where $t$ indexes census tract. Since all variables are measured in the same scope, no fixed effects are tested. The dependent variable is *yes_pct*, the proportion of supporters of the referendum in a tract. Independent variables include *medincome*, *white_pct*, *trump_pct*, and *current_plan*. For more information about these variables, refer to *Table ???*. I hypothesize that the effect of *medincome* is ambiguous. As explained in the Conceptual Model section,  people with higher income pay a larger amount of tax, but the tax takes up a smaller portion of their earnings compared to those with lower income.  *White_pct* is hypothesized to have a negative effect on *yes_pct*, based on the negative correlation between the two variables. A higher percentage of Trump supporters is expected to predict a lower percentage of votes for “yes” in the referendum, as evidenced by common sense and previous literature (???). Finally, since tracts that do not have public transit now and will have it in the short-range benefit the most from the proposition, I predict that the tracts with this feature will have a higher level of *yes_pct* than the others.
 
 *Medage*, *public_pct*, *time_pct*, and *voter_turnout* add to the model as controls. For example, tracts with higher voter turnout are hypothesized to have a lower *yes_pct*, according to the rule of loss aversion – people who believe the referendum incur losses to them are inclined to participate in the referendum actively and vote against it, but people who like the proposition are less motivated to vote in nature. 
-
 
 
 
@@ -296,10 +305,35 @@ A series of assumptions are examined. First, linearity and homoscedasticity assu
 
 ## Discussion
 
+Overall, most of the explanatory and control variables predict the proportion of supporters of the expansion proposition as hypothesized. 
 
-## Mediating factor
+In both models, the median income does not significantly predict *yes_pct*. The finding is consistent with the hypothesis that the effect of income level is complicated by taxes. If more information on the financing plan of the expansion and the details of taxation were available, it would be possible to separate the influence of taxation from income. 
+
+Partisanship attachment is a significant factor, even after controlling for other variables such as income and race. The tracts that have a higher proportion of votes for Trump during the 2016 Election tend to reject the expansion of public transport more. Republicans are usually reluctant to agree on public spending due to the increase in tax incurred.
+
+As for the control variables, the median age positively associates with *yes_pct*, but the coefficient is relatively small. The percentage of people taking public transit to work predicts *yes_pct* positively as well. People who do not regularly utilize public transit benefit less from the expansion because they are likely to have other transportation available, and switching to public transportation generates costs such as registering, and spending time to get familiar with the locations and operation. *Time_pct* negatively predicts *yes_pct*, indicating that the areas in which more people spend over an hour to work tend to disapprove with the proposal. Voter turnout rate is negatively related to the dependent variable, conforming with previous research conclusion that those who disagree with the proposal are more likely to express their opinions.  
+
+
+### Complications with the *current_plan* variable
 
 ```{r}
+plan_map <- tm_shape(gwinnett_track_map)  + tm_polygons(col = "current_plan") #+ tm_shape(short_range) + tm_lines()
+white_map <- tm_shape(gwinnett_track_map)  + tm_polygons(col = "white_pct")# + tm_shape(short_range) + tm_lines()
+trump_map <- tm_shape(gwinnett_track_map)  + tm_polygons(col = "trump_pct")# + tm_shape(short_range) + tm_lines()
+vote_map <- tm_shape(gwinnett_track_map)  + tm_polygons(col = "yes_pct") #+ tm_shape(short_range) + tm_lines()
+tmap_arrange(plan_map, white_map, trump_map, vote_map)
+```
+
+One of the most unforeseen findings is that the tracts that are newly included in the public transit system in the short-range plan have a significantly higher rate of refusal to the proposition. Intuitively, they should support the plan the most, because they are the direct beneficiaries. 
+
+A possible explanation is they are worried about the short-term disturbances due to the construction such as traffic congestion and noises. However, since short-range expansion proposal does not include services that require heavy construction, this speculation is less persuasive. 
+
+Another supposition is that residents in these tracts do not like the idea of “Connecting Gwinnett.” As can be seen from *Figure ???*, the tracts marked with purple in the first map are mostly high in *trump_pct*, *white_pct*, and low in *yes_pct*. It is possible that some sort of segregation still exists, that people in these areas refuse to get connected with other communities that are less "white." In future research, I recommend adding another factor such as the number of hate crimes against racial or ethnic minorities, as a measure of "the level of racism."
+
+
+### Partisanship as a mediating factor (Unfinished)
+
+```{r, include = F}
 ggplot(final_data, aes(x = white_pct, y = yes_pct))+
    geom_point()
 ```
@@ -309,7 +343,8 @@ ggplot(final_data, aes(x = white_pct, y = yes_pct))+
 library(psych)
 mediate(yes_pct ~ white_pct + (trump_pct), data = final_data, n.iter = 10000)
 ```
-
+- *yes_pct* ~ *white_pct* positive: transportation history, favor the white
+- *trump_pct* is a mediating factor that turns the relationship between *white_pct* and *yes_pct* to negative
 
 
 ```{r eval=FALSE, include=FALSE}
@@ -318,15 +353,7 @@ with(final_data, mediation(x = white_pct, mediator = trump_pct, dv = yes_pct, bo
 ```
 
 
-## Try shit
-
-```{r}
-mod5<- lm(data = data_tf, yes_pct ~ white_pct + trump_pct) 
-summary(mod5)
-vif(mod5)
-```
-
-
 
 
 # References
+xxx

@@ -20,6 +20,7 @@ library(readxl)
 library(readr)
 library(tigris)
 library(tmap)
+library(dplyr)
 st_options(plain.ascii = F,
            style = "rmarkdown",
            footnote = NA,
@@ -326,7 +327,7 @@ election_mode <- election_variables %>%
 ```
 
 
-3. Remove the write-in votes because they don't belong to any specific precincts; transpose the data; finally, calculate the precentage of votes for each candidate. 
+3. Remove the write-in votes because they don't belong to any specific precincts, and transpose the data. 
 
 ```{r election data cleaning 3}
 election_tidy <- as.data.frame(election_mode %>%
@@ -549,6 +550,9 @@ The variable used in the final analysis are:
 ```{r summarize and save data}
 export_summary_table(dfSummary(final_data))
 save("final_data", file = "processed_data/analysis_data.RData")
+gwinnett_track_map <- gwinnett_tracks %>%
+  full_join(final_data, by = "GEOID") 
+save("gwinnett_track_map", file = "processed_data/map_data.RData")
 ```
 
 
@@ -563,15 +567,5 @@ The percentage of Trump supporters is relatively evenly distributed, with a mean
 
 Finally, as expected, public transportation is accessible to more tracts if it expands as planned. Interestingly, through a more detailed look at the data, we can see one tract covered by public transit within 500 meters of distance at present, but no more in the short-range plan. This is possibly due to a reduction in circuitous routing in the proposition.
 
-# map trys
-```{r}
-gwinnett_track_map <- gwinnett_tracks %>%
-  full_join(final_data, by = "GEOID") 
-plan_map <- tm_shape(gwinnett_track_map)  + tm_polygons(col = "current_plan") + tm_shape(short_range) + tm_lines()
-white_map <- tm_shape(gwinnett_track_map)  + tm_polygons(col = "white_pct") + tm_shape(short_range) + tm_lines()
-trump_map <- tm_shape(gwinnett_track_map)  + tm_polygons(col = "trump_pct") + tm_shape(short_range) + tm_lines()
-vote_map <- tm_shape(gwinnett_track_map)  + tm_polygons(col = "yes_pct") + tm_shape(short_range) + tm_lines()
-tmap_arrange(plan_map, white_map, trump_map, vote_map)
 
-```
 
