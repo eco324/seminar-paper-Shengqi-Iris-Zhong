@@ -352,6 +352,57 @@ library(MBESS)
 with(final_data, mediation(x = white_pct, mediator = trump_pct, dv = yes_pct, bootstrap = TRUE, which.boot = "BCa", B = 10000))
 ```
 
+```{r}
+data_tf_2 <- data_tf %>%
+   mutate(cp_3 = as.factor(case_when(current_plan == 3 ~1,
+                           current_plan != 3 ~ 0))) 
+```
+
+
+```{r}
+mod3 <- lm(data = data_tf_2, yes_pct ~ log_medincome + white_pct 
+           + cp_3 + trump_pct + medage + log_public_pct + time_pct +
+              sqrt_voter_turnout)
+summary(mod3)
+mod4 <- lm(data = data_tf_2, yes_pct ~ log_medincome + white_pct +
+           cp_3 * trump_pct + medage + log_public_pct + time_pct +
+              sqrt_voter_turnout)
+summary(mod4)
+anova(mod3,mod4)
+```
+
+```{r}
+data_tf_3 <- data_tf %>%
+   mutate(cp_3 = as.factor(case_when(current_plan == 3 ~1,
+                           current_plan != 3 ~ 0))) %>%
+   filter(cp_3 == 1)
+```
+
+
+```{r}
+mod5 <- lm(data = data_tf_3, yes_pct ~ log_medincome + white_pct 
+            + trump_pct + medage + log_public_pct + time_pct +
+              sqrt_voter_turnout)
+summary(mod5)
+
+```
+
+```{r}
+data_tf_4 <- data_tf %>%
+   mutate(cp_3 = as.factor(case_when(current_plan == 3 ~1,
+                           current_plan != 3 ~ 0))) %>%
+   filter(cp_3 == 0)
+```
+
+
+```{r}
+mod6 <- lm(data = data_tf_4, yes_pct ~ log_medincome + white_pct 
+            + trump_pct + medage + log_public_pct + time_pct +
+              sqrt_voter_turnout)
+summary(mod6)
+
+```
+
 
 
 
