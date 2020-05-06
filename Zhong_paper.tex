@@ -89,6 +89,73 @@ Transportation Planning\thanks{xx}}
 xx
 \end{abstract}
 
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+Air pollution has become a global concern. Approximately 91\% of the
+population around the world live in places where air quality levels
+exceed WHO limits in 2016 (Ambient (Outdoor) Air Pollution, n.d.).
+Severe air pollution increases the risk for cardiovascular and
+respiratory diseases, cancer and adverse birth outcomes, and is
+generally associated with higher death rates (WHO \textbar{} Air
+Pollution, n.d.). Transportation is a major source of outdoor air
+pollution. For example, road transport contributes to up to thirty
+percent of particulate emissions in European cities. Developing public
+transit is an effective way to reduce air pollution. When people switch
+their travel mode from private vehicles to public transport, the
+concentration of air pollutants such as carbon monoxide decreases
+significantly (Chen \& Whalley, 2012; Zheng et al., 2019).
+
+Constructing a public transit often requires majority approval from the
+local voters. Voters either choose yes or no in the ballot, and if more
+than half of them vote for yes, the initiative is approved. In public
+transit referendums, supporters benefit from public transport by saving
+travel time or expenditure, or believe it can relieve traffic congestion
+and reduce pollution (Manville \& Cummins, 2015). Meanwhile, opponents
+concern with the increase of tax. While some argue that ballot result
+does not provide enough information for empirical analyses because it is
+a binary response void of the reasoning behind the voter's choice
+(Manville \& Levine, 2018), various research studying voting outcomes
+has come to insightful conclusions (Burkhardt \& Chan, 2017; Kinsey et
+al., 2010, etc.). When enough data is collected and shows patterns of
+individuals with similar characteristics making the same decision,
+researchers can infer how these factors shape voters' minds. Such an
+investigation helps policymakers recognize how different populations
+understand public transit and improve the proposition accordingly to
+benefit a wider variety of people.
+
+This paper examines a public transit referendum in Gwinnett, Georgia, on
+March 23rd, 2019. The referendum is about whether to join Metropolitan
+Atlanta Rapid Transit Authority (MARTA) and expand public transit
+service. My research asks how sociodemographic characteristics such as
+race and partisanship influence voters' decisions. After collecting data
+from the government website and census bureau, I convert a few variables
+to census tract level, so that they are measured at the same unit. I
+create two model specifications, one using the original dataset, the
+other using a modified dataset with skewed variables transformed. After
+age, commute time, percentage of people using public transit, and voter
+turnout are held as controls, partisanship significantly predicts the
+percentage of supporters for the referendum -- the tracts with a higher
+proportion of Trump supporters tend to vote against the public transit
+plan. Race is also a significant predictor, such that the tracts with a
+higher proportion of the white population favor the referendum. Finally,
+counterintuitively, the tracts newly included in the public transit
+system by the proposition tend to reject the plan, even though they gain
+more benefit from it.
+
+A possible explanation for my last finding can be related to racial
+discrimination, as addressed in popular press articles (Binkovitz,
+2017). Gwinnett has already rejected MARTA twice before, mainly because
+the white residents in the suburban areas refused to take the same
+transport with urban Black people. It is likely that the same reason
+applies to the 2019 referendum as well.
+
+The remaining paper is structured as follows. In Section 2, I include a
+background of Gwinnett's current public transit system, the content of
+the proposition, and the referendum. In Section 3, I describe the data
+sources, methods, and models. Section 4 presents the results and
+discussions. Finally, Section 5 concludes this paper.
+
 \hypertarget{literature-review-unfinished}{%
 \section{Literature Review
 (Unfinished)}\label{literature-review-unfinished}}
@@ -645,6 +712,113 @@ measure of ``the level of racism.''
 transportation history, favor the white - \emph{trump\_pct} is a
 mediating factor that turns the relationship between \emph{white\_pct}
 and \emph{yes\_pct} to negative
+
+Call: lm(formula = yes\_pct \textasciitilde{} log\_medincome +
+white\_pct + cp\_3 + trump\_pct + medage + log\_public\_pct + time\_pct
++ sqrt\_voter\_turnout, data = data\_tf\_2)
+
+Residuals: Min 1Q Median 3Q Max -0.100052 -0.035836 0.002392 0.033678
+0.099693
+
+Coefficients: Estimate Std. Error t value
+Pr(\textgreater\textbar t\textbar)\\
+(Intercept) 1.092370 0.212447 5.142 1.28e-06 \textbf{\emph{
+log\_medincome -0.011993 0.022030 -0.544 0.587326\\
+white\_pct 0.122586 0.049971 2.453 0.015823 }\\
+cp\_31 -0.039802 0.010454 -3.807 0.000238 }\emph{ trump\_pct -0.871285
+0.056783 -15.344 \textless{} 2e-16 }\textbf{ medage 0.003628 0.001507
+2.408 0.017801 *\\
+log\_public\_pct 0.022960 0.008133 2.823 0.005702 } time\_pct -0.320043
+0.083614 -3.828 0.000221 *\textbf{ sqrt\_voter\_turnout -0.321077
+0.103100 -3.114 0.002383 } --- Signif. codes: 0 `\emph{\textbf{' 0.001
+'}' 0.01 '}' 0.05 `.' 0.1 ' ' 1
+
+Residual standard error: 0.04115 on 104 degrees of freedom Multiple
+R-squared: 0.919, Adjusted R-squared: 0.9128 F-statistic: 147.5 on 8 and
+104 DF, p-value: \textless{} 2.2e-16
+
+Call: lm(formula = yes\_pct \textasciitilde{} log\_medincome +
+white\_pct + cp\_3 * trump\_pct + medage + log\_public\_pct + time\_pct
++ sqrt\_voter\_turnout, data = data\_tf\_2)
+
+Residuals: Min 1Q Median 3Q Max -0.099292 -0.034462 0.001796 0.033772
+0.098852
+
+Coefficients: Estimate Std. Error t value
+Pr(\textgreater\textbar t\textbar)\\
+(Intercept) 1.082925 0.214382 5.051 1.91e-06 \textbf{\emph{
+log\_medincome -0.011154 0.022200 -0.502 0.616438\\
+white\_pct 0.122825 0.050170 2.448 0.016048 }\\
+cp\_31 -0.054186 0.034688 -1.562 0.121330\\
+trump\_pct -0.879980 0.060408 -14.567 \textless{} 2e-16 }\emph{ medage
+0.003714 0.001525 2.435 0.016621 }\\
+log\_public\_pct 0.023097 0.008171 2.827 0.005652 ** time\_pct -0.314020
+0.085076 -3.691 0.000359 *\textbf{ sqrt\_voter\_turnout -0.321009
+0.103505 -3.101 0.002485 } cp\_31:trump\_pct 0.032815 0.075431 0.435
+0.664444\\
+--- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 '
+' 1
+
+Residual standard error: 0.04131 on 103 degrees of freedom Multiple
+R-squared: 0.9192, Adjusted R-squared: 0.9121 F-statistic: 130.1 on 9
+and 103 DF, p-value: \textless{} 2.2e-16
+
+Analysis of Variance Table
+
+Model 1: yes\_pct \textasciitilde{} log\_medincome + white\_pct + cp\_3
++ trump\_pct + medage + log\_public\_pct + time\_pct +
+sqrt\_voter\_turnout Model 2: yes\_pct \textasciitilde{} log\_medincome
++ white\_pct + cp\_3 * trump\_pct + medage + log\_public\_pct +
+time\_pct + sqrt\_voter\_turnout Res.Df RSS Df Sum of Sq F
+Pr(\textgreater F) 1 104 0.17610\\
+2 103 0.17577 1 0.00032298 0.1893 0.6644
+
+Call: lm(formula = yes\_pct \textasciitilde{} log\_medincome +
+white\_pct + trump\_pct + medage + log\_public\_pct + time\_pct +
+sqrt\_voter\_turnout, data = data\_tf\_3)
+
+Residuals: Min 1Q Median 3Q Max -0.077770 -0.030289 0.004854 0.025092
+0.073703
+
+Coefficients: Estimate Std. Error t value
+Pr(\textgreater\textbar t\textbar)\\
+(Intercept) 1.390563 0.830343 1.675 0.11618\\
+log\_medincome -0.038839 0.077578 -0.501 0.62440\\
+white\_pct 0.118582 0.192143 0.617 0.54704\\
+trump\_pct -0.854305 0.229601 -3.721 0.00228 ** medage 0.001382 0.003327
+0.416 0.68405\\
+log\_public\_pct 0.057258 0.028091 2.038 0.06087 . time\_pct -0.137833
+0.186997 -0.737 0.47324\\
+sqrt\_voter\_turnout 0.025029 0.452743 0.055 0.95669\\
+--- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 '
+' 1
+
+Residual standard error: 0.04297 on 14 degrees of freedom Multiple
+R-squared: 0.9083, Adjusted R-squared: 0.8625 F-statistic: 19.81 on 7
+and 14 DF, p-value: 2.992e-06
+
+Call: lm(formula = yes\_pct \textasciitilde{} log\_medincome +
+white\_pct + trump\_pct + medage + log\_public\_pct + time\_pct +
+sqrt\_voter\_turnout, data = data\_tf\_4)
+
+Residuals: Min 1Q Median 3Q Max -0.098698 -0.032922 -0.003093 0.034279
+0.102060
+
+Coefficients: Estimate Std. Error t value
+Pr(\textgreater\textbar t\textbar)\\
+(Intercept) 1.002039 0.240801 4.161 7.68e-05 \textbf{\emph{
+log\_medincome -0.004292 0.025786 -0.166 0.868215\\
+white\_pct 0.124772 0.054313 2.297 0.024120 }\\
+trump\_pct -0.890271 0.062985 -14.135 \textless{} 2e-16 }\emph{ medage
+0.004028 0.002053 1.962 0.053086 .\\
+log\_public\_pct 0.019245 0.008889 2.165 0.033254 }\\
+time\_pct -0.365807 0.101423 -3.607 0.000528 *\textbf{
+sqrt\_voter\_turnout -0.347868 0.110835 -3.139 0.002351 } --- Signif.
+codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 ' ' 1
+
+Residual standard error: 0.04169 on 83 degrees of freedom Multiple
+R-squared: 0.9164, Adjusted R-squared: 0.9093 F-statistic: 130 on 7 and
+83 DF, p-value: \textless{} 2.2e-16
 
 \hypertarget{references}{%
 \section{References}\label{references}}
