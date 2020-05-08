@@ -79,14 +79,25 @@
 \usepackage{xcolor}
 
 \title{The Influence of Individual Characterisitcs on Public
-Transportation Planning\thanks{xx}}
+Transportation Planning}
 \author{Iris Zhong}
 \date{}
 
 \begin{document}
 \maketitle
 \begin{abstract}
-xx
+This paper uses a linear regression model to investigate the
+sociodemographic factors that shape voters' decisions in a public
+transit referendum in Gwinnett County, GA, at an aggregate census tract
+level. Partisanship is found to be a significant predictor, such that
+the places with a higher proportion of Trump supporters reject the
+proposition more. The tracts with a higher concentration of white
+population are predicted to have more votes for ``yes'' when other
+variables are controlled. Finally, the tracts that do not have access to
+public transit at present and will have access to the plan tend to
+oppose the referendum. The results suggest the possibility of racism in
+white households that they do not favor the idea of using public transit
+to connect with neighborhoods with more racial minorities.
 \end{abstract}
 
 \hypertarget{introduction}{%
@@ -148,7 +159,13 @@ discrimination, as addressed in popular press articles (Binkovitz,
 2017). Gwinnett had already rejected MARTA twice before, mainly because
 the white residents in the suburban areas refused to take the same
 transport with urban Black people. It is likely that the same reason
-applies to the 2019 referendum as well.
+applies to the 2019 referendum as well. This speculation seems to
+contradict my second finding that white people tend to vote yes in the
+referendum. However, it can be argued that a large part of racial
+discrimination is explained by the proportion of people supporting
+Trump. After holding this variable constant, the relationship between
+the proportion of the white population and the percentage of votes for
+yes becomes positive.
 
 The remaining paper is structured as follows. Section 2 reviews previous
 literature. In Section 3, I include a background of Gwinnett's current
@@ -157,21 +174,22 @@ referendum. In Section 4, I describe the data sources, methods, and
 models. Section 5 presents the results and discussions. Finally, Section
 6 concludes this paper.
 
-\hypertarget{literature-review-unfinished}{%
-\section{Literature Review
-(Unfinished)}\label{literature-review-unfinished}}
+\hypertarget{literature-review}{%
+\section{Literature Review}\label{literature-review}}
 
-Referendum data, characterized as dichotomously coded from the survey,
-has been widely used in economic research. The estimation outcome with
-the referendum approach is compared to that of the individual stochastic
-valuation approach in Bollino's paper, which estimates the Italians' WTP
-of using renewable energy to produce electricity (2010). The estimated
-WTP from the referendum approach depends on how the original
-Likert-scale data is coded into a binary variable, and most of the
-outcomes are similar to the results from the individual stochastic
-valuation approach. Even though he ignores the sociodemographic factors
-in the referendum approach, the study justifies that it can provide
-similar conclusions with other models.
+Referendum data is coded dichotomously with either ``yes'' or ``no.''
+Even though it does not seem to provide much information, it is used
+intensively in economics research, and its applicability is justified.
+For example, Bollino estimates the Italians' WTP of using renewable
+energy to produce electricity (2010). He compares the outcome of using
+the referendum approach (coding the data into a binary variable) and the
+individual stochastic valuation approach. The estimated WTP from the
+referendum approach depends on how the original Likert-scale data is
+coded into a binary variable, and most of the results are similar to
+those from the individual stochastic valuation approach. Even though he
+ignores the sociodemographic factors in the referendum approach, the
+study proves that using the referendum approach can provide similar
+conclusions with other models.
 
 Similarly, Burkhardt and Chan (2017) also utilize referendum data to
 estimate WTP for public goods, but at an aggregate zip code level with a
@@ -183,7 +201,9 @@ proposition to pass by finding the difference between WTP and price.
 Even though my project does not involve assessing voters' WTP, this
 procedure should be considered in future studies so that an estimation
 of the necessary reduction in cost to reach enough support can be
-computed.
+computed. Additionally, I will adopt their method of consolidating
+precinct-level data to zip code, in order to transform precinct-level
+voting and election datasets to the census tract level.
 
 Allen et al.~(2016) study the reasoning of the failure of a referendum
 on a congestion charging scheme in Edinburgh. Instead of using direct
@@ -229,6 +249,19 @@ the methods, they utilize the spatial lag model to correct for
 autocorrelation, which is proper to use in my project as well since both
 studies use precinct-level data.
 
+Finally, socioeconomic factors also play a role in public transit. Ward
+discusses the importance of public transit service for the minorities
+(2009). Due to the historical influence of redlining and residential
+segregation, racial and ethnic minorities often live in ``food deserts
+and medically underserved areas.'' They also tend to have lower social
+mobility and geographic access when they have low income, less
+educational attainment, and no vehicle availability. Therefore, public
+transit is essential for them to improve mobility and increase
+accessibility. This review supports my hypothesis that racial minorities
+are more likely to support this referendum. Besides, I am also concerned
+that minorities could have lower participation in the referendum, due to
+their lower accessibility to politics, language barriers, etc.
+
 \hypertarget{background}{%
 \section{Background}\label{background}}
 
@@ -258,11 +291,11 @@ The major roads in Gwinnett include two interstate highways, three U.S.
 routes, and eighteen state routes (``Gwinnett County, Georgia,'' 2020).
 In the public transit sector, Gwinnett County Transit currently operates
 seven Local bus routes and five Express routes (Routes and Schedules
-\textbar{} Gwinnett County, n.d.) (see Figure ???). The heavy rail
-transit (HRT) operated by the Metropolitan Atlanta Rapid Transit
-Authority (MARTA) does not go through Gwinnett. Yet, the nearest rail
-station is very close to the border, and several bus lines start from
-there (Connect Gwinnett Transit Plan Recommendations Report, 2018).
+\textbar{} Gwinnett County, n.d.). The heavy rail transit (HRT) operated
+by the Metropolitan Atlanta Rapid Transit Authority (MARTA) does not go
+through Gwinnett. Yet, the nearest rail station is very close to the
+border, and several bus lines start from there (Connect Gwinnett Transit
+Plan Recommendations Report, 2018).
 
 \hypertarget{connect-gwinnett-transit-plan}{%
 \subsection{Connect Gwinnett: Transit
@@ -321,22 +354,23 @@ and affect the result.
 \hypertarget{conceptual-model}{%
 \subsection{Conceptual model}\label{conceptual-model}}
 
-According to previous research, sociodemographic elements can influence
-people's voting decisions in the referendum. For example, the effect of
-income is mixed: on the one hand, people with higher income will pay a
-smaller portion of their earnings for the implementation of the plan; on
-the other hand, they will pay a larger amount of tax. Bollino (2008)
-finds a positive correlation between income and people's willingness to
-pay for renewable resources. Burkhardt and Chan (2017) separate the
-influence of income from tax, and discover their opposite effects on
-voting. Therefore, it is worth considering the relationship between
-income and percentage of supporters in this referendum. Voters'
-partisanship attachment is found to be a significant factor as well in
-Burkhardt and Chan's (2017) paper. Areas with higher proportions of
-Republicans are less supportive of fiscally costly propositions. In my
-project, it can be hypothesized that tracts that have a higher
-proportion of Trump supporters tend to have a lower percentage of
-agreement to the proposal.
+This paper sets out to find the factors that influence voting results in
+this referendum. According to previous research, sociodemographic
+elements can influence people's voting decisions in the referendum. For
+example, the effect of income is mixed: on the one hand, people with
+higher income will pay a smaller portion of their earnings for the
+implementation of the plan; on the other hand, they will pay a larger
+amount of tax. Bollino (2008) finds a positive correlation between
+income and people's willingness to pay for renewable resources.
+Burkhardt and Chan (2017) separate the influence of income from tax, and
+discover their opposite effects on voting. Therefore, it is worth
+considering the relationship between income and percentage of supporters
+in this referendum. Voters' partisanship attachment is found to be a
+significant factor as well in Burkhardt and Chan's (2017) paper. Areas
+with higher proportions of Republicans are less supportive of fiscally
+costly propositions. In my project, it can be hypothesized that tracts
+that have a higher proportion of Trump supporters tend to have a lower
+percentage of agreement to the proposal.
 
 In addition, some factors related to transportation can intuitively
 shape people's attitudes towards public transit. For example, the areas
@@ -370,11 +404,11 @@ Next, cross-sectional sociodemographic characteristics at the census
 tract level are found in Census Bureau via an R package called
 \texttt{tidycensus}. The data comes from the American Community Survey
 5-year estimate published in 2018. The median age and median income are
-collected here. In addition, the proportion of white, the percentage of
-people who go to work by public transportation, and the percentage of
-people who travel more than an hour to work are calculated by dividing
-the relevant variables by the total population or the survey sample
-size.
+taken from here. In addition, the proportion of the population that is
+white, the percentage of people who go to work by public transportation,
+and the percentage of people who travel more than an hour to work are
+calculated by dividing the relevant variables by the total population or
+the survey sample size.
 
 The information on whether the tract enjoys the proximity of public
 transportation now and future can be acquired from spatial maps and
@@ -382,25 +416,26 @@ analyses. First, a precinct-level shapefile of Gwinnett County made in
 2018 is obtained from the Georgia General Assembly. Gwinnett County maps
 with current and proposed future public transit systems are available on
 the Gwinnett County government website. I select the short-range
-expansion plan (Y2020 -- 2025) because the cost and benefit of the
-expansion in the far future are discounted more. After modifications in
-QGIS software, the maps are then transformed into spatial data readable
-in R. Five-hundred-meter buffer zones are created around bus and railway
-routes. The categorical variable \emph{current\_plan} has four levels: 1
-represents no transportation near this tract at present and in the
-future; 2 represents the tracts that are accessible to public transit
-currently but not in the future; 3 stands for the tracts that do not
-have transit at present but will do in the expansion plan; 4 represents
-the tracts that have and will have public transit for now and for the
-future.
+expansion plan (Y2019 -- 2024) because the cost and benefit of the
+expansion in the far future are discounted more. PDF maps are
+georeferenced in QGIS software, and then exported as spatial data
+readable in R. Five-hundred-meter buffer zones are created around bus
+and railway routes. The categorical variable \emph{current\_plan} has
+four levels: 1 represents no transportation near this tract at present
+and in the future; 2 represents the tracts that are accessible to public
+transit currently but not in the future; 3 stands for the tracts that do
+not have transit at present but will do in the expansion plan; 4
+represents the tracts that have and will have public transit for now and
+for the future.
 
 As noted above, both referendum and 2016 election data are collected at
 the precinct level. However, the other datasets are performed at the
 census tract level. Therefore, referendum and election data are
-redistributed by the areas shared by the precinct and the tract. See the
-data appendix for detailed steps of transformation.
+redistributed by the areas shared by the precinct and the tract,
+following Burkhardt and Chan (2017). See the data appendix for detailed
+steps of transformation.
 
-The final dataset joins the datasets above by GEOID. It is
+The final dataset joins the datasets above by census tract. It is
 cross-sectional, measured with the unit of the census tract. Since there
 are 113 census tracts in Gwinnett, the dataset has 113 observations,
 with no missing data. A description of the variables can be found in
@@ -459,7 +494,7 @@ pattern of inequality is universally observed.
 The usage of public transit is low. On average, only one percent of the
 population relies on public transportation to go to work. As proved by
 later analyses, the distribution is highly skewed, and will be
-transformed in some models. \textbf{public\_pct max needs to be fixed}
+transformed in some models.
 
 The variable \emph{current\_plan} is not in \emph{Table 2} because it is
 a categorical variable. In sum, 31 tracts do not have access to public
@@ -475,18 +510,18 @@ potentially arise.
 
 A correlation matrix is created from \texttt{corrplot} package to
 investigate the correlation between each pair of factors (see
-\emph{Figure ???}). Positive correlations are in blue colors, and
-negative correlations are in red colors. The magnitude is reflected by
-the color intensity and the size of the dot. Non-significant (p
-\textgreater{} 0.05) correlations are marked with a cross.
-\emph{Current\_plan} is omitted in the matrix because it is categorical.
-The dependent variable \emph{yes\_pct} is significantly correlated with
-every independent variable. \emph{Medage}, \emph{voter\_turnout},
-\emph{medincome}, \emph{white\_pct}, and \emph{trump\_pct} are all
-strongly positively correlated with each other, and all of them are
-negatively associated with \emph{yes\_pct}. Given the number of strong,
-significant correlations among the factors, it is essential to check
-collinearity in the regression model.
+\emph{Figure 1}). Positive correlations are in blue colors, and negative
+correlations are in red colors. The magnitude is reflected by the color
+intensity and the size of the dot. Non-significant (p \textgreater{}
+0.05) correlations are marked with a cross. \emph{Current\_plan} is
+omitted in the matrix because it is categorical. The dependent variable
+\emph{yes\_pct} is significantly correlated with every independent
+variable. \emph{Medage}, \emph{voter\_turnout}, \emph{medincome},
+\emph{white\_pct}, and \emph{trump\_pct} are all strongly positively
+correlated with each other, and all of them are negatively associated
+with \emph{yes\_pct}. Given the number of strong, significant
+correlations among the factors, it is essential to check collinearity in
+the regression model.
 
 The major limitation of the data is the unit conversion from precinct to
 census tract. Such a method assumes that residents in one precinct have
@@ -507,19 +542,20 @@ the same scope, no fixed effects are tested. The dependent variable is
 \emph{yes\_pct}, the proportion of supporters of the referendum in a
 tract. Independent variables include \emph{medincome},
 \emph{white\_pct}, \emph{trump\_pct}, and \emph{current\_plan}. For more
-information about these variables, refer to \emph{Table ???}. I
+information about these variables, refer to \emph{Table 1}. I
 hypothesize that the effect of \emph{medincome} is ambiguous. As
 explained in the Conceptual Model section, people with higher income pay
 a larger amount of tax, but the tax takes up a smaller portion of their
 earnings compared to those with lower income. \emph{White\_pct} is
 hypothesized to have a negative effect on \emph{yes\_pct}, based on the
-negative correlation between the two variables. A higher percentage of
+article stating that the white population had historically rejected a
+similar proposition twice (Binkovitz, 2017). A higher percentage of
 Trump supporters is expected to predict a lower percentage of votes for
 ``yes'' in the referendum, as evidenced by common sense and previous
-literature (???). Finally, since tracts that do not have public transit
-now and will have it in the short-range benefit the most from the
-proposition, I predict that the tracts with this feature will have a
-higher level of \emph{yes\_pct} than the others.
+literature (Kinsey et al., 2010). Finally, since tracts that do not have
+public transit now and will have it in the short-range benefit the most
+from the proposition, I predict that the tracts with this feature will
+have a higher level of \emph{yes\_pct} than the others.
 
 \emph{Medage}, \emph{public\_pct}, \emph{time\_pct}, and
 \emph{voter\_turnout} add to the model as controls. For example, tracts
@@ -598,7 +634,7 @@ F Statistic & 113.224$^{***}$ (df = 10; 102) \\
 \end{tabular} 
 \end{table}
 
-\emph{Table ???} provides the results of Model 1. The equation is
+\emph{Table 3} provides the results of Model 1. The equation is
 statistically significant (F(10, 102) = 113.22, p \textless{} 0.05).
 Adjusted \(R^2\) is 0.909, indicating that the independent variables in
 this specification explain a large portion of the variance in the
@@ -609,11 +645,11 @@ large coefficient: a one percent increase in the proportion of Trump
 supporters decreases the percentage of voters in favor of the referendum
 by 0.886\%, holding other variables constant.
 
-However, unlike the outcome from the correlation matrix (see
-\emph{Figure ???}), \emph{white\_pct} significantly predicts
-\emph{yes\_pct} in a positive direction. A higher percentage of the
-white population in the tract is associated with higher support of the
-proposition when holding other explanatory variables constant.
+However, unlike the beliefs in previous articles, \emph{white\_pct}
+significantly predicts \emph{yes\_pct} in a positive direction. A higher
+percentage of the white population in the tract is associated with
+higher support of the proposition when holding other explanatory
+variables constant.
 
 Another unanticipated result is \emph{current\_plan}. In contrast to
 baseline tracts that do not access public transit service both now and
@@ -684,24 +720,24 @@ F Statistic & 117.561$^{***}$ (df = 10; 102) \\
 Model 2 uses multiple linear regression as well, except that the skewed
 variables \emph{medincome}, \emph{public\_pct}, and
 \emph{voter\_turnout} are transformed. The overall outcome is identical
-to Model 1 (see \emph{Table ???}). After log transformation, the effect
-of median income is still insignificant.
+to Model 1 (see \emph{Table 4}). After log transformation, the effect of
+median income is still insignificant.
 
 A series of assumptions are examined. First, linearity and
 homoscedasticity assumptions are met, as illustrated by the residual
 plots. Next, because several factors correlate with each other (see
-\emph{Figure ???}), VIFs are calculated to detect multicollinearity.
-Since all of the independent variables exhibit a VIF below 5 in both
-models, no collinearity issue is detected. Lastly, there is a potential
-fault of using linear regression in this dataset. The value of the
-dependent variable \emph{yes\_pct} is restricted to the range of 0 to 1,
-because it represents a percentage. On the other hand, the predicted
-outcome from linear regression is unbounded. As a result, I calculate
-the predicted values from the two models with the actual datasets. The
+\emph{Figure 1}), VIFs are calculated to detect multicollinearity. Since
+all of the independent variables exhibit a VIF below 5 in both models,
+no collinearity issue is detected. Lastly, there is a potential fault of
+using linear regression in this dataset. The value of the dependent
+variable \emph{yes\_pct} is restricted to the range of 0 to 1, because
+it represents a percentage. On the other hand, the predicted outcome
+from linear regression is unbounded. As a result, I calculate the
+predicted values from the two models with the actual datasets. The
 predicted outcome is close to the actual value of \emph{yes\_pct}, all
 between 0 and 1. Then, I continue testing by finding the minimum and
 maximum values of each independent variable in the dataset (to see the
-actual minimum and maximum values, see \emph{Table ???}), and plug them
+actual minimum and maximum values, see \emph{Table 2}), and plug them
 into the models accordingly to gain the extreme predicted
 \emph{yes\_pct}. The extreme values for Model 1 are 0.09 and 0.96, and
 0.11 and 0.95 in Model 2, all within the interval {[}0,1{]}. Therefore,
@@ -747,7 +783,7 @@ are more likely to express their opinions.
 \emph{current\_plan}
 variable}{Complications with the current\_plan variable}}\label{complications-with-the-current_plan-variable}}
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-2-1.pdf}
+\includegraphics{Zhong_paper_files/figure-latex/create maps-1.pdf}
 
 One of the most unforeseen findings is that the tracts that are newly
 included in the public transit system in the short-range plan have a
@@ -762,135 +798,202 @@ services that require heavy construction, this speculation is less
 persuasive.
 
 Another supposition is that residents in these tracts do not like the
-idea of ``Connecting Gwinnett.'' As can be seen from \emph{Figure ???},
+idea of ``Connecting Gwinnett.'' As can be seen from \emph{Figure 2},
 the tracts marked with purple in the first map are mostly high in
 \emph{trump\_pct}, \emph{white\_pct}, and low in \emph{yes\_pct}. It is
 possible that some sort of segregation still exists, that people in
 these areas refuse to get connected with other communities that are less
-``white.'' In future research, I recommend adding another factor such as
-the number of hate crimes against racial or ethnic minorities, as a
-measure of ``the level of racism.''
+``white,'' and such discrimination is not entirely captured by the
+existing explanatory variables. In future research, I recommend adding
+another factor such as the number of hate crimes against racial or
+ethnic minorities, as a measure of ``the level of racism.''
 
-\hypertarget{partisanship-as-a-mediating-factor-unfinished}{%
-\subsubsection{Partisanship as a mediating factor
-(Unfinished)}\label{partisanship-as-a-mediating-factor-unfinished}}
+Previous rejections of MARTA in Gwinnett can support this speculation.
+Since 1971, Gwinnett residents had refused to develop public transit
+with MARTA because they preferred driving over traveling by public
+transit with other Black people (Binkovitz, 2017). They were afraid that
+their white neighborhoods would be disturbed by racial minorities via
+public transportation.
 
-\includegraphics{Zhong_paper_files/figure-latex/unnamed-chunk-4-1.pdf} -
-\emph{yes\_pct} \textasciitilde{} \emph{white\_pct} positive:
-transportation history, favor the white - \emph{trump\_pct} is a
-mediating factor that turns the relationship between \emph{white\_pct}
-and \emph{yes\_pct} to negative
+\hypertarget{race}{%
+\subsubsection{Race}\label{race}}
 
-Call: lm(formula = yes\_pct \textasciitilde{} log\_medincome +
-white\_pct + cp\_3 + trump\_pct + medage + log\_public\_pct + time\_pct
-+ sqrt\_voter\_turnout, data = data\_tf\_2)
+The effect of the proportion of the white population is unexpected. The
+model suggests that holding other variables constant, a higher
+\emph{white\_pct} would predict more support for the referendum,
+contradicting with the previous articles (Binkovitz, 2017; Karner,
+2019). I believe it is because the influence of racial discrimination is
+already explained in the variables such as \emph{trump\_pct}. Therefore,
+when holding \emph{trump\_pct} and other variables constant, the effect
+of racism is controlled, and thus \emph{white\_pct} would predict in a
+different direction than anticipated.
 
-Residuals: Min 1Q Median 3Q Max -0.100052 -0.035836 0.002392 0.033678
-0.099693
+The reason for \emph{white\_pct} as a positive predictor might trace
+back to the beginning of public transportation service in the
+metropolitan Atlanta area. In the mid-1900s, white households were
+encouraged to move from urban to suburban areas from transportation and
+housing subsidies. As a result, Atlanta city was populated by Black
+families (Binkovitz, 2017). To fulfill the white's demands to connect
+with the city, MARTA was created. The bias towards the white population
+in the first place could potentially explain why the white favor the
+proposition after partisanship factor is controlled.
 
-Coefficients: Estimate Std. Error t value
-Pr(\textgreater\textbar t\textbar)\\
-(Intercept) 1.092370 0.212447 5.142 1.28e-06 \textbf{\emph{
-log\_medincome -0.011993 0.022030 -0.544 0.587326\\
-white\_pct 0.122586 0.049971 2.453 0.015823 }\\
-cp\_31 -0.039802 0.010454 -3.807 0.000238 }\emph{ trump\_pct -0.871285
-0.056783 -15.344 \textless{} 2e-16 }\textbf{ medage 0.003628 0.001507
-2.408 0.017801 *\\
-log\_public\_pct 0.022960 0.008133 2.823 0.005702 } time\_pct -0.320043
-0.083614 -3.828 0.000221 *\textbf{ sqrt\_voter\_turnout -0.321077
-0.103100 -3.114 0.002383 } --- Signif. codes: 0 `\emph{\textbf{' 0.001
-'}' 0.01 '}' 0.05 `.' 0.1 ' ' 1
+\hypertarget{limitation-future-direction}{%
+\subsubsection{Limitation \& Future
+direction}\label{limitation-future-direction}}
 
-Residual standard error: 0.04115 on 104 degrees of freedom Multiple
-R-squared: 0.919, Adjusted R-squared: 0.9128 F-statistic: 147.5 on 8 and
-104 DF, p-value: \textless{} 2.2e-16
+This research has several limitations. First of all, I have only
+examined the short-range plan. As I have discussed in Section 3, one of
+the most critical propositions is the construction of HRT in the
+long-range. Future research could look at other plans to test if they
+have a different influence on voters' decisions.
 
-Call: lm(formula = yes\_pct \textasciitilde{} log\_medincome +
-white\_pct + cp\_3 * trump\_pct + medage + log\_public\_pct + time\_pct
-+ sqrt\_voter\_turnout, data = data\_tf\_2)
+Moreover, census data is collected from every household, but not
+everyone participated in the referendum. The demographic distribution of
+the entire tract can be different from that of the voters in the tract.
+If some groups disproportionally participate more or less actively than
+the others, the data from Census Bureau cannot accurately describe the
+characteristics of the voters.
 
-Residuals: Min 1Q Median 3Q Max -0.099292 -0.034462 0.001796 0.033772
-0.098852
+In order to improve the model, more variables can add to the regression.
+For example, the effect of race can be further specified. This paper
+only divides race into white and non-white. Future research could lay
+out the minorities as variables. For example, Asian or Asian Americans
+might perceive public transit in a different way from Black or African
+Americans. Other variables, such as education level, could also
+significantly predict voting outcomes and are worth testing in the
+future.
 
-Coefficients: Estimate Std. Error t value
-Pr(\textgreater\textbar t\textbar)\\
-(Intercept) 1.082925 0.214382 5.051 1.91e-06 \textbf{\emph{
-log\_medincome -0.011154 0.022200 -0.502 0.616438\\
-white\_pct 0.122825 0.050170 2.448 0.016048 }\\
-cp\_31 -0.054186 0.034688 -1.562 0.121330\\
-trump\_pct -0.879980 0.060408 -14.567 \textless{} 2e-16 }\emph{ medage
-0.003714 0.001525 2.435 0.016621 }\\
-log\_public\_pct 0.023097 0.008171 2.827 0.005652 ** time\_pct -0.314020
-0.085076 -3.691 0.000359 *\textbf{ sqrt\_voter\_turnout -0.321009
-0.103505 -3.101 0.002485 } cp\_31:trump\_pct 0.032815 0.075431 0.435
-0.664444\\
---- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 '
-' 1
+Another research direction is to study the determinants of voter turnout
+rate. It would be interesting to see if the tracts with more Trump
+supporters also demonstrate higher voter turnout.
 
-Residual standard error: 0.04131 on 103 degrees of freedom Multiple
-R-squared: 0.9192, Adjusted R-squared: 0.9121 F-statistic: 130.1 on 9
-and 103 DF, p-value: \textless{} 2.2e-16
+\hypertarget{conclusion}{%
+\section{Conclusion}\label{conclusion}}
 
-Analysis of Variance Table
+In sum, in a public transit referendum, a number of sociodemographic
+characteristics can predict voting behavior. Firstly, partisanship is a
+significant predictor. Republicans, characterized as Trump supporters
+during the 2016 Election, have a higher tendency to oppose the
+referendum. The tracts with a higher percentage of the white population
+are predicted to support the referendum more, when other variables are
+controlled. This could reflect a racial bias towards the white
+population in the history of public transit services in the metropolitan
+Atlanta area. The tracts that are newly added to the public transport
+system counterintuitively reject the referendum more. It suggests that
+the local white residents would refuse to connect with other parts of
+the area that are less white.
 
-Model 1: yes\_pct \textasciitilde{} log\_medincome + white\_pct + cp\_3
-+ trump\_pct + medage + log\_public\_pct + time\_pct +
-sqrt\_voter\_turnout Model 2: yes\_pct \textasciitilde{} log\_medincome
-+ white\_pct + cp\_3 * trump\_pct + medage + log\_public\_pct +
-time\_pct + sqrt\_voter\_turnout Res.Df RSS Df Sum of Sq F
-Pr(\textgreater F) 1 104 0.17610\\
-2 103 0.17577 1 0.00032298 0.1893 0.6644
-
-Call: lm(formula = yes\_pct \textasciitilde{} log\_medincome +
-white\_pct + trump\_pct + medage + log\_public\_pct + time\_pct +
-sqrt\_voter\_turnout, data = data\_tf\_3)
-
-Residuals: Min 1Q Median 3Q Max -0.077770 -0.030289 0.004854 0.025092
-0.073703
-
-Coefficients: Estimate Std. Error t value
-Pr(\textgreater\textbar t\textbar)\\
-(Intercept) 1.390563 0.830343 1.675 0.11618\\
-log\_medincome -0.038839 0.077578 -0.501 0.62440\\
-white\_pct 0.118582 0.192143 0.617 0.54704\\
-trump\_pct -0.854305 0.229601 -3.721 0.00228 ** medage 0.001382 0.003327
-0.416 0.68405\\
-log\_public\_pct 0.057258 0.028091 2.038 0.06087 . time\_pct -0.137833
-0.186997 -0.737 0.47324\\
-sqrt\_voter\_turnout 0.025029 0.452743 0.055 0.95669\\
---- Signif. codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 '
-' 1
-
-Residual standard error: 0.04297 on 14 degrees of freedom Multiple
-R-squared: 0.9083, Adjusted R-squared: 0.8625 F-statistic: 19.81 on 7
-and 14 DF, p-value: 2.992e-06
-
-Call: lm(formula = yes\_pct \textasciitilde{} log\_medincome +
-white\_pct + trump\_pct + medage + log\_public\_pct + time\_pct +
-sqrt\_voter\_turnout, data = data\_tf\_4)
-
-Residuals: Min 1Q Median 3Q Max -0.098698 -0.032922 -0.003093 0.034279
-0.102060
-
-Coefficients: Estimate Std. Error t value
-Pr(\textgreater\textbar t\textbar)\\
-(Intercept) 1.002039 0.240801 4.161 7.68e-05 \textbf{\emph{
-log\_medincome -0.004292 0.025786 -0.166 0.868215\\
-white\_pct 0.124772 0.054313 2.297 0.024120 }\\
-trump\_pct -0.890271 0.062985 -14.135 \textless{} 2e-16 }\emph{ medage
-0.004028 0.002053 1.962 0.053086 .\\
-log\_public\_pct 0.019245 0.008889 2.165 0.033254 }\\
-time\_pct -0.365807 0.101423 -3.607 0.000528 *\textbf{
-sqrt\_voter\_turnout -0.347868 0.110835 -3.139 0.002351 } --- Signif.
-codes: 0 `\emph{\textbf{' 0.001 '}' 0.01 '}' 0.05 `.' 0.1 ' ' 1
-
-Residual standard error: 0.04169 on 83 degrees of freedom Multiple
-R-squared: 0.9164, Adjusted R-squared: 0.9093 F-statistic: 130 on 7 and
-83 DF, p-value: \textless{} 2.2e-16
+A new ballot on the public transit expansion is possibly scheduled to
+hold in November 2020. Since the voting is going to happen in the
+general election, it is expected that there will be a higher turnout
+rate and more diversity in voters. The findings in this paper explicitly
+suggest that Republicans and people living in tracts newly included in
+the public transit service oppose the referendum. Campaigns for the
+public transit expansion plan could target this population. For example,
+campaigners can persuade the residents in the tracts that will be added
+to public transit to support by advocating the economic and
+environmental benefits of utilizing public transit.
 
 \hypertarget{references}{%
 \section{References}\label{references}}
 
-xxx
+Allen, S., Gaunt, M., \& Rye, T. (2006). An investigation into the
+reasons for the rejection of congestion charging by the citizens of
+Edinburgh. \emph{Trasporti Europei, 32}, 95--113.
+
+\emph{Ambient (outdoor) air pollution.} (n.d.). Retrieved May 3, 2020,
+from
+\url{https://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health}
+
+Binkovitz, L. (2017, February 8). \emph{New Study Examines How Historic
+Racism Shaped Atlanta's Transportation Network.} The Kinder Institute
+for Urban Research.
+\url{https://kinder.rice.edu/2017/02/08/new-study-examines-how-historic-racism-shaped-atlantas-transportation-network}
+
+Bollino, C. A. (2009). The Willingness to Pay for Renewable Energy
+Sources: The Case of Italy with Socio-demographic Determinants.* Energy
+Journal,* 30(2), 81--96.
+
+Burkhardt, J., \& Chan, N. W. (2017). The Dollars and Sense of Ballot
+Propositions: Estimating Willingness to Pay for Public Goods Using
+Aggregate Voting Data. \emph{Journal of the Association of Environmental
+and Resource Economists, 4}(2), 479--503.
+
+\emph{Census---Means of Transportation to Work by Vehicles Available}.
+(n.d.). Retrieved May 7, 2020, from
+\url{https://data.census.gov/cedsci/table?q=transportation\%20means\%20to\%20work\&g=0500000US13135\&hidePreview=true\&tid=ACSDT1Y2018.B08141\&t=Transportation\&vintage=2018}
+
+Chen, Y., \& Whalley, A. (2012). Green Infrastructure: The Effects of
+Urban Rail Transit on Air Quality. \emph{American Economic Journal:
+Economic Policy, 4}(1), 58--97. \url{https://doi.org/10.1257/pol.4.1.58}
+
+\emph{Connect Gwinnett Transit Plan Recommendations Report}. (2018).
+
+Estep, T. (2019, March 15). \emph{Gwinnett's MARTA referendum: A
+comprehensive voter's guide}. Ajc.
+\url{https://www.ajc.com/news/local-govt--politics/gwinnett-upcoming-marta-referendum-comprehensive-voter-guide/CVj5YhwsvzesGoX29o0xvL/}
+
+\emph{Fast Facts \textbar{} Gwinnett County.} (n.d.). Retrieved May 7,
+2020, from
+\url{https://www.gwinnettcounty.com/web/gwinnett/aboutgwinnett/fastfacts}
+
+Gwinnett County, Georgia. (2020). In \emph{Wikipedia}.
+\url{https://en.wikipedia.org/w/index.php?title=Gwinnett_County,_Georgia\&oldid=954101825}
+
+Karner, A. (2019, April 23). MARTA Rebranding Rooted in a Racialized
+History of Public Transit. \emph{Atlanta Studies}.
+\url{https://www.atlantastudies.org/2019/04/23/alex-karner-marta-rebranding-rooted-in-a-racialized-history-of-public-transit/}
+
+Kinsey, B. S., Bartling, H., Peterson, A. F., \& Baybeck, B. P. (2010).
+Location of Public Goods and the Calculus of Voting: The Seattle
+Monorail Referendum. \emph{Social Science Quarterly, 91}(3), 741--761.
+\url{https://doi.org/10.1111/j.1540-6237.2010.00717.x}
+
+Manville, M., \& Cummins, B. (2015). Why do voters support public
+transportation? Public choices and private behavior.
+\emph{Transportation, 42}(2), 303--332.
+\url{https://doi.org/10.1007/s11116-014-9545-2}
+
+Manville, M., \& Levine, A. S. (2018). What motivates public support for
+public transit? \emph{Transportation Research Part A: Policy and
+Practice, 118,} 567--580.
+\url{https://doi.org/10.1016/j.tra.2018.10.001}
+
+\emph{Principal Means of Transportation to Work \textbar{} Bureau of
+Transportation Statistics. }(n.d.). Retrieved May 7, 2020, from
+\url{https://www.bts.gov/content/principal-means-transportation-work}
+
+\emph{Results---Gwinnett---Election Night Reporting.} (2019).
+\url{https://results.enr.clarityelections.com/GA/Gwinnett/94961/Web02.225391/\#/}
+
+\emph{Routes and Schedules \textbar{} Gwinnett County. } (n.d.).
+Retrieved May 7, 2020, from
+\url{https://www.gwinnettcounty.com/web/gwinnett/Departments/Transportation/GwinnettCountyTransit/RoutesandSchedules}
+
+\emph{Taking Action. } (n.d.). MARTA for Gwinnett. Retrieved May 8,
+2020, from \url{https://marta4gwinnett.org/takingaction}
+
+\emph{U.S. Census Bureau QuickFacts: Gwinnett County, Georgia. } (n.d.).
+Retrieved May 7, 2020, from
+\url{https://www.census.gov/quickfacts/fact/table/gwinnettcountygeorgia/IPE120218\#qf-headnote-a}
+
+Ward, B. G. (2009). Disaggregating Race and Ethnicity: Toward a Better
+Understanding of the Social Impacts of Transport Decisions. \emph{Public
+Works Management \& Policy, 13} (4), 354--360.
+\url{https://doi.org/10.1177/1087724X09334495}
+
+\emph{WHO \textbar{} Air pollution. } (n.d.). WHO; World Health
+Organization. Retrieved May 3, 2020, from
+\url{http://www.who.int/sustainable-development/transport/health-risks/air-pollution/en/}
+
+Yeomans, C. (2018, August 2). \emph{MARTA referendum in March---Rather
+than November---Could cost Gwinnett \$500,000. } Gwinnett Daily Post.
+\url{https://www.gwinnettdailypost.com/local/marta-referendum-in-march---rather-than-november---could-cost-gwinnett-500/article_f6c8b02e-874e-54b4-9c42-a20278e19238.html}
+
+Zheng, S., Zhang, X., Sun, W., \& Wang, J. (2019). The effect of a new
+subway line on local air quality: A case study in Changsha.
+\emph{Transportation Research Part D: Transport and Environment, 68,
+}26--38. \url{https://doi.org/10.1016/j.trd.2017.10.004}
 
 \end{document}
