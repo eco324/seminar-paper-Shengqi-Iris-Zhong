@@ -39,7 +39,7 @@ Constructing a public transit often requires majority approval from the local vo
 
 This paper examines a public transit referendum in Gwinnett, Georgia, on March 23rd, 2019. The referendum is about whether to join Metropolitan Atlanta Rapid Transit Authority (MARTA) and expand public transit service. My research asks how sociodemographic characteristics such as race and partisanship influence voters’ decisions. After collecting data from the government website and census bureau, I convert a few variables to census tract level, so that they are measured at the same unit. I create two model specifications, one using the original dataset, the other using a modified dataset with skewed variables transformed. After age, commute time, percentage of people using public transit, and voter turnout are held as controls, partisanship significantly predicts the percentage of supporters for the referendum – the tracts with a higher proportion of Trump supporters tend to vote against the public transit plan. Race is also a significant predictor, such that the tracts with a higher proportion of the white population favor the referendum. Finally, counterintuitively, the tracts newly included in the public transit system by the proposition tend to reject the plan, even though they gain more benefit from it. 
 
-A possible explanation for my last finding can be related to racial discrimination, as addressed in popular press articles (Binkovitz, 2017). Gwinnett has already rejected MARTA twice before, mainly because the white residents in the suburban areas refused to take the same transport with urban Black people. It is likely that the same reason applies to the 2019 referendum as well. 
+A possible explanation for my last finding can be related to racial discrimination, as addressed in popular press articles (Binkovitz, 2017). Gwinnett had already rejected MARTA twice before, mainly because the white residents in the suburban areas refused to take the same transport with urban Black people. It is likely that the same reason applies to the 2019 referendum as well. This speculation seems to contradict my second finding that white people tend to vote yes in the referendum. However, it can be argued that a large part of racial discrimination is explained by the proportion of people supporting Trump. After holding this variable constant, the relationship between the proportion of the white population and the percentage of votes for yes becomes positive.
 
 The remaining paper is structured as follows. Section 2 reviews previous literature. In Section 3, I include a background of Gwinnett’s current public transit system, the content of the proposition, and the referendum. In Section 4, I describe the data sources, methods, and models. Section 5 presents the results and discussions. Finally, Section 6 concludes this paper. 
 
@@ -59,23 +59,37 @@ Another crucial factor is the accessibility of the proposed transit system. Kins
 
 # Background
 
-## current transportation
+## Gwinnett County and Transportation
+Gwinnett County sits in the north-central part of Georgia in the United States (Fast Facts | Gwinnett County, n.d.). The estimated population was 936,250 in 2019 (U.S. Census Bureau QuickFacts, n.d.), with approximately 55% identified as white, 29.3% identified as Black or African American, 12.4% as Asian, and 0.9% identified as other races. For ethnicity, 21.5% identified themselves as Hispanic or Latino.    
 
+The primary transportation means for Gwinnett County residents is driving. According to Census Bureau statistics in 2018 (Census - Means of Transportation to Work by Vehicles Available, n.d.), of the 456,465 households who are workers over 16 years old, over 90% drive alone or carpool to work. On the other hand, only 0.8% take public transit to work. Since approximately 4.9% of Americans use public transportation to commute (Principal Means of Transportation to Work | Bureau of Transportation Statistics, n.d.), the usage of public transit in Gwinnett is lower than other parts of the country. 
+
+The major roads in Gwinnett include two interstate highways, three U.S. routes, and eighteen state routes (“Gwinnett County, Georgia,” 2020). In the public transit sector, Gwinnett County Transit currently operates seven Local bus routes and five Express routes (Routes and Schedules | Gwinnett County, n.d.) (see Figure ???). The heavy rail transit (HRT) operated by the Metropolitan Atlanta Rapid Transit Authority (MARTA) does not go through Gwinnett. Yet, the nearest rail station is very close to the border, and several bus lines start from there (Connect Gwinnett Transit Plan Recommendations Report, 2018). 
 
 ## Connect Gwinnett: Transit Plan
 
-### Plan overview
+The population in Gwinnett has nearly doubled from 2000 to 2016, but public transit service has not expanded (Connect Gwinnett Transit Plan Recommendations Report, 2018). As a result, Gwinnett County Transit drafted a public transit expansion plan named “Connect Gwinnett: Transit Plan” in 2018. All of the following information comes from its recommendations report (2018). 
 
-### Financing
+The plan consists of four stages: short-range (2019 - 2024), mid-range (2025 – 2029), long-range phase 1 (2030 – 2049), and long-range phase 2 (2050 onward). The most exciting improvement is the first HRT service proposed to build during long-range phase 1. It is an extension of an existing line from MARTA.  
+
+Nevertheless, I decided to study the short-range plan in this paper in order to minimize the effect of discounting on future costs and benefits. Short-range recommendations target on the most immediate demands. During this period, Gwinnet transit service will increase to seventeen local bus routes, nine express commuter bus routes, two direct connect lines, and two flex routes. Direct connect is a new service introduced in the short-range that takes passengers to and from MARTA stations with limited stops to shorten travel time. Flex is an on-demand service that carries passengers upon request.
 
 
-## referendum
+The entire Connect Gwinnett: Transit Plan is estimated to cost 527.7 million dollars. The plan is going to be funded mainly by sales tax revenue, assuming a 1.5% increase of tax in the first five years and a 1% increase afterward. 
+
+## Referendum
+A special referendum was held on March 19th, 2019 to decide whether the county will join MARTA and expand the public transit system following Connect Gwinnett: Transit Plan. A vote for yes “would be a vote in support of ratifying Gwinnett’s pending transit service contract with MARTA — and one in favor of enacting a new 1 percent sales tax to pay for transit projects and operations in the county.” (Estep, 2019)
+
+The referendum eventually failed. Among the 92,243 votes, 42,156 voted yes, and 50,087 voted no (Results - Gwinnett - Election Night Reporting, 2019). The turnout rate was 16.98%.
+
+Some argue that the failure could be due to the delay of the referendum from November 2018 to March 2019 (Yeomans, 2018). The change from voting in a general election to a special referendum would reduce voter turnout and affect the result. 
+
 
 # Data & Methods
 
 ## Conceptual model
 
-According to previous research, sociodemographic elements can influence people’s voting decisions in the referendum. For example, the effect of income is mixed: on the one hand, people with higher income will pay a smaller portion of their earnings for the implementation of the plan; on the other hand, they will pay a larger amount of tax. Bollino (2008) finds a positive correlation between income and people’s willingness to pay for renewable resources. Burkhardt and Chan (2017) separate the influence of income from tax, and discover their opposite effects on voting. Therefore, it is worth considering the relationship between income and percentage of supporters in this referendum. Voters’ partisanship attachment is found to be a significant factor as well in Burkhardt and Chan’s (2017) paper. Areas with higher proportions of Republicans are less supportive of fiscally costly propositions. In my project, it can be hypothesized that tracts that have a higher proportion of Trump supporters tend to have a lower percentage of agreement to the proposal.  
+This paper sets out to find the factors that influence voting results in this referendum. According to previous research, sociodemographic elements can influence people’s voting decisions in the referendum. For example, the effect of income is mixed: on the one hand, people with higher income will pay a smaller portion of their earnings for the implementation of the plan; on the other hand, they will pay a larger amount of tax. Bollino (2008) finds a positive correlation between income and people’s willingness to pay for renewable resources. Burkhardt and Chan (2017) separate the influence of income from tax, and discover their opposite effects on voting. Therefore, it is worth considering the relationship between income and percentage of supporters in this referendum. Voters’ partisanship attachment is found to be a significant factor as well in Burkhardt and Chan’s (2017) paper. Areas with higher proportions of Republicans are less supportive of fiscally costly propositions. In my project, it can be hypothesized that tracts that have a higher proportion of Trump supporters tend to have a lower percentage of agreement to the proposal.  
 
 In addition, some factors related to transportation can intuitively shape people’s attitudes towards public transit. For example, the areas in which people do not use public transit at all might have a higher percentage of refusal of the proposal, because they have alternative transportation means. People who have to travel a long time to work are more likely to support the extension plan if it helps save time. These two factors serve as controls in the models.
 
@@ -89,13 +103,13 @@ The ballot results of the Gwinnett County referendum on Mar 19th, 2019 is obtain
 
 The result of the 2016 Presidential Election is chosen to reflect partisanship. A cross-sectional precinct-level election data is obtained from the MIT Election Data and Science Lab website. The number of votes for Trump at each precinct in Gwinnett county comes from this dataset. 
 
-Next, cross-sectional sociodemographic characteristics at the census tract level are found in Census Bureau via an R package called `tidycensus`. The data comes from the American Community Survey 5-year estimate published in 2018. The median age and median income are collected here. In addition, the proportion of white, the percentage of people who go to work by public transportation, and the percentage of people who travel more than an hour to work are calculated by dividing the relevant variables by the total population or the survey sample size. 
+Next, cross-sectional sociodemographic characteristics at the census tract level are found in Census Bureau via an R package called `tidycensus`. The data comes from the American Community Survey 5-year estimate published in 2018. The median age and median income are taken from here. In addition, the proportion of the population that is white, the percentage of people who go to work by public transportation, and the percentage of people who travel more than an hour to work are calculated by dividing the relevant variables by the total population or the survey sample size. 
 
-The information on whether the tract enjoys the proximity of public transportation now and future can be acquired from spatial maps and analyses. First, a precinct-level shapefile of Gwinnett County made in 2018 is obtained from the Georgia General Assembly. Gwinnett County maps with current and proposed future public transit systems are available on the Gwinnett County government website. I select the short-range expansion plan (Y2020 – 2025) because the cost and benefit of the expansion in the far future are discounted more. After modifications in QGIS software, the maps are then transformed into spatial data readable in R. Five-hundred-meter buffer zones are created around bus and railway routes. The categorical variable *current_plan* has four levels: 1 represents no transportation near this tract at present and in the future; 2 represents the tracts that are accessible to public transit currently but not in the future; 3 stands for the tracts that do not have transit at present but will do in the expansion plan; 4 represents the tracts that have and will have public transit for now and for the future. 
+The information on whether the tract enjoys the proximity of public transportation now and future can be acquired from spatial maps and analyses. First, a precinct-level shapefile of Gwinnett County made in 2018 is obtained from the Georgia General Assembly. Gwinnett County maps with current and proposed future public transit systems are available on the Gwinnett County government website. I select the short-range expansion plan (Y2020 – 2025) because the cost and benefit of the expansion in the far future are discounted more. PDF maps are georeferenced in QGIS software, and then exported as spatial data readable in R. Five-hundred-meter buffer zones are created around bus and railway routes. The categorical variable *current_plan* has four levels: 1 represents no transportation near this tract at present and in the future; 2 represents the tracts that are accessible to public transit currently but not in the future; 3 stands for the tracts that do not have transit at present but will do in the expansion plan; 4 represents the tracts that have and will have public transit for now and for the future. 
 
-As noted above, both referendum and 2016 election data are collected at the precinct level. However, the other datasets are performed at the census tract level. Therefore, referendum and election data are redistributed by the areas shared by the precinct and the tract. See the data appendix for detailed steps of transformation. 
+As noted above, both referendum and 2016 election data are collected at the precinct level. However, the other datasets are performed at the census tract level. Therefore, referendum and election data are redistributed by the areas shared by the precinct and the tract, following Burkhardt and Chan (2017). See the data appendix for detailed steps of transformation. 
 
-The final dataset joins the datasets above by GEOID. It is cross-sectional, measured with the unit of the census tract. Since there are 113 census tracts in Gwinnett, the dataset has 113 observations, with no missing data. A description of the variables can be found in *Table 1*. 
+The final dataset joins the datasets above by census tract. It is cross-sectional, measured with the unit of the census tract. Since there are 113 census tracts in Gwinnett, the dataset has 113 observations, with no missing data. A description of the variables can be found in *Table 1*. 
 
 
 
@@ -168,8 +182,8 @@ data_cor_1 <- rcorr(as.matrix(data_numeric))
 M <- data_cor_1$r
 p_mat <- data_cor_1$P
 corrplot(M, type = "upper", order = "hclust", 
-         p.mat = p_mat, sig.level = 0.05)
-
+         p.mat = p_mat, sig.level = 0.05,mar=c(0,0,2,0),
+         title = "Figure XXX. Correlation Matrix")
 
 ```
 
@@ -372,7 +386,7 @@ ggplot(final_data, aes(x = white_pct, y = yes_pct))+
 ```
 
 
-```{r results = F}
+```{r results = F, include = F}
 library(psych)
 mediate(yes_pct ~ white_pct + (trump_pct), data = final_data, n.iter = 10000)
 ```
@@ -380,61 +394,6 @@ mediate(yes_pct ~ white_pct + (trump_pct), data = final_data, n.iter = 10000)
 - *trump_pct* is a mediating factor that turns the relationship between *white_pct* and *yes_pct* to negative
 
 
-```{r eval=FALSE, include=FALSE}
-library(MBESS)
-with(final_data, mediation(x = white_pct, mediator = trump_pct, dv = yes_pct, bootstrap = TRUE, which.boot = "BCa", B = 10000))
-```
-
-```{r}
-data_tf_2 <- data_tf %>%
-   mutate(cp_3 = as.factor(case_when(current_plan == 3 ~1,
-                           current_plan != 3 ~ 0))) 
-```
-
-
-```{r}
-mod3 <- lm(data = data_tf_2, yes_pct ~ log_medincome + white_pct 
-           + cp_3 + trump_pct + medage + log_public_pct + time_pct +
-              sqrt_voter_turnout)
-summary(mod3)
-mod4 <- lm(data = data_tf_2, yes_pct ~ log_medincome + white_pct +
-           cp_3 * trump_pct + medage + log_public_pct + time_pct +
-              sqrt_voter_turnout)
-summary(mod4)
-anova(mod3,mod4)
-```
-
-```{r}
-data_tf_3 <- data_tf %>%
-   mutate(cp_3 = as.factor(case_when(current_plan == 3 ~1,
-                           current_plan != 3 ~ 0))) %>%
-   filter(cp_3 == 1)
-```
-
-
-```{r}
-mod5 <- lm(data = data_tf_3, yes_pct ~ log_medincome + white_pct 
-            + trump_pct + medage + log_public_pct + time_pct +
-              sqrt_voter_turnout)
-summary(mod5)
-
-```
-
-```{r}
-data_tf_4 <- data_tf %>%
-   mutate(cp_3 = as.factor(case_when(current_plan == 3 ~1,
-                           current_plan != 3 ~ 0))) %>%
-   filter(cp_3 == 0)
-```
-
-
-```{r}
-mod6 <- lm(data = data_tf_4, yes_pct ~ log_medincome + white_pct 
-            + trump_pct + medage + log_public_pct + time_pct +
-              sqrt_voter_turnout)
-summary(mod6)
-
-```
 
 
 
